@@ -1,28 +1,34 @@
 <template>
     <div class="contenedor1">
-        <div class="image-container">
-            <img src="" alt="Imagen de fondo">
+        <div class="carousel-container">
+            <q-carousel class="responsive-carousel" animated v-model="slide" navigation infinite :autoplay="autoplay"
+                 transition-prev="slide-right" transition-next="slide-left" @mouseenter="autoplay = false"
+                @mouseleave="autoplay = true">
+                <q-img class="carousel-image" :name="1" src="../img/fondo1.jpg"></q-img>
+                <q-img class="carousel-image" :name="2" src="../img/fondo2.jpg"></q-img>
+            </q-carousel>
         </div>
         <div class="wrapper">
-            <div class="from-box login text-center" >
+            <div class="from-box login text-center">
                 <img src="../img/Nature Beans Logo v5.png" alt="" class="logo1">
                 <h2>INGRESAR</h2>
                 <q-form @submit="login2">
-
                     <q-input class="q-mt-sm" outlined v-model="email" label="Documento de Identidad" lazy-rules
-                         :rules="[val => val && val.length > 0 || 'Por favor ingresa tu Número de Documento']">
+                        :rules="[val => val && val.length > 0 || 'Por favor ingresa tu Número de Documento']">
                     </q-input>
                     <q-input outlined class="q-mt-md" v-model="passwordLogin" label="Contraseña"
-                         :type="isPwd ? 'password' : 'text'" :rules="[
-                         val => val !== null && val !== '' || 'Por favor ingresa tu contraseña'
-                          ]">
-                         <template v-slot:append>
-                      <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
-                         </template>
-                     </q-input>
-                     <div class="remember-forgot">
+                        :type="isPwd ? 'password' : 'text'" :rules="[
+                            val => val !== null && val !== '' || 'Por favor ingresa tu contraseña'
+                        ]">
+                        <template v-slot:append>
+                            <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                                @click="isPwd = !isPwd" />
+                        </template>
+                    </q-input>
+                    <div class="remember-forgot">
                         <div class="q-pa-md q-gutter-sm">
-                            <q-dialog v-model="dialog" persistent transition-show="slide-up" transition-hide="slide-down">
+                            <q-dialog v-model="dialog" persistent transition-show="slide-up"
+                                transition-hide="slide-down">
                                 <q-card class="custom-modal-bg" style="width: 1100px;">
                                     <q-bar>
                                         <q-space />
@@ -51,17 +57,20 @@
                 </q-form>
                 <button @click="dialog = true"><a>¿Olvidaste tu contraseña?</a></button>
             </div>
-
         </div>
-    </div>    
+    </div>
 </template>
 
+<script>
+import { ref } from 'vue'
 
-<script setup>
-import { ref } from 'vue';
-
-
-
+export default {
+    setup() {
+        return {
+            slide: ref(1)
+        }
+    }
+}
 </script>
 
 <style>
@@ -82,24 +91,31 @@ import { ref } from 'vue';
 .custom-modal-bg {
     background-color: white;
     color: black;
-
 }
 
-a{
+a {
     color: #162938;
     text-decoration: none;
 }
+
 .remember {
     font-size: 15px;
     margin-top: 18px;
 }
 
-.image-container {
+.carousel-container {
     width: 80%;
-    height: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
-.image-container img {
+.responsive-carousel {
+    flex: 1;
+}
+
+.carousel-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -116,7 +132,6 @@ a{
     display: flex;
     justify-content: center;
     align-items: center;
-
 }
 
 .wrapper .from-box {
@@ -124,16 +139,16 @@ a{
     padding: 40px;
 }
 
-
 .wrapper .from-box.register {
     position: relative
 }
 
-
 .from-box h2 {
-    font-size: 2em;
-    color: #162938;
+    font-size: 2.5em;
+    color: #52585b;
     text-align: center;
+    font-weight: 500;
+    margin-top: 10px;
 }
 
 .input-box {
@@ -159,7 +174,6 @@ a{
 .input-box input:focus~label,
 .input-box input:valid~label {
     top: -5px;
-
 }
 
 .input-box input {
@@ -230,7 +244,6 @@ a{
 .login-register p a {
     color: #162938;
     text-decoration: none;
-
 }
 
 .login-register p a:hover {

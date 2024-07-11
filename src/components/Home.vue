@@ -125,11 +125,11 @@ header img {
 }
 
 .colorheader {
-  background-color: #32b532 !important;
+  background-color: #009B44 !important;
 }
 
 .colorfooter {
-  background-color: #2d2c30 !important;
+  background-color: #3A3B3D !important;
 }
 
 .rol-user {

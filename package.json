@@ -10,7 +10,12 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.12",
+    "axios": "^1.7.2",
+    "floating-vue": "^5.2.2",
+    "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "quasar": "^2.16.5",
+    "sweetalert2": "^11.12.2",
     "vue": "^3.4.29",
     "vue-router": "^4.4.0"
   },

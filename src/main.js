@@ -23,7 +23,16 @@ myApp.use(pinia)
 myApp.use(FloatingVue)
 
 myApp.use(Quasar, {
-  plugins: {}, 
+  plugins: { Notify },
+  config: {
+    notify: {
+      position: 'top',
+      timeout: 2500,
+      textColor: 'white',
+      actions: [{ icon: 'close', color: 'white' }],
+      color:"red"
+    },
+  }, 
 })
 
 

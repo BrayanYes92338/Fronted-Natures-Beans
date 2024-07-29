@@ -1,77 +1,127 @@
 <template>
     <div class="contenedor1">
-        <div class="carousel-container">
-            <q-carousel class="responsive-carousel" animated v-model="slide" navigation infinite :autoplay="autoplay"
-                 transition-prev="slide-right" transition-next="slide-left" @mouseenter="autoplay = false"
-                @mouseleave="autoplay = true">
-                <q-img class="carousel-image" :name="1" src="../img/fondo1.jpg"></q-img>
-                <q-img class="carousel-image" :name="2" src="../img/fondo2.jpg"></q-img>
-            </q-carousel>
-        </div>
-        <div class="wrapper">
-            <div class="from-box login text-center">
-                <img src="../img/Nature Beans Logo v5.png" alt="" class="logo1">
-                <h2>INGRESAR</h2>
-                <q-form @submit="login2">
-                    <q-input class="q-mt-sm" outlined v-model="email" label="Documento de Identidad" lazy-rules
-                        :rules="[val => val && val.length > 0 || 'Por favor ingresa tu Número de Documento']">
-                    </q-input>
-                    <q-input outlined class="q-mt-md" v-model="passwordLogin" label="Contraseña"
-                        :type="isPwd ? 'password' : 'text'" :rules="[
-                            val => val !== null && val !== '' || 'Por favor ingresa tu contraseña'
-                        ]">
-                        <template v-slot:append>
-                            <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                                @click="isPwd = !isPwd" />
-                        </template>
-                    </q-input>
-                    <div class="remember-forgot">
-                        <div class="q-pa-md q-gutter-sm">
-                            <q-dialog v-model="dialog" persistent transition-show="slide-up"
-                                transition-hide="slide-down">
-                                <q-card class="custom-modal-bg" style="width: 1100px;">
-                                    <q-bar>
-                                        <q-space />
-                                        <q-btn dense flat icon="close" @click="cerrar">
-                                            <q-tooltip class="bg-white text-primary">Cerrar</q-tooltip>
-                                        </q-btn>
-                                    </q-bar>
-
-                                    <q-card-section>
-                                        <div class="text-h6">INGRESE CORREO</div>
-                                    </q-card-section>
-                                    <q-card-section class="q-pt-none">
-                                        <p>Por favor ingresar el Correo Electronico para iniciar el proceso de cambio de
-                                            contraseña.</p>
-                                        <q-input class="q-mt-sm" outlined v-model="correo" label="Correo electronico"
-                                            lazy-rules
-                                            :rules="[val => val && val.length > 0 || 'Por favor ingresa tu correo']">
-                                        </q-input>
-                                        <button class="btn" @click="usuarioPutPassword()">Enviar</button>
-                                    </q-card-section>
-                                </q-card>
-                            </q-dialog>
-                        </div>
-                    </div>
-                    <button class="btn" type="submit">Ingresar</button>
-                </q-form>
-                <button @click="dialog = true"><a>¿Olvidaste tu contraseña?</a></button>
+      <div class="carousel-container">
+        <q-carousel 
+          class="responsive-carousel" 
+          animated 
+          v-model="slide" 
+          navigation 
+          infinite 
+          :autoplay="autoplay" 
+          arrows 
+          transition-prev="slide-right" 
+          transition-next="slide-left" 
+          @mouseenter="pauseAutoplay" 
+          @mouseleave="resumeAutoplay"
+        >
+          <q-img class="carousel-image" :name="1" src="../img/fondo1.jpg" loading="lazy"></q-img>
+          <q-img class="carousel-image" :name="2" src="../img/fondo2.jpg" loading="lazy"></q-img>
+        </q-carousel>
+      </div>
+      <div class="wrapper">
+        <div class="from-box login text-center">
+          <img src="../img/Nature Beans Logo v5.png" alt="" class="logo1">
+          <h2>INGRESAR</h2>
+          <q-form @submit="Login2">
+            <q-input 
+              class="q-mt-sm" 
+              outlined 
+              v-model="documento" 
+              label="Documento de Identidad" 
+              lazy-rules 
+              :rules="[val => val && val.length > 0 || 'Por favor ingresa tu Número de Documento']"
+            />
+            <q-input 
+              outlined 
+              class="q-mt-md" 
+              v-model="passwordLogin" 
+              label="Contraseña" 
+              :type="isPwd ? 'password' : 'text'" 
+              :rules="[val => val !== null && val !== '' || 'Por favor ingresa tu contraseña']"
+            >
+              <template v-slot:append>
+                <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
+              </template>
+            </q-input>
+            <div class="remember-forgot">
+              <div class="q-pa-md q-gutter-sm">
+                <q-dialog v-model="dialog" persistent transition-show="slide-up" transition-hide="slide-down">
+                  <q-card class="custom-modal-bg" style="width: 1100px;">
+                    <q-bar>
+                      <q-space />
+                      <q-btn dense flat icon="close" @click="cerrar">
+                        <q-tooltip class="bg-white text-primary">Cerrar</q-tooltip>
+                      </q-btn>
+                    </q-bar>
+                    <q-card-section>
+                      <div class="text-h6">INGRESE CORREO</div>
+                    </q-card-section>
+                    <q-card-section class="q-pt-none">
+                      <p>Por favor ingresar el Correo Electronico para iniciar el proceso de cambio de contraseña.</p>
+                      <q-input 
+                        class="q-mt-sm" 
+                        outlined 
+                        v-model="correo" 
+                        label="Correo electronico" 
+                        lazy-rules 
+                        :rules="[val => val && val.length > 0 || 'Por favor ingresa tu correo']"
+                      />
+                      <button class="btn" @click="usuarioPutPassword()">Enviar</button>
+                    </q-card-section>
+                  </q-card>
+                </q-dialog>
+              </div>
             </div>
+            <button class="btn" type="submit">Ingresar</button>
+          </q-form>
+          <button @click="dialog = true"><a>¿Olvidaste tu contraseña?</a></button>
         </div>
+      </div>
     </div>
-</template>
-
-<script>
-import { ref } from 'vue'
-
-export default {
-    setup() {
-        return {
-            slide: ref(1)
-        }
+  </template>
+  
+  <script setup>
+  import { ref } from 'vue';
+  import { useUsuarioStore } from '../stores/usuario.js';
+  import { useRouter } from "vue-router";
+  import { Notify } from 'quasar';
+  
+  const router = useRouter();
+  const dialog = ref(false);
+  let useUsuario = useUsuarioStore();
+  let documento = ref('');
+  let passwordLogin = ref("");
+  let isPwd = ref(true);
+  let slide = ref(1);
+  let autoplay = ref(true);
+  
+  function cerrar() {
+    dialog.value = false;
+  }
+  
+  async function Login2() {
+    try {
+      const res = await useUsuario.Login({
+        documento: documento.value,
+        password: passwordLogin.value
+      });
+      useUsuario.token = res.data.token;
+      useUsuario.user = res.data.usuario;
+      console.log(res);
+      router.push('/menu');
+    } catch (error) {
+      console.log(error);
     }
-}
-</script>
+  }
+  
+  function pauseAutoplay() {
+    autoplay.value = false;
+  }
+  
+  function resumeAutoplay() {
+    autoplay.value = 15000;
+  }
+  </script>
 
 <style>
 .logo1 {

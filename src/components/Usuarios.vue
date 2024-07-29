@@ -21,7 +21,7 @@
                         maxlength="10" />
                     <q-input outlined v-model="correo" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Correo del Usuario" type="text" />
-                        <q-input outlined v-model="password" use-input hide-selected fill-input input-debounce="0"
+                    <q-input outlined v-model="password" use-input hide-selected fill-input input-debounce="0"
                         :type="isPwd ? 'password' : 'text'" class="q-my-md q-mx-md" label="Contraseña">
                         <template v-slot:append>
                             <q-icon name="fas fa-eye" class="cursor-pointer" v-if="isPwd"
@@ -49,7 +49,43 @@
                 </q-card>
             </q-dialog>
         </div>
- 
+        <!-- Editar Usuarios-->
+        <div>
+            <q-dialog v-model="alerta" persistent>
+                <q-card class="" style="width: 700px">
+                    <q-card-section style="background-color: #009B44; margin-bottom: 20px">
+                        <div class="text-h6 text-white">
+                            Editar Usuario
+                        </div>
+                    </q-card-section>
+                    <q-input outlined v-model="nombre" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Nombre del Usuario" type="text" />
+                    <q-input outlined v-model="direccion" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Direccion del Usuario" type="text" />
+                    <q-input outlined v-model="documento" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Documento del Usuario" type="tel" required pattern="[0-9]+"
+                        maxlength="10" />
+                    <q-input outlined v-model="correo" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Correo del Usuario" type="text" />
+                    <q-input outlined v-model="telefono" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Telefono del Usuario" type="tel" required pattern="[0-9]+"
+                        maxlength="10" />
+
+                    <q-input outlined v-model="municipio" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Municipio del Usuario" type="text" />
+                    <q-card-actions align="right">
+                        <q-btn @click="validarEdicionUsuario()" color="red" class="text-white"
+                            :loading="useUsuario.loading">
+                            Editar
+                            <template v-slot:loading>
+                                <q-spinner color="primary" size="1em" />
+                            </template>
+                        </q-btn>
+                        <q-btn label="Cerrar" color="black" outline @click="cerrar2()" />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+        </div>
         <!-- Tabla Usuarios -->
         <div style="display: flex; justify-content: center">
             <q-table title="Usuarios" title-class="text-red text-weight-bolder text-h4"
@@ -65,20 +101,21 @@
                     <q-td :props="props">
                         <div style="display: flex; gap:15px; justify-content: center;">
                             <!-- boton de editar -->
-                            <q-btn color="primary" @click="traerUsuario(props.row)">
+                            <q-btn color="primary" @click="traerInfo(props.row)">
                                 <q-tooltip>
                                     Editar
                                 </q-tooltip>
                                 <i class="fas fa-pencil-alt">
                                 </i></q-btn>
                             <!-- botons de activado y desactivado -->
-                            <q-btn v-if="props.row.estado == 1" color="negative">
+                            <q-btn v-if="props.row.estado == 1" @click="deshabilitarUsuario(props.row)"
+                                color="negative">
                                 <q-tooltip>
                                     Desacticar
                                 </q-tooltip>
                                 <i class="fas fa-times">
                                 </i></q-btn>
-                            <q-btn v-else color="positive">
+                            <q-btn v-else color="positive" @click="habilitarUsuaro(props.row)">
                                 <q-tooltip>
                                     Acticar
                                 </q-tooltip><i class="fas fa-check">
@@ -122,6 +159,10 @@ function abrir() {
 
 function cerrar() {
     alert.value = false;
+}
+
+function cerrar2() {
+    alerta.value = false;
 }
 
 
@@ -223,6 +264,7 @@ async function agregarUsuarios() {
     });
     listarUsuarios();
     cerrar();
+    console.log(r)
 }
 
 function validarUsuario() {
@@ -236,7 +278,7 @@ function validarUsuario() {
         Notify.create("Se debe agregar un documento de Usuario");
     } else if (!validacionnumeros.test(documento.value)) {
         Notify.create("El documento solo debe llevar numeros");
-    }  else if (correo.value == "" || correo.value.trim().length === 0) {
+    } else if (correo.value == "" || correo.value.trim().length === 0) {
         Notify.create("Se debe agregar un correo de Usuario");
     } else if (!validacionCorreo.test(correo.value)) {
         Notify.create("El correo del usuario no es valido");
@@ -260,8 +302,75 @@ function validarUsuario() {
     }
 }
 
-function traerUsuario(usuario){
-alerta = true
+function traerInfo(usuario) {
+    alerta.value = true;
+    nombre.value = usuario.nombre
+    direccion.value = usuario.direccion
+    documento.value = usuario.documento
+    correo.value = usuario.correo
+    telefono.value = usuario.telefono
+    municipio.value = usuario.municipio
+    id.value = usuario._id
+
+}
+
+function validarEdicionUsuario() {
+
+    
+        editarUsuario()
+        limpiar()
+        cerrar2()
+        Notify.create({
+            type: "positive",
+            message: "Usuario editado exitosamente",
+        });
+    
+}
+
+async function editarUsuario() {
+    try {
+        await useUsuario.putUsuario(id.value,{
+            nombre: nombre.value,
+            direccion: direccion.value,
+            documento: documento.value,
+            correo: correo.value,
+            telefono: telefono.value,
+            municipio: municipio.value,
+        })
+        listarUsuarios()
+    } catch (error) {
+        console.error('Error al editar el Usuario', error);
+        Notify.create('Error al editar el Usuario')
+    }
+}
+
+
+
+async function habilitarUsuaro(usuario) {
+    const res = await useUsuario.putActivarUsuario(usuario._id)
+        .then((response) => {
+            console.log(response);
+            listarUsuarios()
+        })
+
+        .catch((error) => {
+            console.error('Error de Usuario', error);
+            Notify.create('Error al habilitar el Usuario')
+        })
+
+}
+
+async function deshabilitarUsuario(usuario) {
+    const res = await useUsuario.putDesactivarUsuario(usuario._id)
+        .then((response) => {
+            console.log(response);
+            listarUsuarios()
+        })
+
+        .catch((error) => {
+            console.error('Error de Usuario', error);
+            Notify.create('Error al deshabilitar el Usuario')
+        })
 
 }
 

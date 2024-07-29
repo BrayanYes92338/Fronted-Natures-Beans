@@ -1,37 +1,53 @@
 <template>
   <q-layout view="hHh lpR fFf">
-
     <q-header reveal elevated class="bg-primary text-white colorheader" height-hint="98">
       <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title>
-          <p class="rol-user">hola</p>
+        <q-btn v-if="useUsuario.token" dense flat round icon="menu" @click="toggleLeftDrawer" />    
+        <!-- Rol del usuario -->
+        <q-toolbar-title class="toolbar-title">
+          <p class="rol-user">{{ usuario.nombre }}</p>
         </q-toolbar-title>
+        <!-- Espacio flexible para empujar el contenido al final -->
+        <div class="q-mx-auto"></div>
+
+        <!-- Separador -->
+        <span class="separator">|</span>
+        <!-- Ícono de casa con enlace al dashboard -->
+        <router-link to="/menu" class="home-icon">
+          <q-btn dense flat round icon="home" class="home-btn" />
+        </router-link>
       </q-toolbar>
-
-      <q-tabs align="left">
-
-      </q-tabs>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" side="left" overlay behavior="desktop" bordered>
-      <header class=header>
-        <img src="../img/user.jpg" alt="" class="perfil-prueba">
-        <p class="name-user">Hola</p>
+    <q-drawer v-if="useUsuario.token" v-model="leftDrawerOpen" side="left" overlay behavior="desktop" bordered>
+      <header class="header">
+        <div class="fondoimagen">
+          <img src="../img/user.jpg" alt="" class="perfil-prueba">
+          <p class="name-user">{{ usuario.rol}}</p>
+        </div>
       </header>
       <div class="menu">
-        <div class="item"> <router-link class="item opciones" to="/menu"><i class="fas fa-tachometer-alt"></i>
-            DashBoard</router-link>
+        <div class="item">
+          <router-link class="item opciones" to="/menu">
+            <i class="fas fa-tachometer-alt"></i> DashBoard
+          </router-link>
         </div>
-        <div class="item"> <router-link class="opciones" to="/usuario"><i class="fas fa-user"></i>Usuario</router-link>
-          
+        <div v-if="usuario.rol ==='ADMIN'" class="item">
+          <router-link class="opciones" to="/usuario">
+            <i class="fas fa-user"></i> Usuario
+          </router-link>
+        </div>
+        <div  v-if="usuario.rol === 'ADMIN' || usuario.rol === 'GESTOR'"  class="item">
+          <router-link class="opciones" to="/finca">
+            <i class="fas fa-home"></i>Fincas
+          </router-link>
         </div>
       </div>
       <div class="btn-cerrar">
-        <button class="cerrar-sesion" @click="singOut()"> <i class="fa fa-sign-out-alt "></i> Cerrar Sesion</button>
+        <button class="cerrar-sesion" @click="cerrarSesion()">
+          <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
+        </button>
       </div>
-
     </q-drawer>
 
     <q-page-container>
@@ -45,58 +61,83 @@
         </q-toolbar-title>
       </q-toolbar>
     </q-footer>
-
   </q-layout>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUsuarioStore } from '../stores/usuario.js'
+
+let router = useRouter()
+let useUsuario = useUsuarioStore()
+let usuario = useUsuario.user
 
 const leftDrawerOpen = ref(false)
 
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
-const toggleSubMenu = (menu) => {
-  subMenus.value[menu] = !subMenus.value[menu]
+
+const cerrarSesion = () => {
+  useUsuario.user = {}
+  useUsuario.token = ''
+  router.push('/')
 }
 </script>
 
 <style scoped>
 .header {
-  background: #33363a;
   width: 100%;
   height: 190px;
+  position: relative; 
 }
 
-header img {
+.fondoimagen {
+  background-image: url('../img/Boceto.png');
+  background-size: cover; 
+  background-position: center; 
   width: 100%;
-  margin: 15px;
-  margin-left: 110px;
-  border-radius: 50%;
+  height: 190px;
+  position: relative;
+
 }
 
 .perfil-prueba {
   height: 100px;
   width: 100px;
+  position: absolute; 
+  top: 20px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  border: #e9c62d solid 3px;
+  border-radius: 50%;
 }
 
 .name-user {
   color: white;
-  font-size: 15px;
+  font-size: 18px;
   text-align: center;
   font-weight: bold;
-  margin-left: 34px;
+  position: absolute; 
+  top: 130px; 
+  left: 50%; 
+  text-shadow: 
+    -2px -2px 0 #000, 
+     2px -2px 0 #000, 
+    -2px  2px 0 #000, 
+     2px  2px 0 #000;
+  transform: translateX(-50%);
 }
 
 .menu {
   width: 100%;
   margin-top: 20px;
 }
-.menu .item{
+
+.menu .item {
   position: relative;
   cursor: pointer;
-
 }
 
 .menu .item .opciones {
@@ -109,19 +150,8 @@ header img {
   line-height: 60px;
 }
 
-.item i{
+.item i {
   margin-right: 8px;
-}
-
-.item a .dropdown{
-  position: absolute;
-  right: 0;
-  margin: 20px;
-  transition: 0.3 ease;
-}
-
-.item .sub-menu{
-  background: #F0F0F0;
 }
 
 .colorheader {
@@ -134,6 +164,7 @@ header img {
 
 .rol-user {
   margin-top: 15px;
+ 
 }
 
 .titulo-footer {
@@ -157,5 +188,28 @@ header img {
   display: inline-block;
   text-align: center;
   cursor: pointer;
+}
+
+.cerrar-sesion:hover {
+  background-color: #e61d1d;
+}
+
+.home-icon {
+  margin-left: 16px; 
+}
+
+.home-btn {
+  color: white; 
+  font-size: 24px; 
+}
+
+.separator {
+  margin: 0 18px; 
+  color: white; 
+  font-size: 28px; 
+}
+
+.toolbar-title {
+  margin-left: 16px;
 }
 </style>

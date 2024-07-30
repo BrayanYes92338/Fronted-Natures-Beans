@@ -53,7 +53,7 @@ export const  useFincaStore = defineStore('finca', () => {
         try{
            loading.value = true; 
            const r = axios.put(`api/fincas/editar/${id}`, data, {
-            header: {
+            headers: {
                 token: useUsuario.token
             }
            })
@@ -75,7 +75,9 @@ export const  useFincaStore = defineStore('finca', () => {
         try{
             loading.value = true;
             const r = await axios.put(`api/fincas/activar/${id}`, {},{
-                headers: useUsuario.token
+                headers: {
+                    token: useUsuario.token
+                }
             })
             return r
         }catch (error){
@@ -94,7 +96,9 @@ export const  useFincaStore = defineStore('finca', () => {
         try{
             loading.value = true;
             const r = await axios.put(`api/fincas/desactivar/${id}`, {},{
-                headers: useUsuario.token
+                headers: {
+                    token: useUsuario.token
+                }
             })
             return r
         }catch (error){

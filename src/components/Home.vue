@@ -32,12 +32,12 @@
             <i class="fas fa-tachometer-alt"></i> DashBoard
           </router-link>
         </div>
-        <div v-if="usuario.rol ==='ADMIN'" class="item">
+        <div class="item">
           <router-link class="opciones" to="/usuario">
             <i class="fas fa-user"></i> Usuario
           </router-link>
         </div>
-        <div  v-if="usuario.rol === 'ADMIN' || usuario.rol === 'GESTOR'"  class="item">
+        <div    class="item">
           <router-link class="opciones" to="/finca">
             <i class="fas fa-home"></i>Fincas
           </router-link>

@@ -315,8 +315,31 @@ function traerInfo(usuario) {
 }
 
 function validarEdicionUsuario() {
-
-    
+    let validacionnumeros = /^[0-9]+$/;
+    let validacionCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (nombre.value == "" || nombre.value.trim().length === 0) {
+        Notify.create("Se debe agregar un nombre de Usuario");
+    } else if (direccion.value == "" || direccion.value.trim().length === 0) {
+        Notify.create("Se debe agregar una direccion de Usuario");
+    } else if (documento.value == "" || documento.value.trim().length === 0) {
+        Notify.create("Se debe agregar un documento de Usuario");
+    } else if (!validacionnumeros.test(documento.value)) {
+        Notify.create("El documento solo debe llevar numeros");
+    } else if (correo.value == "" || correo.value.trim().length === 0) {
+        Notify.create("Se debe agregar un correo de Usuario");
+    } else if (!validacionCorreo.test(correo.value)) {
+        Notify.create("El correo del usuario no es valido");
+    } else if (password.value == "" || password.value.trim().length === 0) {
+        Notify.create("Se debe agregar una contraseña de Usuario");
+    } else if (telefono.value == "" || telefono.value.trim().length === 0) {
+        Notify.create("Se debe agregar un telefono de Usuario");
+    } else if (!validacionnumeros.test(telefono.value)) {
+        Notify.create("El telefono solo debe llevar numeros");
+    } else if (rol.value == "" || rol.value.trim().length === 0) {
+        Notify.create("Se debe agregar un rol de Usuario");
+    } else if (municipio.value == "" || municipio.value.trim().length === 0) {
+        Notify.create("Se debe agregar un municipio de Usuario");
+    } else {
         editarUsuario()
         limpiar()
         cerrar2()
@@ -324,7 +347,7 @@ function validarEdicionUsuario() {
             type: "positive",
             message: "Usuario editado exitosamente",
         });
-    
+    }  
 }
 
 async function editarUsuario() {

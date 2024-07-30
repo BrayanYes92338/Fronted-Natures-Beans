@@ -8,9 +8,10 @@ import Finca from "../components/Finca.vue"
 
 const auth = (to, from, next) => {
     if (checkAuth()) {
-        const useUsuario = useUsuarioStore();
-        const rol = useUsuario.user.rol;
+        const userUsuario = useUsuarioStore();
+        const rol = userUsuario.user.rol;
         console.log(rol);
+
         if (to.meta && to.meta.roles && !to.meta.roles.includes(rol)) {
             return next({ name: 'login' });
         }
@@ -19,6 +20,7 @@ const auth = (to, from, next) => {
         return next({ name: 'login' });
     }
 };
+
 
 const checkAuth = () => {
     const useUsuario = useUsuarioStore();

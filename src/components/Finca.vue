@@ -56,6 +56,37 @@
                 </q-card>
             </q-dialog>
         </div>
+        <div>
+            <q-dialog v-model="modalLimite" persistent>
+                <q-card class="" style="width: 700px">
+                    <q-card-section style="background-color:#009B44; margin-bottom: 20px">
+                        <div class="text-h6 text-white">
+                            {{ "Limites de la finca" + nombreF }}
+                        </div>
+                    </q-card-section>
+                    <q-table title="Limites de la Finca" title-class="text-red text-weight-bolder text-h4"
+                        table-header-class="text-black font-weight-bold" :rows="rows" :columns="columnas" row-key="name"
+                        style="width: 90%;">
+                        <template v-slot:body-cell-estado="props">
+                            <q-td :props="props">
+                                <p style="color: green;" v-if="props.row.estado == 1">Activo</p>
+                                <p style="color: red;" v-else>Inactivo</p>
+                            </q-td>
+                        </template>
+                        <template v-slot:body-cell-opciones="props">
+                            <q-td :props="props">
+                                <div style="display: flex; gap:15px; justify-content: center; ">
+
+                                </div>
+                            </q-td>
+                        </template>
+                    </q-table>
+                    <q-card-actions align="right">
+                        <q-btn label="Cerrar" color="black" outline @click="cerrar2()" />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+        </div>
 
         <div style="display: flex; justify-content: center">
             <q-table title="Fincas" title-class="text-red text-weight-bolder text-h4"
@@ -69,8 +100,8 @@
                 </template>
                 <template v-slot:body-cell-opciones="props">
                     <q-td :props="props">
-                        <div style="display: flex; gap:15px; justify-content: center;">
-                            <q-btn color="teal" >
+                        <div style="display: flex; gap:15px; justify-content: center; ">
+                            <q-btn color="teal" @click="abrirLimites(props.row)">
                                 <q-tooltip>
                                     Ver Limites de la Finca
                                 </q-tooltip>
@@ -132,6 +163,7 @@ let este = ref("");
 let oeste = ref("");
 let area = ref("");
 let nombreF = ref("")
+let modalLimite = ref(false);
 
 function abrir() {
     accion.value = 1
@@ -141,6 +173,49 @@ function abrir() {
 function cerrar() {
     alert.value = false;
 }
+
+function cerrar2() {
+    modalLimite.value = false;
+}
+
+function abrirLimites() {
+    modalLimite.value = true;
+}
+
+const columnas = ref([
+    {
+        name: 'norte',
+        required: true,
+        label: 'Norte Finca',
+        align: 'center',
+        field: 'norte',
+        sortable: true
+    },
+    {
+        name: 'sur',
+        required: true,
+        label: 'Sur Finca',
+        align: 'center',
+        field: 'sur',
+        sortable: true
+    },
+    {
+        name: 'este',
+        required: true,
+        label: 'Este Finca',
+        align: 'center',
+        field: 'este',
+        sortable: true
+    },
+    {
+        name: 'oeste',
+        required: true,
+        label: 'Oestee Finca',
+        align: 'center',
+        field: 'oeste',
+        sortable: true
+    },
+])
 
 const columns = ref([
     {
@@ -349,6 +424,7 @@ function traerFincas(finca) {
     ciudad.value = finca.ciudad;
     direccion.value = finca.direccion;
     ubicacion.value = finca.ubicacion;
+    norte.value = finca.norte
     area.value = finca.area;
 }
 
@@ -419,7 +495,7 @@ function Limpiar() {
 onMounted(() => {
     listarUsuarios()
     listarFincas()
-  
+
 })
 
 </script>

@@ -173,7 +173,7 @@ a {
 
 .wrapper {
     position: relative;
-    width: 20%;
+    width: 25%;
     height: 100%;
     background: #F3F3F3;
     border: solid 2px rgba(255, 255, 255, .5);
@@ -298,5 +298,53 @@ a {
 
 .login-register p a:hover {
     text-decoration: underline;
+}
+
+@media(max-width: 1240px)
+{
+    .wrapper {
+       
+        width: 30%;
+       
+    }
+}
+
+@media(max-width: 905px)
+{
+    .wrapper {
+       
+        width: 40%;
+    }
+    .logo1 {
+        width: 250px;
+        height: 130px;
+    }
+}
+
+@media(max-width: 725px)
+{
+  
+    .logo1 {
+        width: 220px;
+        height: 130px;
+    }
+    
+}
+@media(max-width: 650px)
+{
+  
+    .logo1 {
+        width: 150px;
+        height: 130px;
+    }
+    
+}
+
+@media(max-width: 535px)
+{
+  
+    h2 {
+        font-size: medium;
+    }
 }
 </style>

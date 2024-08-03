@@ -70,7 +70,7 @@
                 <template v-slot:body-cell-opciones="props">
                     <q-td :props="props">
                         <div style="display: flex; gap:15px; justify-content: center;">
-                            <q-btn color="teal" @click="">
+                            <q-btn color="teal" >
                                 <q-tooltip>
                                     Ver Limites de la Finca
                                 </q-tooltip>

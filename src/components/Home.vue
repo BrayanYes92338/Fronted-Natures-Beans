@@ -42,6 +42,11 @@
             <i class="fas fa-home"></i>Fincas
           </router-link>
         </div>
+        <div    class="item">
+          <router-link class="opciones" to="/proveedor">
+            <i class="fas fa-truck"></i>Proveedor
+          </router-link>
+        </div>
       </div>
       <div class="btn-cerrar">
         <button class="cerrar-sesion" @click="cerrarSesion()">
@@ -211,5 +216,13 @@ const cerrarSesion = () => {
 
 .toolbar-title {
   margin-left: 16px;
+}
+@media(max-width: 1366px)
+{
+  
+  .cerrar-sesion {
+        margin-bottom: 30%;
+}
+
 }
 </style>

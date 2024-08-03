@@ -173,16 +173,17 @@ a {
 }
 
 .wrapper {
-  position: relative;
-  width: 25%;
-  height: 100%;
-  background: #F3F3F3;
-  border: solid 2px rgba(255, 255, 255, .5);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 0 30px rgba(0, 0, 0, .5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    position: relative;
+    width: 25%;
+    height: 100%;
+    background: #F3F3F3;
+    border: solid 2px rgba(255, 255, 255, .5);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .wrapper .from-box {
@@ -349,4 +350,54 @@ a {
   }
   
 }
+
+
+@media(max-width: 1240px)
+{
+    .wrapper {
+       
+        width: 30%;
+       
+    }
+}
+
+@media(max-width: 905px)
+{
+    .wrapper {
+       
+        width: 40%;
+    }
+    .logo1 {
+        width: 250px;
+        height: 130px;
+    }
+}
+
+@media(max-width: 725px)
+{
+  
+    .logo1 {
+        width: 220px;
+        height: 130px;
+    }
+    
+}
+@media(max-width: 650px)
+{
+  
+    .logo1 {
+        width: 150px;
+        height: 130px;
+    }
+    
+}
+
+@media(max-width: 535px)
+{
+  
+    h2 {
+        font-size: medium;
+    }
+}
+
 </style>

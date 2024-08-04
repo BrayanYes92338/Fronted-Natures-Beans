@@ -42,9 +42,19 @@
             <i class="fas fa-home"></i>Fincas
           </router-link>
         </div>
-        <div    class="item">
+        <div class="item">
           <router-link class="opciones" to="/proveedor">
             <i class="fas fa-truck"></i>Proveedor
+          </router-link>
+        </div>
+        <div class="item">
+          <router-link class="opciones" to="/clima">
+            <i class="fas fa-cloud-sun"></i>Clima
+          </router-link>
+        </div>
+        <div class="item">
+          <router-link class="opciones" to="/empleado">
+            <i class="fas fa-users"></i>Empleados
           </router-link>
         </div>
       </div>

@@ -329,14 +329,10 @@ function validarEdicionUsuario() {
         Notify.create("Se debe agregar un correo de Usuario");
     } else if (!validacionCorreo.test(correo.value)) {
         Notify.create("El correo del usuario no es valido");
-    } else if (password.value == "" || password.value.trim().length === 0) {
-        Notify.create("Se debe agregar una contraseña de Usuario");
     } else if (telefono.value == "" || telefono.value.trim().length === 0) {
         Notify.create("Se debe agregar un telefono de Usuario");
     } else if (!validacionnumeros.test(telefono.value)) {
         Notify.create("El telefono solo debe llevar numeros");
-    } else if (rol.value == "" || rol.value.trim().length === 0) {
-        Notify.create("Se debe agregar un rol de Usuario");
     } else if (municipio.value == "" || municipio.value.trim().length === 0) {
         Notify.create("Se debe agregar un municipio de Usuario");
     } else {

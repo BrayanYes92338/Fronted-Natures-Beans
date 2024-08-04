@@ -47,6 +47,11 @@
             <i class="fas fa-truck"></i>Proveedor
           </router-link>
         </div>
+        <div    class="item">
+          <router-link class="opciones" to="/parcela">
+            <i class="fas fa-mountain"></i>Parcela
+          </router-link>
+        </div>
       </div>
       <div class="btn-cerrar">
         <button class="cerrar-sesion" @click="cerrarSesion()">

@@ -6,6 +6,7 @@ import Home from '../components/Home.vue';
 import Menu from "../components/Menu.vue";
 import Finca from "../components/Finca.vue";
 import Proveedor from "../components/Proveedor.vue";
+import Parcela from "../components/Parcelas.vue";
 
 const auth = (to, from, next) => {
     if (checkAuth()) {
@@ -38,9 +39,10 @@ const routes = [
     {
         path: "/home", component: Home, beforeEnter: auth, children: [
             { path: "/menu", component: Menu, beforeEnter: auth},
-            { path: "/usuario", component: Usuario, beforeEnter: auth, meta: { roles: ['ADMIN'] } },
+            { path: "/usuario", component: Usuario, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/finca", component: Finca, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
-            { path: "/proveedor", component: Proveedor, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } }
+            { path: "/proveedor", component: Proveedor, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
+            { path: "/parcela", component: Parcela, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } }
         ]
     },
 ];

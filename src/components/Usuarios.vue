@@ -159,6 +159,7 @@ function abrir() {
 
 function cerrar() {
     alert.value = false;
+    limpiar()
 }
 
 function cerrar2() {
@@ -333,7 +334,7 @@ function validarEdicionUsuario() {
         Notify.create("Se debe agregar un telefono de Usuario");
     } else if (!validacionnumeros.test(telefono.value)) {
         Notify.create("El telefono solo debe llevar numeros");
-    } else if (municipio.value == "" || municipio.value.trim().length === 0) {
+    }  else if (municipio.value == "" || municipio.value.trim().length === 0) {
         Notify.create("Se debe agregar un municipio de Usuario");
     } else {
         editarUsuario()
@@ -357,6 +358,7 @@ async function editarUsuario() {
             municipio: municipio.value,
         })
         listarUsuarios()
+        limpiar()
     } catch (error) {
         console.error('Error al editar el Usuario', error);
         Notify.create('Error al editar el Usuario')

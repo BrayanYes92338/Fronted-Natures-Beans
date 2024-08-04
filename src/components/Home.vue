@@ -18,7 +18,6 @@
         </router-link>
       </q-toolbar>
     </q-header>
-
     <q-drawer v-if="useUsuario.token" v-model="leftDrawerOpen" side="left" overlay behavior="desktop" bordered>
       <header class="header">
         <div class="fondoimagen">
@@ -42,14 +41,23 @@
             <i class="fas fa-home"></i>Fincas
           </router-link>
         </div>
-        <div    class="item">
+        <div class="item">
           <router-link class="opciones" to="/proveedor">
             <i class="fas fa-truck"></i>Proveedor
           </router-link>
         </div>
-        <div    class="item">
+  <div    class="item">
           <router-link class="opciones" to="/parcela">
             <i class="fas fa-mountain"></i>Parcela
+        <div class="item">
+          <router-link class="opciones" to="/clima">
+            <i class="fas fa-cloud-sun"></i>Clima
+          </router-link>
+        </div>
+        <div class="item">
+          <router-link class="opciones" to="/empleado">
+            <i class="fas fa-users"></i>Empleados
+
           </router-link>
         </div>
       </div>

@@ -8,6 +8,8 @@ import Finca from "../components/Finca.vue";
 import Proveedor from "../components/Proveedor.vue";
 import Clima from "../components/Clima.vue";
 import Empleado from "../components/Empleado.vue";
+import Parcela from "../components/Parcelas.vue";
+
 
 const auth = (to, from, next) => {
     if (checkAuth()) {
@@ -44,7 +46,9 @@ const routes = [
             { path: "/finca", component: Finca, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/proveedor", component: Proveedor, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/clima", component: Clima, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
-            {path: "/empleado", component: Empleado,  beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] }}
+            {path: "/empleado", component: Empleado,  beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] }},
+             { path: "/parcela", component: Parcela, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } }
+
         ]
     },
 ];

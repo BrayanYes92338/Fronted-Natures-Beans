@@ -10,4 +10,5 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { Notify } from 'quasar';
+import {useEmpleadoStore} from '../stores/empleado';
 </script>

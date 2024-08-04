@@ -25,15 +25,16 @@
                         maxlength="10" />
                     <q-input outlined v-model="estudios" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Estudios del Trabajador" type="text" />
-                    <q-input outlined v-model="descripcion" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label="Descripcion del Trabajador" type="text" />
+                        <q-select outlined v-model="descripcion " :options="['Agricultor','Meteorólogo','Téc de Mantenimiento', 'Gestor de Inventario', 'Coordinador de Riego','Operador de Maquinaria']" label="Seleccione el Rol del Trabajador"
+                        class="q-my-md q-mx-md" />
                     <q-card-actions align="right">
-                        <q-btn v-if="accion === 1" color="red" class="text-white" :loading="useEmpleado.loading" @click="validarIngresoEmpleados()">Agregar
+                        <q-btn v-if="accion === 1" color="red" class="text-white" :loading="useEmpleado.loading"
+                            @click="validarIngresoEmpleados()">Agregar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
                             </template>
                         </q-btn>
-                        <q-btn v-if="accion !== 1" color="red" class="text-white" :loading="useEmpleado.loading">
+                        <q-btn v-if="accion !== 1" @click="validarEdicionEmpleado() " color="red" class="text-white" :loading="useEmpleado.loading" >
                             Editar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
@@ -59,20 +60,20 @@
                         <div style="display: flex; gap:15px; justify-content: center; ">
 
                             <!-- boton de editar -->
-                            <q-btn color="primary" @click="traerFincas(props.row)">
+                            <q-btn color="primary" @click="traerEmpleados(props.row)" >
                                 <q-tooltip>
                                     Editar
                                 </q-tooltip>
                                 <i class="fas fa-pencil-alt">
                                 </i></q-btn>
                             <!-- botons de activado y desactivado -->
-                            <q-btn v-if="props.row.estado == 1" @click="deshabilitarFinca(props.row)" color="negative">
+                            <q-btn v-if="props.row.estado == 1" @click="deshabilitarEmpleado(props.row)" color="negative">
                                 <q-tooltip>
                                     Desacticar
                                 </q-tooltip>
                                 <i class="fas fa-times">
                                 </i></q-btn>
-                            <q-btn v-else color="positive" @click="habilitarFinca(props.row)">
+                            <q-btn v-else color="positive" @click="habilitarEmpleado(props.row)">
                                 <q-tooltip>
                                     Acticar
                                 </q-tooltip><i class="fas fa-check">
@@ -112,6 +113,7 @@ function abrir() {
 
 function cerrar() {
     alert.value = false;
+    limpiar()
 }
 
 const columns = ref([
@@ -166,7 +168,7 @@ const columns = ref([
     {
         name: 'descripcion',
         required: true,
-        label: 'Descripcion',
+        label: 'Rol del Empleado',
         align: 'center',
         field: 'descripcion',
         sortable: true
@@ -195,26 +197,36 @@ async function listarEmplados() {
     console.log(r.data.empleado);
 }
 
-function validarIngresoEmpleados(){
+function validarIngresoEmpleados() {
     let validacionnumeros = /^[0-9]+$/;
     let validacionCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(nombre.value == ""|| nombre.value.trim().length ===0){
+    if (nombre.value == "" || nombre.value.trim().length === 0) {
         Notify.create("Se debe agregar nombre del Empleado");
     } else if (correo.value == "" || correo.value.trim().length === 0) {
         Notify.create("Se debe agregar un correo de Usuario");
     } else if (!validacionCorreo.test(correo.value)) {
         Notify.create("El correo del usuario no es valido");
-    }else if (documento.value == "" || documento.value.trim().length === 0) {
+    } else if (documento.value == "") {
         Notify.create("Se debe agregar un documento de Usuario");
     } else if (!validacionnumeros.test(documento.value)) {
         Notify.create("El documento solo debe llevar numeros");
-    } else{
+    } else if (direccion.value == "" || direccion.value.trim().length === 0) {
+        Notify.create("Se debe agregar una direccion del Empleado");
+    } else if (telefono.value == "") {
+        Notify.create("Se debe agregar un telefono del Empleado");
+    } else if (!validacionnumeros.test(telefono.value)) {
+        Notify.create("El telefono solo debe llevar numeros");
+    } else if (estudios.value == "" || estudios.value.trim().length === 0) {
+        Notify.create("Se debe agregar estudios del Empleado");
+    } else if (descripcion.value == "" || descripcion.value.trim().length === 0) {
+        Notify.create("Se debe agregar una descripcion del Empleado");
+    } else {
         agregarEmpleados()
         cerrar()
         Notify.create({
             type: "positive",
             message: "Empleado agregado exitosamente",
-        }); 
+        });
     }
 }
 
@@ -232,6 +244,110 @@ async function agregarEmpleados() {
     listarEmplados()
     console.log(r);
 
+}
+
+function traerEmpleados(empleado){
+    accion.value = 2
+    alert.value = true
+    id.value = empleado._id
+    nombre.value = empleado.nombre
+    correo.value = empleado.correo
+    documento.value = empleado.documento
+    direccion.value = empleado.direccion
+    telefono.value = empleado.telefono
+    estudios.value = empleado.estudios
+    descripcion.value = empleado.descripcion
+}
+
+function validarEdicionEmpleado() {
+    let validacionnumeros = /^[0-9]+$/;
+    let validacionCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (nombre.value == "" || nombre.value.trim().length === 0) {
+        Notify.create("Se debe agregar nombre del Empleado");
+    } else if (correo.value == "" || correo.value.trim().length === 0) {
+        Notify.create("Se debe agregar un correo de Usuario");
+    } else if (!validacionCorreo.test(correo.value)) {
+        Notify.create("El correo del usuario no es valido");
+    } else if (documento.value == "") {
+        Notify.create("Se debe agregar un documento de Usuario");
+    } else if (!validacionnumeros.test(documento.value)) {
+        Notify.create("El documento solo debe llevar numeros");
+    } else if (direccion.value == "" || direccion.value.trim().length === 0) {
+        Notify.create("Se debe agregar una direccion del Empleado");
+    } else if (telefono.value == "") {
+        Notify.create("Se debe agregar un telefono del Empleado");
+    } else if (!validacionnumeros.test(telefono.value)) {
+        Notify.create("El telefono solo debe llevar numeros");
+    } else if (estudios.value == "" || estudios.value.trim().length === 0) {
+        Notify.create("Se debe agregar estudios del Empleado");
+    } else if (descripcion.value == "" || descripcion.value.trim().length === 0) {
+        Notify.create("Se debe agregar una descripcion del Empleado");
+    } else {
+     
+        editarEmpleado()
+        cerrar()
+        Notify.create({
+            type: "positive",
+            message: "Empleado editado exitosamente",
+        });
+    }
+}
+
+
+async function editarEmpleado(){
+    try{
+        await useEmpleado.putEmpleado(id.value,{
+            nombre: nombre.value,
+            correo: correo.value,
+            documento: documento.value,
+            direccion: direccion.value,
+            telefono: telefono.value,
+            estudios: estudios.value,
+            descripcion: descripcion.value
+        })
+        listarEmplados()
+        limpiar()
+    }catch (error){
+        console.error('Error de Empleado', error);
+        Notify.create('Error al editar el Empleado')
+    }
+}
+
+async function habilitarEmpleado(empleado){
+    const res = await useEmpleado.putEmpleadoActivar(empleado._id)
+    .then((response) => {
+            console.log(response);
+            listarEmplados()
+        })
+
+        .catch((error) => {
+            console.error('Error de Empleado', error);
+            Notify.create('Error al habilitar el Empleado')
+        })
+   
+}
+
+async function deshabilitarEmpleado(empleado){
+    const res = await useEmpleado.putEmpleadoDesactivar(empleado._id)
+    .then((response) => {
+            console.log(response);
+            listarEmplados()
+        })
+
+        .catch((error) => {
+            console.error('Error de Empleado', error);
+            Notify.create('Error al deshabilitar el Empleado')
+        })
+}
+
+function limpiar() {
+    nombre.value = ""
+    correo.value = ""
+    documento.value = ""
+    direccion.value = ""
+    telefono.value = ""
+    estudios.value = ""
+    descripcion.value = ""
 }
 
 

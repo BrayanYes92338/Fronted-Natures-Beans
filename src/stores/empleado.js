@@ -4,15 +4,15 @@ import { Notify } from "quasar";
 import { ref } from "vue";
 import { useUsuarioStore } from "./usuario.js";
 
-export const useEmpleadoStore = defineStore('empleado', ()=>{
+export const useEmpleadoStore = defineStore('empleado', () => {
     let loading = ref(false);
     let empleados = ref([]);
-    const useUsuario = useUsuarioStore(); 
+    const useUsuario = useUsuarioStore();
 
-    const listarEmpleado = async ()=>{
-        try{
+    const listarEmpleado = async () => {
+        try {
             loading.value = true;
-            const response = await axios.get('api/empleado/listar',{
+            const response = await axios.get('api/empleado/listar', {
                 headers: {
                     token: useUsuario.token
                 }
@@ -20,15 +20,15 @@ export const useEmpleadoStore = defineStore('empleado', ()=>{
             empleados.value = response.data;
             return response;
 
-        }catch (error){
+        } catch (error) {
             console.error(' Error al obtener lista de Empleados:', error)
             throw error
-        }finally{
+        } finally {
             loading.value = false;
         }
     }
-    const postEmpleado = async (data)=>{
-        try{
+    const postEmpleado = async (data) => {
+        try {
             loading.value = true;
             let res = await axios.post('api/empleado/agregar', data, {
                 headers: {
@@ -36,9 +36,50 @@ export const useEmpleadoStore = defineStore('empleado', ()=>{
                 }
             })
             return res
-        }catch (error){
+        } catch (error) {
             loading.value = true
             console.log(error);
+            Notify.create({
+                type: "negative",
+                message: error.response.data.errors[0].msg,
+            });
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    const putEmpleado = async (id, data) => {
+        try {
+            loading.value = true;
+            const r = await axios.put(`api/empleado/editar/${id}`, data, {
+                headers: {
+                    token: useUsuario.token
+                }
+            })
+            return r
+        } catch (error) {
+            loading.value = true
+            console.log(error)
+            Notify.create({
+                type: "negative",
+                message: error.response.data.errors[0].msg,
+            });
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    const putEmpleadoActivar = async (id)=>{
+        try{
+            loading.value = true;
+            const r = await axios.put(`api/empleado/activar/${id}`, {}, {
+                headers: {
+                    token: useUsuario.token
+                }
+            })
+            return r
+        }catch (error){
+            loading.value = true;
             Notify.create({
                 type: "negative",
                 message: error.response.data.errors[0].msg,
@@ -48,7 +89,27 @@ export const useEmpleadoStore = defineStore('empleado', ()=>{
         }
     }
 
-    return{listarEmpleado,postEmpleado, loading, empleados}
-},{
-    persist: true, 
+    const putEmpleadoDesactivar = async (id)=>{
+        try{
+            loading.value = true;
+            const r = await axios.put(`api/empleado/desactivar/${id}`, {}, {
+                headers: {
+                    token: useUsuario.token
+                }
+            })
+            return r
+        }catch (error){
+            loading.value = true;
+            Notify.create({
+                type: "negative",
+                message: error.response.data.errors[0].msg,
+            });
+        }finally{
+            loading.value = false;
+        }
+    }
+
+    return { listarEmpleado, postEmpleado, putEmpleado, putEmpleadoActivar,putEmpleadoDesactivar, loading, empleados }
+}, {
+    persist: true,
 })

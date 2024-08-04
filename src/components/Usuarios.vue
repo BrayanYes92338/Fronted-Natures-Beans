@@ -159,6 +159,7 @@ function abrir() {
 
 function cerrar() {
     alert.value = false;
+    limpiar()
 }
 
 function cerrar2() {
@@ -357,6 +358,7 @@ async function editarUsuario() {
             municipio: municipio.value,
         })
         listarUsuarios()
+        limpiar()
     } catch (error) {
         console.error('Error al editar el Usuario', error);
         Notify.create('Error al editar el Usuario')

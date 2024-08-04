@@ -56,6 +56,8 @@
                 </q-card>
             </q-dialog>
         </div>
+
+        <!-- Tabla de limites de las fincas -->
         <div>
             <q-dialog v-model="modalLimite" persistent>
                 <q-card class="" style="width: 700px">
@@ -157,6 +159,7 @@ let departamento = ref("");
 let ciudad = ref("");
 let direccion = ref("");
 let ubicacion = ref("");
+let limites = ref([])
 let norte = ref("");
 let sur = ref("");
 let este = ref("");

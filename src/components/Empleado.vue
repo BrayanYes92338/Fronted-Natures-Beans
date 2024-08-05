@@ -25,7 +25,7 @@
                         maxlength="10" />
                     <q-input outlined v-model="estudios" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Estudios del Trabajador" type="text" />
-                        <q-select outlined v-model="descripcion " :options="['Agricultor','Meteorólogo','Téc de Mantenimiento', 'Gestor de Inventario', 'Coordinador de Riego','Operador de Maquinaria']" label="Seleccione el Rol del Trabajador"
+                        <q-select outlined v-model="descripcion" :options="['Agricultor','Meteorólogo','Téc de Mantenimiento', 'Gestor de Inventario', 'Coordinador de Riego','Operador de Maquinaria']" label="Seleccione el Rol del Trabajador"
                         class="q-my-md q-mx-md" />
                     <q-card-actions align="right">
                         <q-btn v-if="accion === 1" color="red" class="text-white" :loading="useEmpleado.loading"
@@ -90,7 +90,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { Notify } from 'quasar';
-import { useEmpleadoStore } from '../stores/empleado';
+import { useEmpleadoStore } from '../stores/empleado.js';
 
 const useEmpleado = useEmpleadoStore()
 

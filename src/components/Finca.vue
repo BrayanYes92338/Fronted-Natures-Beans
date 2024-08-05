@@ -358,7 +358,6 @@ function validarIngresoFincas() {
         Notify.create("Se debe agregar una Area de la Finca");
     } else {
         agregarFincas()
-        Limpiar()
         cerrar()
         Notify.create({
             type: "positive",

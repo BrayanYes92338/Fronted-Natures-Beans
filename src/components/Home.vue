@@ -46,9 +46,11 @@
             <i class="fas fa-truck"></i>Proveedor
           </router-link>
         </div>
-  <div    class="item">
+        <div    class="item">
           <router-link class="opciones" to="/parcela">
             <i class="fas fa-mountain"></i>Parcela
+          </router-link>
+          </div>  
         <div class="item">
           <router-link class="opciones" to="/clima">
             <i class="fas fa-cloud-sun"></i>Clima
@@ -191,7 +193,7 @@ const cerrarSesion = () => {
 }
 
 .btn-cerrar {
-  margin-top: 160px;
+  margin-top: 100px;
   text-align: center;
 }
 

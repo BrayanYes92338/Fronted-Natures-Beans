@@ -26,48 +26,7 @@ export const useParcelaStore = defineStore("parcela",()=>{
         } finally {
             loading.value = false;
         } 
-        }
-
-    const listarParcelaActiva = async () => {
-        try {
-            loading.value = true
-            let res = await axios.get("api/parcela/activas", {
-                headers: {
-                    token: useUsuario.token
-                }
-            })
-                parcela.value = res.data;
-                return res;
-    
-        } catch (error) {
-                console.error('Error al obtener la lista de parcelas activas', error);
-                throw error;
-    
-        } finally {
-                loading.value = false
-        }
-        }  
-
-        const listarParcelaInactiva = async () => {
-            try {
-                loading.value = true
-                let res = await axios.get("api/parcela/inactivas", {
-                    headers: {
-                        token: useUsuario.token
-                    }
-                })
-                parcela.value = res.data;
-                return res;
-    
-            } catch (error) {
-                console.error('Error al obtener la lista de Parcelas inactivas', error);
-                throw error;
-    
-            } finally {
-                loading.value = false
-            }
-        } 
-        
+        }       
 
     const postParcela = async (data) => {
     try {
@@ -116,7 +75,7 @@ export const useParcelaStore = defineStore("parcela",()=>{
     const putParcelaActiva = async (id) => {
         try {
             loading.value = true;
-            let r = await axios.put(`api/parcela/activar/${id}`, {}, {
+            let r = await axios.put(`/api/parcela/activar/${id}`, {}, {
                 headers: {
                     token: useUsuario.token
                 }
@@ -157,7 +116,7 @@ export const useParcelaStore = defineStore("parcela",()=>{
         }
     }
 
-    return { listarParcela, listarParcelaActiva, listarParcelaInactiva, postParcela, putParcela, putParcelaActiva, putParcelaInactiva, loading, parcela }
+    return { listarParcela,  postParcela, putParcela, putParcelaActiva, putParcelaInactiva, loading, parcela }
 
 },
 

@@ -33,7 +33,7 @@
                        </q-item>
                        </template>
                    </q-select>
-                   <q-input outlined v-model=" tipoClima" use-input hide-selected fill-input input-debounce="0"
+                   <q-input outlined v-model="tipoClima" use-input hide-selected fill-input input-debounce="0"
                        class="q-my-md q-mx-md" label="Nombre del  tipo de Clima" type="text" />
                    <q-input outlined v-model="horaInicio" use-input hide-selected fill-input input-debounce="0"
                        class="q-my-md q-mx-md" label="hora de Inicio" type="text" />    

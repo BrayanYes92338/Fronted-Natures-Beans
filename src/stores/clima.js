@@ -47,7 +47,28 @@ export const useClimaStore = defineStore('clima', () => {
         }
     }
 
-    return { listarClimas, postClimas, loading, climas }
+
+    const putClimas = async (id, data) => {
+        try {
+            loading.value = true;
+            let r = await axios.put(`api/clima/editar/${id}`, data, {
+                headers: {
+                    token: useUsuario.token
+                }
+            });
+            return r;
+        } catch (error){
+            loading.value = true
+            console.log(error);
+            Notify.create({
+                type: "negative",
+                message: error.res.data.errors[0].msg,
+            });
+        }finally{
+            loading.value = false;
+        }
+    };
+    return { listarClimas, postClimas, putClimas, loading, climas }
 
 }, {
     persist: true

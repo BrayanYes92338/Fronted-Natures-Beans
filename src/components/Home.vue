@@ -48,7 +48,7 @@
         </div>
         <div    class="item">
           <router-link class="opciones" to="/parcela">
-            <i class="fas fa-mountain"></i>Parcela
+            <i class="fas fa-tree"></i>Parcela
           </router-link>
           </div>  
         <div class="item">
@@ -59,7 +59,11 @@
         <div class="item">
           <router-link class="opciones" to="/empleado">
             <i class="fas fa-users"></i>Empleados
-
+          </router-link>
+        </div>
+        <div class="item">
+          <router-link class="opciones" to="/cultivo">
+            <i class="fas fa-seedling"></i>Cultivos
           </router-link>
         </div>
       </div>

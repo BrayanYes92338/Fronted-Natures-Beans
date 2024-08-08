@@ -125,6 +125,7 @@ function abrir() {
 
 function cerrar() {
    alert.value = false;
+   Limpiar()
 }
 
 

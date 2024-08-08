@@ -175,10 +175,13 @@ function abrir() {
 
 function cerrar() {
     alert.value = false;
+    Limpiar()
 }
 
 function cerrar2() {
     modalLimite.value = false;
+        Limpiar()
+
 }
 
 function abrirLimites() {

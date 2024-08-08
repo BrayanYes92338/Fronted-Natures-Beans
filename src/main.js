@@ -12,8 +12,8 @@ import FloatingVue from 'floating-vue'
 import 'floating-vue/dist/style.css'
 import './style.css'
 
-axios.defaults.baseURL = "https://accurate-gleaming-morocco.glitch.me/"
-// axios.defaults.baseURL = "http://localhost:4500/"
+// axios.defaults.baseURL = "https://accurate-gleaming-morocco.glitch.me/"
+axios.defaults.baseURL = "http://localhost:4500/"
 
 let requestsPending = 0;
 

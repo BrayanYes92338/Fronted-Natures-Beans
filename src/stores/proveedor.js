@@ -79,10 +79,7 @@ export const useProveedorStore = defineStore("proveedor",()=>{
     } catch (error){
         loading.value = true
         console.log(error);
-        Notify.create({
-            type: "negative",
-            message: error.res.data.errors[0].msg,
-        });
+        throw error;
     }finally{
         loading.value = false;
     }

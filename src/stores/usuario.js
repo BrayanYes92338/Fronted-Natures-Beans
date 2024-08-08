@@ -57,11 +57,12 @@ export const useUsuarioStore = defineStore("usuario", () => {
         } catch (error) {
             loading.value = true
             console.log(error)
-            Notify.create({
-                type: "negative",
-                message: error.response.data.errors[0].msg,
-            });
-            return error;
+        // Notify.create({
+        //     type: "negative",
+        //     message: error.response.data.errors[0].msg,
+        // });
+            throw error; 
+
         } finally {
             loading.value = false
 

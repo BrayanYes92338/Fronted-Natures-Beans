@@ -10,6 +10,7 @@ import Clima from "../components/Clima.vue";
 import Empleado from "../components/Empleado.vue";
 import Parcela from "../components/Parcelas.vue";
 import Cultivo from "../components/Cultivo.vue";
+import CambioContra from "../components/CambioContra.vue";
 
 
 const auth = (to, from, next) => {
@@ -37,9 +38,7 @@ const checkAuth = () => {
 };
 
 const routes = [
-    {
-        path: "/", name: "login", component: Login
-    },
+    { path: "/", name: "login", component: Login },
     {
         path: "/home", component: Home, beforeEnter: auth, children: [
             { path: "/menu", component: Menu, beforeEnter: auth },
@@ -47,11 +46,12 @@ const routes = [
             { path: "/finca", component: Finca, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/proveedor", component: Proveedor, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/clima", component: Clima, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
-            { path: "/empleado", component: Empleado,  beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] }},
+            { path: "/empleado", component: Empleado, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] }},
             { path: "/parcela", component: Parcela, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/cultivo", component: Cultivo, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
         ]
     },
+    { path: "/actualizar", component: CambioContra } 
 ];
 
 export const router = createRouter({

@@ -1,130 +1,146 @@
 <template>
-    <div class="contenedor1">
-      <div class="carousel-container">
-        <q-carousel 
-          class="responsive-carousel" 
-          animated 
-          v-model="slide" 
-          navigation 
-          infinite 
-          :autoplay="autoplay" 
-          arrows 
-          transition-prev="slide-right" 
-          transition-next="slide-left" 
-          @mouseenter="pauseAutoplay" 
-          @mouseleave="resumeAutoplay"
-        >
-          <q-img class="carousel-image" :name="1" src="../img/fondo1.jpg" loading="lazy"></q-img>
-          <q-img class="carousel-image" :name="2" src="../img/fondo2.jpg" loading="lazy"></q-img>
-        </q-carousel>
-      </div>
-      <div class="wrapper">
-        <div class="from-box login text-center">
-          <img src="../img/Nature Beans Logo v5.png" alt="" class="logo1">
-          <h2>INGRESAR</h2>
-          <q-form @submit="Login2">
-            <q-input 
-              class="q-mt-sm" 
-              outlined 
-              v-model="documento" 
-              label="Documento de Identidad" 
-              lazy-rules 
-              :rules="[val => val && val.length > 0 || 'Por favor ingresa tu Número de Documento']"
-            />
-            <q-input 
-              outlined 
-              class="q-mt-md" 
-              v-model="passwordLogin" 
-              label="Contraseña" 
-              :type="isPwd ? 'password' : 'text'" 
-              :rules="[val => val !== null && val !== '' || 'Por favor ingresa tu contraseña']"
-            >
-              <template v-slot:append>
-                <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
-              </template>
-            </q-input>
-            <div class="remember-forgot">
-              <div class="q-pa-md q-gutter-sm">
-                <q-dialog v-model="dialog" persistent transition-show="slide-up" transition-hide="slide-down">
-                  <q-card class="custom-modal-bg" style="width: 1100px;">
-                    <q-bar>
-                      <q-space />
-                      <q-btn dense flat icon="close" @click="cerrar">
-                        <q-tooltip class="bg-white text-primary">Cerrar</q-tooltip>
-                      </q-btn>
-                    </q-bar>
-                    <q-card-section>
-                      <div class="text-h6">INGRESE CORREO</div>
-                    </q-card-section>
-                    <q-card-section class="q-pt-none">
-                      <p>Por favor ingresar el Correo Electronico para iniciar el proceso de cambio de contraseña.</p>
-                      <q-input 
-                        class="q-mt-sm" 
-                        outlined 
-                        v-model="correo" 
-                        label="Correo electronico" 
-                        lazy-rules 
-                        :rules="[val => val && val.length > 0 || 'Por favor ingresa tu correo']"
-                      />
-                      <button class="btn" @click="usuarioPutPassword()">Enviar</button>
-                    </q-card-section>
-                  </q-card>
-                </q-dialog>
-              </div>
+  <div class="contenedor1">
+    <div class="carousel-container">
+      <q-carousel class="responsive-carousel" animated v-model="slide" navigation infinite :autoplay="autoplay" arrows
+        transition-prev="slide-right" transition-next="slide-left" @mouseenter="pauseAutoplay"
+        @mouseleave="resumeAutoplay">
+        <q-img class="carousel-image" :name="1" src="../img/fondo1.jpg" loading="lazy"></q-img>
+        <q-img class="carousel-image" :name="2" src="../img/fondo2.jpg" loading="lazy"></q-img>
+      </q-carousel>
+    </div>
+    <div class="wrapper">
+      <div class="from-box login text-center">
+        <img src="../img/Nature Beans Logo v5.png" alt="" class="logo1">
+        <h2>INGRESAR</h2>
+        <q-form @submit="Login2">
+          <q-input class="q-mt-sm" outlined v-model="documento" label="Documento de Identidad" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor ingresa tu Número de Documento']" />
+          <q-input outlined class="q-mt-md" v-model="passwordLogin" label="Contraseña"
+            :type="isPwd ? 'password' : 'text'"
+            :rules="[val => val !== null && val !== '' || 'Por favor ingresa tu contraseña']">
+            <template v-slot:append>
+              <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
+            </template>
+          </q-input>
+          <div class="remember-forgot">
+            <div class="q-pa-md q-gutter-sm">
+              <q-dialog v-model="dialog" persistent transition-show="slide-up" transition-hide="slide-down">
+                <q-card class="custom-modal-bg" style="width: 1200px !important;">
+                  <q-bar class="hola">
+                    <q-space />
+                    <q-btn dense flat icon="close" @click="cerrar">
+                      <q-tooltip class="bg-white text-primary">Cerrar</q-tooltip>
+                    </q-btn>
+                  </q-bar>
+                  <q-card-section class="text-center">
+                    <img src="../img/Nature Beans Logo v3.png" alt="" class="logito">
+                    <div class="text-h6">INGRESE CORREO</div>
+                  </q-card-section>
+                  <q-card-section class="q-pt-none">
+                    <p>Por favor ingresar el Correo Electronico para iniciar el proceso de cambio de contraseña.</p>
+                    <q-input class="q-mt-sm" outlined v-model="correo" label="Correo electronico" lazy-rules
+                      :rules="[val => val && val.length > 0 || 'Por favor ingresa tu correo']" />
+                    <button class="btn" @click="ActualizarContra()">Enviar</button>
+                  </q-card-section>
+                </q-card>
+              </q-dialog>
             </div>
-            <button class="btn" type="submit">Ingresar</button>
-          </q-form>
-          <button @click="dialog = true"><a>¿Olvidaste tu contraseña?</a></button>
-        </div>
+          </div>
+          <button class="btn" type="submit">Ingresar</button>
+        </q-form>
+        <button @click="dialog = true"><a>¿Olvidaste tu contraseña?</a></button>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
-  import { useUsuarioStore } from '../stores/usuario.js';
-  import { useRouter } from "vue-router";
-  import { Notify } from 'quasar';
-  
-  const router = useRouter();
-  const dialog = ref(false);
-  let useUsuario = useUsuarioStore();
-  let documento = ref('');
-  let passwordLogin = ref("");
-  let isPwd = ref(true);
-  let slide = ref(1);
-  let autoplay = ref(true);
-  
-  function cerrar() {
-    dialog.value = false;
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { useUsuarioStore } from '../stores/usuario.js';
+import { useRouter } from "vue-router";
+import { Notify } from 'quasar';
+
+const router = useRouter();
+const dialog = ref(false);
+let useUsuario = useUsuarioStore();
+let documento = ref('');
+let passwordLogin = ref("");
+let isPwd = ref(true);
+let slide = ref(1);
+let autoplay = ref(true);
+let correo = ref("");
+
+function cerrar() {
+  dialog.value = false;
+}
+
+async function Login2() {
+  try {
+    const res = await useUsuario.Login({
+      documento: documento.value,
+      password: passwordLogin.value
+    });
+    useUsuario.token = res.data.token;
+    useUsuario.user = res.data.usuario;
+    console.log(res);
+    router.push('/menu');
+  } catch (error) {
+    console.log(error);
   }
-  
-  async function Login2() {
-    try {
-      const res = await useUsuario.Login({
-        documento: documento.value,
-        password: passwordLogin.value
+}
+
+function pauseAutoplay() {
+  autoplay.value = false;
+}
+
+function resumeAutoplay() {
+  autoplay.value = 15000;
+}
+
+async function ActualizarContra() {
+  try {
+    if (!correo.value) {
+      Notify.create({
+        message: "Por favor ingrese un correo",
+        position: "top",
+        color: 'red',
+        timeout: 4000
       });
-      useUsuario.token = res.data.token;
-      useUsuario.user = res.data.usuario;
-      console.log(res);
-      router.push('/menu');
-    } catch (error) {
-      console.log(error);
+    } else {
+      const res = await useUsuario.usuarioGetEmail(correo.value);
+      if (res.data.usuario) {
+        const ress = await useUsuario.enviarCorreo(correo.value);
+        console.log(ress);
+
+        Notify.create({
+          message: "El correo ha sido enviado exitosamente",
+          position: "top",
+          color: 'green',
+          timeout: 4000
+        });
+        dialog.value = false;
+        limpiar();
+      } else {
+        Notify.create({
+          message: "El correo no es válido",
+          position: "top",
+          color: 'red',
+          timeout: 4000
+        });
+      }
+
     }
+  } catch (error) {
+    console.log(error);
   }
-  
-  function pauseAutoplay() {
-    autoplay.value = false;
-  }
-  
-  function resumeAutoplay() {
-    autoplay.value = 15000;
-  }
-  </script>
+}
+
+function limpiar() {
+  correo.value = ""
+}
+
+</script>
 <style>
-
-
 .logo1 {
   width: 280px;
   height: 130px;
@@ -173,16 +189,16 @@ a {
 }
 
 .wrapper {
-    position: relative;
-    width: 25%;
-    height: 100%;
-    background: #F3F3F3;
-    border: solid 2px rgba(255, 255, 255, .5);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 30px rgba(0, 0, 0, .5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: relative;
+  width: 25%;
+  height: 100%;
+  background: #F3F3F3;
+  border: solid 2px rgba(255, 255, 255, .5);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
 }
 
@@ -302,102 +318,116 @@ a {
   text-decoration: underline;
 }
 
-@media(max-width: 1240px)
-{
+.hola {
+  background: none !important;
+  color: gray;
+}
+
+.text-h6{
+  margin-top: 30px;
+  font-size: 30px !important;
+}
+
+.logito {
+  width: 100px;
+  height: 100px;
+  display: block;
+  margin: 0 auto;
+}
+
+.text-center {
+  text-align: center;
+}
+
+@media(max-width: 1240px) {
   .wrapper {
-     
-      width: 30%;
-     
+
+    width: 30%;
+
   }
 }
 
-@media(max-width: 905px)
-{
+@media(max-width: 905px) {
   .wrapper {
-     
-      width: 40%;
+
+    width: 40%;
   }
+
   .logo1 {
-      width: 250px;
-      height: 130px;
+    width: 250px;
+    height: 130px;
   }
 }
 
-@media(max-width: 725px)
-{
+@media(max-width: 725px) {
 
   .logo1 {
-      width: 220px;
-      height: 130px;
+    width: 220px;
+    height: 130px;
   }
-  
+
 }
-@media(max-width: 650px)
-{
+
+@media(max-width: 650px) {
 
   .logo1 {
-      width: 150px;
-      height: 130px;
+    width: 150px;
+    height: 130px;
   }
-  
+
 }
 
-@media(max-width: 535px)
-{
+@media(max-width: 535px) {
 
   h2 {
-      font-size: medium;
+    font-size: medium;
   }
-  
+
 }
 
 
-@media(max-width: 1240px)
-{
-    .wrapper {
-       
-        width: 30%;
-       
-    }
+@media(max-width: 1240px) {
+  .wrapper {
+
+    width: 30%;
+
+  }
 }
 
-@media(max-width: 905px)
-{
-    .wrapper {
-       
-        width: 40%;
-    }
-    .logo1 {
-        width: 250px;
-        height: 130px;
-    }
+@media(max-width: 905px) {
+  .wrapper {
+
+    width: 40%;
+  }
+
+  .logo1 {
+    width: 250px;
+    height: 130px;
+  }
 }
 
-@media(max-width: 725px)
-{
-  
-    .logo1 {
-        width: 220px;
-        height: 130px;
-    }
-    
-}
-@media(max-width: 650px)
-{
-  
-    .logo1 {
-        width: 150px;
-        height: 130px;
-    }
-    
+@media(max-width: 725px) {
+
+  .logo1 {
+    width: 220px;
+    height: 130px;
+  }
+
 }
 
-@media(max-width: 535px)
-{
-  
-    h2 {
-        font-size: medium;
-    }
+@media(max-width: 650px) {
+
+  .logo1 {
+    width: 150px;
+    height: 130px;
+  }
+
 }
 
+@media(max-width: 535px) {
+
+  h2 {
+    font-size: medium;
+  }
+}
 </style>

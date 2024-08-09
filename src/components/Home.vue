@@ -2,7 +2,7 @@
   <q-layout view="hHh lpR fFf">
     <q-header reveal elevated class="bg-primary text-white colorheader" height-hint="98">
       <q-toolbar>
-        <q-btn v-if="useUsuario.token" dense flat round icon="menu" @click="toggleLeftDrawer" />    
+        <q-btn v-if="useUsuario.token" dense flat round icon="menu" @click="toggleLeftDrawer" />
         <!-- Rol del usuario -->
         <q-toolbar-title class="toolbar-title">
           <p class="rol-user">{{ usuario.nombre }}</p>
@@ -22,7 +22,7 @@
       <header class="header">
         <div class="fondoimagen">
           <img src="../img/user.jpg" alt="" class="perfil-prueba">
-          <p class="name-user">{{ usuario.rol}}</p>
+          <p class="name-user">{{ usuario.rol }}</p>
         </div>
       </header>
       <div class="menu">
@@ -36,7 +36,7 @@
             <i class="fas fa-user"></i> Usuario
           </router-link>
         </div>
-        <div    class="item">
+        <div class="item">
           <router-link class="opciones" to="/finca">
             <i class="fas fa-home"></i>Fincas
           </router-link>
@@ -46,11 +46,11 @@
             <i class="fas fa-truck"></i>Proveedor
           </router-link>
         </div>
-        <div    class="item">
+        <div class="item">
           <router-link class="opciones" to="/parcela">
             <i class="fas fa-tree"></i>Parcela
           </router-link>
-          </div>  
+        </div>
         <div class="item">
           <router-link class="opciones" to="/clima">
             <i class="fas fa-cloud-sun"></i>Clima
@@ -114,13 +114,13 @@ const cerrarSesion = () => {
 .header {
   width: 100%;
   height: 190px;
-  position: relative; 
+  position: relative;
 }
 
 .fondoimagen {
   background-image: url('../img/Boceto.png');
-  background-size: cover; 
-  background-position: center; 
+  background-size: cover;
+  background-position: center;
   width: 100%;
   height: 190px;
   position: relative;
@@ -130,10 +130,10 @@ const cerrarSesion = () => {
 .perfil-prueba {
   height: 100px;
   width: 100px;
-  position: absolute; 
-  top: 20px; 
-  left: 50%; 
-  transform: translateX(-50%); 
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   border: #e9c62d solid 3px;
   border-radius: 50%;
 }
@@ -143,14 +143,14 @@ const cerrarSesion = () => {
   font-size: 18px;
   text-align: center;
   font-weight: bold;
-  position: absolute; 
-  top: 130px; 
-  left: 50%; 
-  text-shadow: 
-    -2px -2px 0 #000, 
-     2px -2px 0 #000, 
-    -2px  2px 0 #000, 
-     2px  2px 0 #000;
+  position: absolute;
+  top: 130px;
+  left: 50%;
+  text-shadow:
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000;
   transform: translateX(-50%);
 }
 
@@ -188,7 +188,7 @@ const cerrarSesion = () => {
 
 .rol-user {
   margin-top: 15px;
- 
+
 }
 
 .titulo-footer {
@@ -219,29 +219,29 @@ const cerrarSesion = () => {
 }
 
 .home-icon {
-  margin-left: 16px; 
+  margin-left: 16px;
 }
 
 .home-btn {
-  color: white; 
-  font-size: 24px; 
+  color: white;
+  font-size: 24px;
 }
 
 .separator {
-  margin: 0 18px; 
-  color: white; 
-  font-size: 28px; 
+  margin: 0 18px;
+  color: white;
+  font-size: 28px;
 }
 
 .toolbar-title {
   margin-left: 16px;
 }
-@media(max-width: 1366px)
-{
-  
+
+@media(max-width: 1366px) {
+
   .cerrar-sesion {
-        margin-bottom: 30%;
-}
+    margin-bottom: 30%;
+  }
 
 }
 </style>

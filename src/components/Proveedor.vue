@@ -1,9 +1,7 @@
 <template>
   <div>
     <div style="margin-left: 5%; text-align: end; margin-right: 5%">
-      <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()"
-        >Registrar proveedor</q-btn
-      >
+      <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar proveedor</q-btn>
       <!-- AQUI VA EL SELECT -->
       <!-- <q-select outlined v-model="listar" :options="['LISTAR TODO', 'LISTAR ACTIVOS', 'LISTAR INACTIVOS']" label="LISTAR"
             class="q-my-md q-mx-md"/> -->
@@ -11,81 +9,31 @@
     <div>
       <q-dialog v-model="alert" persistent>
         <q-card class="" style="width: 700px">
-          <q-card-section
-            style="background-color: #009b44; margin-bottom: 20px"
-          >
+          <q-card-section style="background-color: #009b44; margin-bottom: 20px">
             <div class="text-h6 text-white">
               {{
                 accion == 1 ? "Agregar Proveedor" : "Editar Provedor " + nombreF
               }}
             </div>
           </q-card-section>
-          <q-input
-            outlined
-            v-model="nombre"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Nombre del proveedor"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="direccion"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Direccion del proveedor"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="telefono"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="telefono del proveedor"
-            type="tel"
-            required
-            pattern="[0-9]+"
-            maxlength="10"
-          />
-          <q-input
-            outlined
-            v-model="correo"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Correo del proveedor"
-            type="email"
-          />
+          <q-input outlined v-model="nombre" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Nombre del proveedor" type="text" />
+          <q-input outlined v-model="direccion" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Direccion del proveedor" type="text" />
+          <q-input outlined v-model="telefono" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="telefono del proveedor" type="tel" required pattern="[0-9]+"
+            maxlength="10" />
+          <q-input outlined v-model="correo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Correo del proveedor" type="email" />
           <q-card-actions align="right">
-            <q-btn
-              v-if="accion === 1"
-              @click="validarProveedor()"
-              color="red"
-              class="text-white"
-              :loading="useProveedor.loading"
-              >Agregar
+            <q-btn v-if="accion === 1" @click="validarProveedor()" color="red" class="text-white"
+              :loading="useProveedor.loading">Agregar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
               </template>
             </q-btn>
-            <q-btn
-              v-if="accion !== 1"
-              @click="validarEdicionProveedor()"
-              color="red"
-              class="text-white"
-              :loading="useProveedor.loading"
-            >
+            <q-btn v-if="accion !== 1" @click="validarEdicionProveedor()" color="red" class="text-white"
+              :loading="useProveedor.loading">
               Editar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -98,15 +46,9 @@
     </div>
 
     <div style="display: flex; justify-content: center">
-      <q-table
-        title="Proveedores"
-        title-class="text-red text-weight-bolder text-h4"
-        table-header-class="text-black font-weight-bold"
-        :rows="rows"
-        :columns="columns"
-        row-key="name"
-        style="width: 90%"
-      >
+      <q-table title="Proveedores" title-class="text-red text-weight-bolder text-h4"
+        table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
+        style="width: 90%">
         <template v-slot:body-cell-estado="props">
           <q-td :props="props">
             <p style="color: green" v-if="props.row.estado == 1">Activo</p>
@@ -119,24 +61,13 @@
               <!-- boton de editar -->
               <q-btn color="primary" @click="traerProveedor(props.row)">
                 <q-tooltip> Editar </q-tooltip>
-                <i class="fas fa-pencil-alt"> </i
-              ></q-btn>
+                <i class="fas fa-pencil-alt"> </i></q-btn>
               <!-- botons de activado y desactivado -->
-              <q-btn
-                v-if="props.row.estado == 1"
-                @click="deshabilitarProveedor(props.row)"
-                color="negative"
-              >
+              <q-btn v-if="props.row.estado == 1" @click="deshabilitarProveedor(props.row)" color="negative">
                 <q-tooltip> Desactivar </q-tooltip>
-                <i class="fas fa-times"> </i
-              ></q-btn>
-              <q-btn
-                v-else
-                color="positive"
-                @click="habilitarProveedor(props.row)"
-              >
-                <q-tooltip> Activar </q-tooltip><i class="fas fa-check"> </i
-              ></q-btn>
+                <i class="fas fa-times"> </i></q-btn>
+              <q-btn v-else color="positive" @click="habilitarProveedor(props.row)">
+                <q-tooltip> Activar </q-tooltip><i class="fas fa-check"> </i></q-btn>
             </div>
           </q-td>
         </template>
@@ -270,7 +201,7 @@ async function validarProveedor() {
         message: "Proveedor agregado exitosamente",
       });
     }
-  }catch (error) {
+  } catch (error) {
     console.error("Error al agregar el Proveedor:", error);
     Notify.create({
       type: "negative",

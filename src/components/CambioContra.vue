@@ -2,7 +2,7 @@
   <q-layout view="hHh lpR fFf">
     <q-header elevated class="bg-primary text-white colorheader" height-hint="98">
       <q-toolbar>
-        <q-btn v-if="useUsuario.token" dense flat round icon="menu" @click="toggleLeftDrawer" />
+        <!-- <q-btn v-if="useUsuario.token" dense flat round icon="menu" @click="toggleLeftDrawer" /> -->
         <q-toolbar-title class="toolbar-title"></q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -172,4 +172,16 @@ function cambiar() {
   font-size: 15px;
   text-align: right;
 }
+
+@media(max-width: 1370px){
+   
+  .form {
+    padding: 30px 30px;
+    margin-bottom: 80px;
+    width: 400px;
+   
+  }
+}
+
+
 </style>

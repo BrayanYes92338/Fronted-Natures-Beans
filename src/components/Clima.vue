@@ -194,7 +194,19 @@ const columns = ref([
        label: 'Fecha',
        align: 'center',
        field: 'createAt',
-       sortable: true
+       sortable: true,
+       format: (val) => {
+    const fechaIngreso = new Date(val);
+    return fechaIngreso.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }) + ' ' + fechaIngreso.toLocaleTimeString("en-GB", {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+  },
    },
    {
        name: 'opciones',

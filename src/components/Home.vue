@@ -66,6 +66,11 @@
             <i class="fas fa-seedling"></i>Cultivos
           </router-link>
         </div>
+        <div class="item">
+          <router-link class="opciones" to="/riego">
+            <i class="fas fa-tint"></i>Riego
+          </router-link>
+        </div>
       </div>
       <div class="btn-cerrar">
         <button class="cerrar-sesion" @click="cerrarSesion()">

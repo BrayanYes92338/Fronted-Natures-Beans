@@ -1,9 +1,9 @@
 <template>
   <div class="contenedor1">
     <div class="carousel-container">
-      <q-carousel class="responsive-carousel" animated v-model="slide" navigation infinite :autoplay="autoplay" arrows
+      <q-carousel class="responsive-carousel" animated v-model="slide" infinite :autoplay="autoplay"
         transition-prev="slide-right" transition-next="slide-left" @mouseenter="pauseAutoplay"
-        @mouseleave="resumeAutoplay">
+        @mouseleave="resumeAutoplay" navigation>
         <q-img class="carousel-image" :name="1" src="../img/fondo1.jpg" loading="lazy"></q-img>
         <q-img class="carousel-image" :name="2" src="../img/fondo2.jpg" loading="lazy"></q-img>
       </q-carousel>
@@ -323,7 +323,7 @@ a {
   color: gray;
 }
 
-.text-h6{
+.text-h6 {
   margin-top: 30px;
   font-size: 30px !important;
 }

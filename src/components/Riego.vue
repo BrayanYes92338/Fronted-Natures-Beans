@@ -1,7 +1,8 @@
 <template>
   <div>
     <div style="margin-left: 5%; text-align: end; margin-right: 5%">
-      <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Riego</q-btn>
+      <q-btn style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar
+        Riego</q-btn>
     </div>
     <div>
       <q-dialog v-model="alert" persistent>
@@ -11,127 +12,43 @@
               {{ accion == 1 ? "Agregar Riego" : "Editar Riego " }}
             </div>
           </q-card-section>
-          <q-select
-            outlined
-            v-model="idCultivo"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            :options="options"
-            @filter="filterFn"
-            label="Seleccionar  el cultivo"
-          >
+          <q-select outlined v-model="idCultivo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="options" @filter="filterFn" label="Seleccionar  el cultivo">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> Sin resultados </q-item-section>
               </q-item>
             </template>
           </q-select>
-          <q-select
-            outlined
-            v-model="idEmpleado"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            :options="opciones"
-            @filter="filtrarFn"
-            label="Selecciona el Empleado"
-          >
+          <q-select outlined v-model="idEmpleado" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opciones" @filter="filtrarFn" label="Selecciona el Empleado">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> Sin resultados </q-item-section>
               </q-item>
             </template>
           </q-select>
-          <q-input
-            outlined
-            v-model="diasTransplante"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="dias de Transplante"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="estadoFenológico"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="estado Fenológico"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="horaInicio"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="hora Inicio"
-            type="time"
-          />
-          <q-input
-            outlined
-            v-model="horaFin"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="hora Fin"
-            type="time"
-          />
-          <q-input
-            outlined
-            v-model="dosis"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="dosis (litro/hora)"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="cantidadAgua"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="cantidad de Agua"
-            type="text"
-          />
+          <q-input outlined v-model="diasTransplante" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="dias de Transplante" type="text" />
+          <q-select outlined v-model="estadoFenológico" :options="['Germinación', 'Emergencia', 'Crecimiento Vegetativo', 'Desarrollo de Yemas/Floración', 'Fructificación','Maduración', 'Cosecha','Senescencia', 'Dormancia (en algunos cultivos)']" label="Seleccione el Estado Fenológico"
+            class="q-my-md q-mx-md" />
+          <q-input outlined v-model="horaInicio" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="hora Inicio" type="time" />
+          <q-input outlined v-model="horaFin" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="hora Fin" type="time" />
+          <q-input outlined v-model="dosis" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="dosis (litro/hora)" type="tel" />
+          <q-input outlined v-model="cantidadAgua" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="cantidad de Agua" type="tel" />
           <q-card-actions align="right">
-            <q-btn
-              v-if="accion === 1"
-              @click="validarIngresoRiego()"
-              color="red"
-              class="text-white"
-              :loading="useRiego.loading"
-              >Agregar
+            <q-btn v-if="accion === 1" @click="validarIngresoRiego()" color="red" class="text-white"
+              :loading="useRiego.loading">Agregar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
               </template>
             </q-btn>
-            <q-btn
-              v-if="accion !== 1"
-              @click="validarEdicionRiego()"
-              color="red"
-              class="text-white"
-              :loading="useRiego.loading"
-            >
+            <q-btn v-if="accion !== 1" @click="validarEdicionRiego()" color="red" class="text-white"
+              :loading="useRiego.loading">
               Editar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -144,28 +61,22 @@
     </div>
 
     <div style="display: flex; justify-content: center">
-      <q-table
-        title="Riegos"
-        title-class="text-red text-weight-bolder text-h4"
-        table-header-class="text-black font-weight-bold"
-        :rows="rows"
-        :columns="columns"
-        row-key="name"
-        style="width: 90%"
-      >
+      <q-table title="Riegos" title-class="text-green text-weight-bolder text-h4"
+        table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
+        style="width: 90%">
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props">
             <div style="display: flex; gap: 15px; justify-content: center">
               <!-- boton de editar -->
               <q-btn color="primary" @click="traerRiego(props.row)">
                 <q-tooltip> Editar </q-tooltip>
-                <i class="fas fa-pencil-alt"> </i
-              ></q-btn>
+                <i class="fas fa-pencil-alt"> </i></q-btn>
             </div>
           </q-td>
         </template>
       </q-table>
     </div>
+
   </div>
 </template>
 
@@ -187,7 +98,7 @@ let id = ref("");
 let accion = ref(1);
 let idCultivo = ref("");
 let idEmpleado = ref("");
-//  let fechaRiego = ref("");
+let fechaRiego = ref("");
 let diasTransplante = ref("");
 let estadoFenológico = ref("");
 let horaInicio = ref("");
@@ -223,30 +134,34 @@ const columns = ref([
     sortable: true,
   },
   {
-  name: "fechaRiego",
-  required: true,
-  label: "fecha de Riego",
-  align: "center",
-  field: "fechaRiego",
-  sortable: true,
-  format: (val) => {
-    const fechaIngreso = new Date(val);
-    return fechaIngreso.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    }) + ' ' + fechaIngreso.toLocaleTimeString("en-GB", {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    });
+    name: "fechaRiego",
+    required: true,
+    label: "Fecha de Riego",
+    align: "center",
+    field: "fechaRiego",
+    sortable: true,
+    format: (val) => {
+      if (!val) return '';
+
+      const fechaIngreso = new Date(val);
+      const fechaColombia = new Date(fechaIngreso.toLocaleString("en-US", { timeZone: "America/Bogota" }));
+
+      return fechaColombia.toLocaleDateString("es-CO", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }) + ' ' + fechaColombia.toLocaleTimeString("es-CO", {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    },
   },
-},
+
 
   {
     name: "diasTransplante",
     required: true,
-    label: "dias de Transplante",
+    label: "Días de Transplante",
     align: "center",
     field: "diasTransplante",
     sortable: true,
@@ -254,7 +169,7 @@ const columns = ref([
   {
     name: "estadoFenológico",
     required: true,
-    label: "estado Fenológico",
+    label: "Estado Fenológico",
     align: "center",
     field: "estadoFenológico",
     sortable: true,
@@ -262,35 +177,73 @@ const columns = ref([
   {
     name: "horaInicio",
     required: true,
-    label: "hora Inicio",
+    label: "Hora Inicio",
     align: "center",
     field: "horaInicio",
     sortable: true,
+    format: (val) => {
+      try {
+        // Aquí asumimos que val es solo la hora en formato "HH:mm"
+        const [hours, minutes] = val.split(":");
+        const date = new Date();
+        date.setHours(parseInt(hours));
+        date.setMinutes(parseInt(minutes));
+
+        return date.toLocaleTimeString("es-CO", {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        });
+      } catch (error) {
+        console.error("Error formateando la hora de inicio:", error);
+        return "Hora inválida";
+      }
+    }
   },
   {
     name: "horaFin",
     required: true,
-    label: "hora Final",
+    label: "Hora Final",
     align: "center",
     field: "horaFin",
     sortable: true,
+    format: (val) => {
+      try {
+        const [hours, minutes] = val.split(":");
+        const date = new Date();
+        date.setHours(parseInt(hours));
+        date.setMinutes(parseInt(minutes));
+
+        return date.toLocaleTimeString("es-CO", {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        });
+      } catch (error) {
+        console.error("Error formateando la hora final:", error);
+        return "Hora inválida";
+      }
+    }
   },
   {
     name: "dosis",
     required: true,
-    label: "dosis (litro/hora)",
+    label: "Dosis (litro/hora)",
     align: "center",
     field: "dosis",
     sortable: true,
+    format: (val) => `${val} L/H`,
   },
   {
     name: "cantidadAgua",
     required: true,
-    label: "cantida dAgua",
+    label: "Cantidad Agua",
     align: "center",
     field: "cantidadAgua",
     sortable: true,
+    format: (val) => `${val} Litros`
   },
+
   {
     name: "opciones",
     required: true,
@@ -385,6 +338,7 @@ function validarIngresoRiego() {
 }
 
 async function agregarRiego() {
+
   const r = await useRiego.postRiegos({
     idCultivo: idCultivo.value.value,
     idEmpleado: idEmpleado.value.value,
@@ -394,12 +348,15 @@ async function agregarRiego() {
     horaFin: horaFin.value,
     dosis: dosis.value,
     cantidadAgua: cantidadAgua.value,
+
   });
+
   cerrar();
   Limpiar();
   listarRiegos();
   console.log(r);
 }
+
 
 function traerRiego(riego) {
   alert.value = true;
@@ -486,18 +443,4 @@ onMounted(() => {
   listarEmpleados();
 });
 
-// La fecha en formato ISO proveniente de MongoDB Atlas
-const fechaMongoDB = "2024-08-10T22:42:00.634Z";
-
-// Crear un objeto Date a partir de la fecha en formato ISO
-const fechaUTC = new Date(fechaMongoDB);
-
-// Obtener la diferencia de tiempo en minutos entre UTC y Colombia (UTC-5)
-const diferenciaHoraria = -5 * 60; // -5 horas
-
-// Ajustar la fecha sumando la diferencia horaria
-const fechaColombia = new Date(fechaUTC.getTime() + diferenciaHoraria * 60000);
-
-console.log(fechaColombia.toISOString()); // ISO string ajustada para Colombia
-console.log(fechaColombia.toLocaleString("es-CO", { timeZone: "America/Bogota" })); // Formato local para Colombia
 </script>

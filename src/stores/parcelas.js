@@ -27,7 +27,37 @@ export const useParcelaStore = defineStore("parcela",()=>{
             loading.value = false;
         } 
         }       
-
+        let ListarParcelaActivo = async () => {
+  
+            try {
+              let res = await axios.get("api/parcela/activos",{
+                headers: {
+                  token: useUsuario.token
+                },
+              });
+              console.log(res);
+              return res.data;
+            } catch (error) {
+              console.log(error);
+              return error;
+            }
+          };
+          let ListarParcelaInactivo = async () => {
+    
+            try {
+              let res = await axios.get("api/parcela/inactivos",{
+                headers: {
+                  token: useUsuario.token
+  
+                },
+              });
+              console.log(res);
+              return res.data;
+            } catch (error) {
+              console.log(error);
+              return error;
+            }
+          };
     const postParcela = async (data) => {
     try {
         loading.value = true;
@@ -116,7 +146,7 @@ export const useParcelaStore = defineStore("parcela",()=>{
         }
     }
 
-    return { listarParcela,  postParcela, putParcela, putParcelaActiva, putParcelaInactiva, loading, parcela }
+    return { listarParcela,  postParcela, putParcela, putParcelaActiva, putParcelaInactiva,ListarParcelaActivo,ListarParcelaInactivo, loading, parcela }
 
 },
 

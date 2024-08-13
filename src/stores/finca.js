@@ -27,7 +27,37 @@ export const  useFincaStore = defineStore('finca', () => {
             loading.value = false;
         }
     }
+    let ListarFincasActivo = async () => {
+  
+          try {
+            let res = await axios.get("api/fincas/activos",{
+              headers: {
+                token: useUsuario.token
+              },
+            });
+            console.log(res);
+            return res.data;
+          } catch (error) {
+            console.log(error);
+            return error;
+          }
+        };
+        let ListarFincasInactivo = async () => {
+  
+          try {
+            let res = await axios.get("api/fincas/inactivos",{
+              headers: {
+                token: useUsuario.token
 
+              },
+            });
+            console.log(res);
+            return res.data;
+          } catch (error) {
+            console.log(error);
+            return error;
+          }
+        };
     const postFincas = async (data) =>{
         try{
            loading.value = true;
@@ -113,7 +143,7 @@ export const  useFincaStore = defineStore('finca', () => {
         }
     }
 
-    return {listarFincas, postFincas,putFincas,putFincaActivar, putFincaDesactivar, loading, fincas}
+    return {listarFincas, postFincas,putFincas,putFincaActivar, putFincaDesactivar,ListarFincasActivo,ListarFincasInactivo, loading, fincas}
 
 },
     {

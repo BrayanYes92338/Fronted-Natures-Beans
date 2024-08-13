@@ -1,7 +1,22 @@
 <template>
     <div>
-        <div style="margin-left: 5%; text-align: end; margin-right: 5%">
+        <div style="display: flex; justify-content: flex-end;margin-left: 5%;  margin-right: 5%">
             <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Finca</q-btn>
+            <q-btn-dropdown color="green" icon="visibility" label="Filtrar"
+                style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
+                class="q-my-md q-ml-md">
+                <q-list>
+                    <q-item clickable v-ripple @click="listarFincas()">
+                        <q-item-section>Listar Todos</q-item-section>
+                    </q-item>
+                    <q-item clickable v-ripple @click="listarFincaActivos()">
+                        <q-item-section>Listar Activos</q-item-section>
+                    </q-item>
+                    <q-item clickable v-ripple @click="listarFincaInactivo()">
+                        <q-item-section>Listar Inactivos</q-item-section>
+                    </q-item>
+                </q-list>
+            </q-btn-dropdown>
         </div>
         <div>
             <q-dialog v-model="alert" persistent>
@@ -12,7 +27,7 @@
                         </div>
                     </q-card-section>
                     <q-select outlined v-model="idUsuario" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" :options="options" @filter="filterFn"
+                        class="q-my-md q-mx-md" :options="opticons" @filter="filterFn"
                         label="Selecciona el Responsable de la Finca">
                         <template v-slot:no-option>
                             <q-item>
@@ -180,7 +195,7 @@ function cerrar() {
 
 function cerrar2() {
     modalLimite.value = false;
-        Limpiar()
+    Limpiar()
 
 }
 
@@ -433,7 +448,34 @@ function traerFincas(finca) {
     area.value = finca.area;
 }
 
+const listarFincaActivos = async () => {
+    try {
+        const res = await useFinca.ListarFincasActivo();
+        rows.value = res.FincaActiva;
+        Notify.create({
+            message: "Listado de Fincas Activos",
+            color: "green",
+        });
+    } catch (error) {
+        console.error("Error al listar Fincas activos:", error);
+        Notify.create("Error al obtener Fincas de Usuarios activos");
+    }
+};
 
+const listarFincaInactivo = async () => {
+    try {
+        const res = await useFinca.ListarFincasInactivo();
+        rows.value = res.FincaActiva
+            ;
+        Notify.create({
+            message: "Listado de Fincas Inactivos",
+            color: "green",
+        });
+    } catch (error) {
+        console.error("Error al listar Fincas inactivos:", error);
+        Notify.create("Error al obtener listado de Fincas inactivos");
+    }
+};
 function validarEdicionFinca() {
     let validacionnumeros = /^[0-9]+$/;
 

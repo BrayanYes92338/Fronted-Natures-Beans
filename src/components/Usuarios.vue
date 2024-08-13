@@ -4,16 +4,26 @@
   <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">
     Registrar Usuario
   </q-btn>
-<q-select
-  style="width: 300px;"
-  outlined
-  v-model="rol"
-  :options="['Listar Todo', 'Listar Activos', 'Listar Inactivos']"
-  label="Seleccione Accion"
-  class="q-my-md q-mx-md"
-></q-select>
+  <q-btn-dropdown
+        color="green"
+        icon="visibility"
+        label="Filtrar"
+        style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
+        class="q-my-md q-ml-md"
+      >
+        <q-list>
+          <q-item clickable v-ripple @click="listarUsuarios()">
+            <q-item-section>Listar Todos</q-item-section>
+          </q-item>
+          <q-item clickable v-ripple @click="listarUsuarioActivos()">
+            <q-item-section>Listar Activos</q-item-section>
+          </q-item>
+          <q-item clickable v-ripple @click="listarUsuarioInactivo()">
+            <q-item-section>Listar Inactivos</q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
 
-<button style="width: 100px;heigth:50px;" @click="cambiarAccion()">buscar</button>
 
 
 

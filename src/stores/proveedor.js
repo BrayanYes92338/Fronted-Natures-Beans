@@ -27,7 +27,7 @@ export const useProveedorStore = defineStore("proveedor",()=>{
     } 
     }
 
-    const listarProveedorActivo = async () => {
+    const listarProveedorActivos = async () => {
         try {
             loading.value = true
             let res = await axios.get("api/proveedor/activos", {
@@ -47,7 +47,7 @@ export const useProveedorStore = defineStore("proveedor",()=>{
         }
     }  
 
-    const listarProveedorInactivo = async () => {
+    const listarProveedorInactivos = async () => {
         try {
             loading.value = true
             let res = await axios.get("api/proveedor/inactivos", {
@@ -56,6 +56,8 @@ export const useProveedorStore = defineStore("proveedor",()=>{
                 }
             })
             proveedor.value = res.data;
+            console.log(proveedor);
+            
             return res;
 
         } catch (error) {
@@ -149,7 +151,7 @@ const putProveedorInactivo = async (id) => {
     }
 }
 
-return { listarProveedor, listarProveedorActivo, listarProveedorInactivo, postProveedor, putProveedor, putProveedorActivo, putProveedorInactivo, loading, proveedor }
+return { listarProveedor, listarProveedorActivos, listarProveedorInactivos, postProveedor, putProveedor, putProveedorActivo, putProveedorInactivo, loading, proveedor }
 
 },
 

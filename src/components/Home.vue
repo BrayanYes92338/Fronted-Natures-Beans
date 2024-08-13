@@ -37,35 +37,48 @@
           </router-link>
         </div>
         <div class="item">
-          <router-link class="opciones" to="/finca">
-            <i class="fas fa-home"></i>Fincas
+          <a class="opciones sub" href="#" @click.prevent="toggleSubMenu('finca')">
+            <i class="fas fa-home"></i> Informacion Finca
+            <i v-if="subMenus.finca" class="fas fa-angle-down dropdown"></i>
+            <i v-else class="fas fa-angle-right dropdown"></i>
+          </a>
+          <div class="sub-menu" v-show="subMenus.finca">
+            <router-link class="opciones" to="/finca">
+              <i class="fas fa-home"></i>Fincas
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.finca">
+            <router-link class="opciones" to="/parcela">
+              <i class="fas fa-tree"></i>Parcela
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.finca">
+            <router-link class="opciones" to="/clima">
+              <i class="fas fa-cloud-sun"></i>Clima
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.finca">
+            <router-link class="opciones" to="/empleado">
+              <i class="fas fa-users"></i>Empleados
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.finca">
+            <router-link class="opciones" to="/cultivo">
+              <i class="fas fa-seedling"></i>Cultivos
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.finca">
+          <router-link class="opciones" to="/riego">
+            <i class="fas fa-tint"></i>Riego
           </router-link>
+        </div>
         </div>
         <div class="item">
           <router-link class="opciones" to="/proveedor">
             <i class="fas fa-truck"></i>Proveedor
           </router-link>
         </div>
-        <div class="item">
-          <router-link class="opciones" to="/parcela">
-            <i class="fas fa-tree"></i>Parcela
-          </router-link>
-        </div>
-        <div class="item">
-          <router-link class="opciones" to="/clima">
-            <i class="fas fa-cloud-sun"></i>Clima
-          </router-link>
-        </div>
-        <div class="item">
-          <router-link class="opciones" to="/empleado">
-            <i class="fas fa-users"></i>Empleados
-          </router-link>
-        </div>
-        <div class="item">
-          <router-link class="opciones" to="/cultivo">
-            <i class="fas fa-seedling"></i>Cultivos
-          </router-link>
-        </div>
+
       </div>
       <div class="btn-cerrar">
         <button class="cerrar-sesion" @click="cerrarSesion()">
@@ -103,6 +116,14 @@ const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
+const toggleSubMenu = (menu) => {
+  subMenus.value[menu] = !subMenus.value[menu]
+}
+
+const subMenus = ref({
+  finca: false
+})
+
 const cerrarSesion = () => {
   useUsuario.user = {}
   useUsuario.token = ''
@@ -124,7 +145,6 @@ const cerrarSesion = () => {
   width: 100%;
   height: 190px;
   position: relative;
-
 }
 
 .perfil-prueba {
@@ -188,7 +208,6 @@ const cerrarSesion = () => {
 
 .rol-user {
   margin-top: 15px;
-
 }
 
 .titulo-footer {
@@ -196,8 +215,10 @@ const cerrarSesion = () => {
   text-align: right;
 }
 
+
 .btn-cerrar {
-  margin-top: 100px;
+  margin-top: 40px; 
+  margin-bottom: 20px; 
   text-align: center;
 }
 
@@ -242,6 +263,5 @@ const cerrarSesion = () => {
   .cerrar-sesion {
     margin-bottom: 30%;
   }
-
 }
 </style>

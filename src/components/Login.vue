@@ -1,9 +1,9 @@
 <template>
   <div class="contenedor1">
     <div class="carousel-container">
-      <q-carousel class="responsive-carousel" animated v-model="slide" navigation infinite :autoplay="autoplay" arrows
+      <q-carousel class="responsive-carousel" animated v-model="slide" infinite :autoplay="autoplay"
         transition-prev="slide-right" transition-next="slide-left" @mouseenter="pauseAutoplay"
-        @mouseleave="resumeAutoplay">
+        @mouseleave="resumeAutoplay" navigation>
         <q-img class="carousel-image" :name="1" src="../img/fondo1.jpg" loading="lazy"></q-img>
         <q-img class="carousel-image" :name="2" src="../img/fondo2.jpg" loading="lazy"></q-img>
       </q-carousel>
@@ -80,14 +80,34 @@ async function Login2() {
       documento: documento.value,
       password: passwordLogin.value
     });
+
     useUsuario.token = res.data.token;
     useUsuario.user = res.data.usuario;
-    console.log(res);
     router.push('/menu');
   } catch (error) {
-    console.log(error);
+    if (error.response && error.response.status === 401) {
+      Notify.create({
+        message: error.response.data.msg ,
+        position: "top",
+        color: 'red',
+        timeout: 4000
+      });
+    }else  if (error.response && error.response.data && error.response.data.errors) {
+      Notify.create({
+        message: error.response.data.errors[0].msg,
+        color: "red",
+      })}else {
+      console.log(error);
+      Notify.create({
+        message: "Ocurrió un error desconocido.",
+        position: "top",
+        color: 'red',
+        timeout: 4000
+      });
+    }
   }
 }
+
 
 function pauseAutoplay() {
   autoplay.value = false;
@@ -323,7 +343,7 @@ a {
   color: gray;
 }
 
-.text-h6{
+.text-h6 {
   margin-top: 30px;
   font-size: 30px !important;
 }

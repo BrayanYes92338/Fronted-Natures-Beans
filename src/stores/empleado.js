@@ -27,6 +27,36 @@ export const useEmpleadoStore = defineStore('empleado', () => {
             loading.value = false;
         }
     }
+    let ListarEmpleadoActivo = async () => {
+  
+        try {
+          let res = await axios.get("api/empleado/activos",{
+            headers: {
+              token: useUsuario.token
+            },
+          });
+          console.log(res);
+          return res.data;
+        } catch (error) {
+          console.log(error);
+          return error;
+        }
+      };
+      let ListarEmpleadoInactivo = async () => {
+
+        try {
+          let res = await axios.get("api/empleado/inactivos",{
+            headers: {
+              token: useUsuario.token
+            },
+          });
+          console.log(res);
+          return res.data;
+        } catch (error) {
+          console.log(error);
+          return error;
+        }
+      };
     const postEmpleado = async (data) => {
         try {
             loading.value = true;
@@ -109,7 +139,7 @@ export const useEmpleadoStore = defineStore('empleado', () => {
         }
     }
 
-    return { listarEmpleado, postEmpleado, putEmpleado, putEmpleadoActivar,putEmpleadoDesactivar, loading, empleados }
+    return { listarEmpleado, postEmpleado, putEmpleado, putEmpleadoActivar,putEmpleadoDesactivar, ListarEmpleadoActivo,ListarEmpleadoInactivo,loading, empleados }
 }, {
     persist: true,
 })

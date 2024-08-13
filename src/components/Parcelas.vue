@@ -1,7 +1,22 @@
 <template>
     <div>
-        <div style="margin-left: 5%; text-align: end; margin-right: 5%">
+        <div style="display: flex; justify-content: flex-end;margin-left: 5%;  margin-right: 5%">
             <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Parcela</q-btn>
+            <q-btn-dropdown color="green" icon="visibility" label="Filtrar"
+                style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
+                class="q-my-md q-ml-md">
+                <q-list>
+                    <q-item clickable v-ripple @click="listarParcelas()">
+                        <q-item-section>Listar Todos</q-item-section>
+                    </q-item>
+                    <q-item clickable v-ripple @click="listarParcelaActivo()">
+                        <q-item-section>Listar Activos</q-item-section>
+                    </q-item>
+                    <q-item clickable v-ripple @click="listarParcelasInactivo()">
+                        <q-item-section>Listar Inactivos</q-item-section>
+                    </q-item>
+                </q-list>
+            </q-btn-dropdown>
         </div>
         <div>
             <q-dialog v-model="alert" persistent>
@@ -245,7 +260,40 @@ async function listarFincas() {
     console.log(fincas);
 
 }
+const listarParcelaActivo = async () => {
+    try {
+        const res = await useParcela.ListarParcelaActivo();
+        rows.value = res.parcela;
+        Notify.create({
+            message: "Listado de Parcela Activos",
+            color: "green",
+        });
+        console.log("hola");
+        
+        
+    } catch (error) {
+        console.error("Error al listar Parcela activos:", error);
+        Notify.create("Error al obtener Parcela de Usuarios activos");
+    }
+};
 
+const listarParcelasInactivo = async () => {
+    try {
+        const res = await useParcela.ListarParcelaInactivo();
+        
+        rows.value = res.parcela;
+
+            console.log(res);
+            
+        Notify.create({
+            message: "Listado de Parcela Inactivos",
+            color: "green",
+        });
+    } catch (error) {
+        console.error("Error al listar Parcela inactivos:", error);
+        Notify.create("Error al obtener listado de Parcela inactivos");
+    }
+};
 function filterFn(val, update, abort) {
     update(() => {
         const needle = val.toLowerCase();

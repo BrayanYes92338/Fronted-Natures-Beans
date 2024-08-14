@@ -1,7 +1,8 @@
 <template>
     <div>
         <div style="margin-left: 5%; text-align: end; margin-right: 5%">
-            <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Finca</q-btn>
+            <q-btn style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar
+                Finca</q-btn>
         </div>
         <div>
             <q-dialog v-model="alert" persistent>
@@ -27,10 +28,27 @@
                     <q-input outlined v-model="ruc" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="R.U.C de la Finca" type="tel" required pattern="[0-9]+"
                         maxlength="10" />
-                    <q-input outlined v-model="departamento" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label="Departamento donde esta la Finca" type="text" />
-                    <q-input outlined v-model="ciudad" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label="Ciudad donde esta la Finca" type="text" />
+                    <q-select outlined v-model="departamento" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" :options="opcionesDepa" @filter="filterFnDepa"
+                         label="Selecciona el Departamento donde esta la Finca">
+                        <template v-slot:no-option>
+                            <q-item>
+                                <q-item-section class="text-grey">
+                                    Sin resultados
+                                </q-item-section>
+                            </q-item>
+                        </template>
+                    </q-select>
+                    <q-select outlined v-model="ciudad" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Selecciona la Ciudad donde esta la Finca">
+                        <template v-slot:no-option>
+                            <q-item>
+                                <q-item-section class="text-grey">
+                                    Sin resultados
+                                </q-item-section>
+                            </q-item>
+                        </template>
+                    </q-select>
                     <q-input outlined v-model="direccion" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Direccion donde esta la Finca" type="text" />
                     <q-input outlined v-model="ubicacion" use-input hide-selected fill-input input-debounce="0"
@@ -91,7 +109,7 @@
         </div>
 
         <div style="display: flex; justify-content: center">
-            <q-table title="Fincas" title-class="text-red text-weight-bolder text-h4"
+            <q-table title="Fincas" title-class="text-green text-weight-bolder text-h4"
                 table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
                 style="width: 90%;">
                 <template v-slot:body-cell-estado="props">
@@ -144,9 +162,11 @@ import { Notify } from 'quasar';
 import axios from 'axios';
 import { useUsuarioStore } from "../stores/usuario.js"
 import { useFincaStore } from "../stores/finca.js"
+import { useDepartamentoStore } from "../stores/departamento.js"
 
 const useUsuario = useUsuarioStore();
 const useFinca = useFincaStore();
+const useDepartamento = useDepartamentoStore()
 
 let rows = ref([]);
 let alert = ref(false);
@@ -180,7 +200,7 @@ function cerrar() {
 
 function cerrar2() {
     modalLimite.value = false;
-        Limpiar()
+    Limpiar()
 
 }
 
@@ -306,6 +326,8 @@ const columns = ref([
     }
 ])
 
+// Listar Usuarios
+
 let usuarios = []
 let datos = {}
 const options = ref(usuarios)
@@ -331,6 +353,50 @@ async function listarUsuarios() {
     console.log(usuarios);
 
 }
+
+// Listar Departamentos
+
+let Departamentos = []
+let dateDep = {}
+const opcionesDepa = ref(Departamentos)
+
+function filterFnDepa(val, update, abort) {
+    update(() => {
+        const needle = val.toLowerCase();
+        opcionesDepa.value = Departamentos.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
+    });
+};
+
+
+async function ListarDepartamentos() {
+    const data = await useDepartamento.listarDepartamento();
+    data.data.forEach(item => {
+        dateDep = {
+            label: item.departamento,
+            value: item.ciudades
+        };
+        Departamentos.push(dateDep);
+    });
+
+    console.log(Departamentos);
+
+}
+
+// Listar Municipios
+
+let Municipios = [];
+let dateMun = {};
+const opcionesMun = ref(Municipios);
+
+function filterFnMun(val, update, abort) {
+    update(() => {
+        const needle = val.toLowerCase();
+        opcionesMun.value = Municipios.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
+    });
+}
+
+
+
 
 
 async function listarFincas() {
@@ -500,7 +566,7 @@ function Limpiar() {
 onMounted(() => {
     listarUsuarios()
     listarFincas()
-
+    ListarDepartamentos()
 })
 
 </script>

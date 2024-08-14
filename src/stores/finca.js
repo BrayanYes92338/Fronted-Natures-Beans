@@ -113,7 +113,7 @@ export const  useFincaStore = defineStore('finca', () => {
         }
     }
 
-    return {listarFincas, postFincas,putFincas,putFincaActivar, putFincaDesactivar, loading, fincas}
+    return {listarFincas, postFincas,putFincas,  putFincaActivar, putFincaDesactivar, loading, fincas}
 
 },
     {

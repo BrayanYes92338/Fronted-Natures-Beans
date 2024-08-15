@@ -395,6 +395,9 @@ function filterFnMun(val, update, abort) {
     });
 }
 
+async function listarMunicipio(){
+    
+}
 
 
 

@@ -28,27 +28,24 @@
                     <q-input outlined v-model="ruc" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="R.U.C de la Finca" type="tel" required pattern="[0-9]+"
                         maxlength="10" />
-                    <q-select outlined v-model="departamento" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" :options="opcionesDepa" @filter="filterFnDepa"
-                         label="Selecciona el Departamento donde esta la Finca">
-                        <template v-slot:no-option>
-                            <q-item>
-                                <q-item-section class="text-grey">
+                        <q-select  outlined  v-model="departamento"  use-input  hide-selected  fill-input  input-debounce="0" class="q-my-md q-mx-md"  :options="opcionesDepa"  @filter="filterFnDepa" @update:model-value="onDepartmentChange" label="Selecciona el Departamento donde está la Finca">
+                            <template v-slot:no-option>
+                                <q-item>
+                                  <q-item-section class="text-grey">
                                     Sin resultados
-                                </q-item-section>
-                            </q-item>
-                        </template>
-                    </q-select>
-                    <q-select outlined v-model="ciudad" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label="Selecciona la Ciudad donde esta la Finca">
-                        <template v-slot:no-option>
+                                  </q-item-section>
+                                </q-item>
+                            </template>
+                        </q-select>
+                        <q-select  outlined  v-model="ciudad"  use-input  hide-selected  fill-input  input-debounce="0" :disable="!departamento"  @filter="filterFnMun"  :options="opcionesMun" class="q-my-md q-mx-md"  label="Selecciona la Ciudad donde está la Finca">
+                          <template v-slot:no-option>
                             <q-item>
-                                <q-item-section class="text-grey">
-                                    Sin resultados
-                                </q-item-section>
+                              <q-item-section class="text-grey">
+                                Sin resultados
+                              </q-item-section>
                             </q-item>
-                        </template>
-                    </q-select>
+                          </template>
+                        </q-select>
                     <q-input outlined v-model="direccion" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Direccion donde esta la Finca" type="text" />
                     <q-input outlined v-model="ubicacion" use-input hide-selected fill-input input-debounce="0"
@@ -361,25 +358,20 @@ let dateDep = {}
 const opcionesDepa = ref(Departamentos)
 
 function filterFnDepa(val, update, abort) {
-    update(() => {
-        const needle = val.toLowerCase();
-        opcionesDepa.value = Departamentos.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
-    });
+  update(() => {
+    const needle = val.toLowerCase();
+    opcionesDepa.value = Departamentos.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
+  });
 };
 
 
 async function ListarDepartamentos() {
-    const data = await useDepartamento.listarDepartamento();
-    data.data.forEach(item => {
-        dateDep = {
-            label: item.departamento,
-            value: item.ciudades
-        };
-        Departamentos.push(dateDep);
-    });
-
-    console.log(Departamentos);
-
+  const data = await useDepartamento.listarDepartamento();
+  Departamentos = data.data.map(item => ({
+    label: item.departamento,
+    value: item.ciudades
+  }));
+  opcionesDepa.value = [...Departamentos];
 }
 
 // Listar Municipios
@@ -388,18 +380,21 @@ let Municipios = [];
 let dateMun = {};
 const opcionesMun = ref(Municipios);
 
+function onDepartmentChange(departamentoSeleccionado) {
+  Municipios = departamentoSeleccionado ? departamentoSeleccionado.value.map(ciudad => ({
+    label: ciudad,
+    value: ciudad
+  })) : [];
+  opcionesMun.value = [...Municipios];
+  ciudad.value = null; 
+}
+
 function filterFnMun(val, update, abort) {
-    update(() => {
-        const needle = val.toLowerCase();
-        opcionesMun.value = Municipios.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
-    });
+  update(() => {
+    const needle = val.toLowerCase();
+    opcionesMun.value = Municipios.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
+  });
 }
-
-async function listarMunicipio(){
-    
-}
-
-
 
 
 async function listarFincas() {
@@ -417,20 +412,20 @@ function validarIngresoFincas() {
     } else if (ruc.value == "") {
         Notify.create("Se debe agregar un R.U.C de la Finca");
     } else if (!validacionnumeros.test(ruc.value)) {
-        Notify.create("El R.U.C de la Finca debe ser un numero");
-    } else if (departamento.value == "" || departamento.value.trim().length === 0) {
+        Notify.create("El R.U.C de la Finca debe ser un número");
+    } else if (!departamento.value || departamento.value.label.trim().length === 0) {
         Notify.create("Se debe agregar un Departamento de la Finca");
-    } else if (ciudad.value == "" || ciudad.value.trim().length === 0) {
+    } else if (!ciudad.value || ciudad.value.label.trim().length === 0) {
         Notify.create("Se debe agregar una Ciudad de la Finca");
     } else if (direccion.value == "" || direccion.value.trim().length === 0) {
-        Notify.create("Se debe agregar una Direccion de la Finca");
+        Notify.create("Se debe agregar una Dirección de la Finca");
     } else if (ubicacion.value == "" || ubicacion.value.trim().length === 0) {
-        Notify.create("Se debe agregar una Ubicacion de la Finca");
+        Notify.create("Se debe agregar una Ubicación de la Finca");
     } else if (area.value == "" || area.value.trim().length === 0) {
-        Notify.create("Se debe agregar una Area de la Finca");
+        Notify.create("Se debe agregar un Área de la Finca");
     } else {
-        agregarFincas()
-        cerrar()
+        agregarFincas();
+        cerrar();
         Notify.create({
             type: "positive",
             message: "Finca agregada exitosamente",
@@ -439,13 +434,14 @@ function validarIngresoFincas() {
 }
 
 
+
 async function agregarFincas() {
     const r = await useFinca.postFincas({
         idUsuario: idUsuario.value.value,
         nombre: nombre.value,
         ruc: ruc.value,
-        departamento: departamento.value,
-        ciudad: ciudad.value,
+        departamento: departamento.value.label,
+        ciudad: ciudad.value.label,
         direccion: direccion.value,
         ubicacion: ubicacion.value,
         area: area.value
@@ -490,17 +486,25 @@ function traerFincas(finca) {
     idUsuario.value = {
         label: finca.idUsuario.nombre,
         value: finca.idUsuario._id
-    }
+    };
     nombre.value = finca.nombre;
     nombreF.value = finca.nombre;
     ruc.value = finca.ruc;
-    departamento.value = finca.departamento;
-    ciudad.value = finca.ciudad;
+    const departamentoSeleccionado = Departamentos.find(dep => dep.label === finca.departamento);
+    departamento.value = departamentoSeleccionado;
+    if (departamentoSeleccionado) {
+        const ciudades = departamentoSeleccionado.value;
+        const ciudadSeleccionada = ciudades.find(ciudad => ciudad === finca.ciudad);
+        Municipios = ciudades.map(ciudad => ({ label: ciudad, value: ciudad }));
+        opcionesMun.value = [...Municipios];
+        ciudad.value = { label: ciudadSeleccionada, value: ciudadSeleccionada };
+    }
     direccion.value = finca.direccion;
     ubicacion.value = finca.ubicacion;
-    norte.value = finca.norte
+    norte.value = finca.norte;
     area.value = finca.area;
 }
+
 
 
 function validarEdicionFinca() {

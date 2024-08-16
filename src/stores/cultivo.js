@@ -27,7 +27,36 @@ export const useCultivoStore = defineStore("cultivo",()=>{
             loading.value = false;
         } 
         }       
-
+        let ListarCultivoActivo = async () => {
+  
+            try {
+              let res = await axios.get("api/cultivo/activos",{
+                headers: {
+                  token: useUsuario.token
+                },
+              });
+              console.log(res);
+              return res.data;
+            } catch (error) {
+              console.log(error);
+              return error;
+            }
+          };
+          let ListarCultivoInactivo = async () => {
+    
+            try {
+              let res = await axios.get("api/cultivo/inactivos",{
+                headers: {
+                  token: useUsuario.token
+                },
+              });
+              console.log(res);
+              return res.data;
+            } catch (error) {
+              console.log(error);
+              return error;
+            }
+          };
     const postCultivo = async (data) => {
     try {
         loading.value = true;
@@ -116,7 +145,7 @@ export const useCultivoStore = defineStore("cultivo",()=>{
         }
     }
 
-    return { listarCultivo,  postCultivo, putCultivo, putCultivoActiva, putCultivoInactiva, loading, cultivo}
+    return { listarCultivo,  postCultivo, putCultivo, putCultivoActiva, putCultivoInactiva,ListarCultivoActivo,ListarCultivoInactivo, loading, cultivo}
 
 },
 

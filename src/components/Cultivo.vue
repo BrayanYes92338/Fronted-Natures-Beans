@@ -1,7 +1,8 @@
 <template>
     <div>
         <div style="display: flex; justify-content: flex-end;margin-left: 5%;  margin-right: 5%">
-            <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Cultivo</q-btn>      <q-btn-dropdown color="green" icon="visibility" label="Filtrar"
+            <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Cultivo</q-btn> <q-btn-dropdown
+                color="green" icon="visibility" label="Filtrar"
                 style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
                 class="q-my-md q-ml-md">
                 <q-list>
@@ -41,12 +42,14 @@
                     <q-input outlined v-model="tipo" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="tipo Cultivo" type="text" />
                     <q-card-actions align="right">
-                        <q-btn v-if="accion === 1" @click="validarCultivo()" color="red" class="text-white" :loading="useCultivo.loading">Agregar
+                        <q-btn v-if="accion === 1" @click="validarCultivo()" color="red" class="text-white"
+                            :loading="useCultivo.loading">Agregar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
                             </template>
                         </q-btn>
-                        <q-btn v-if="accion !== 1" @click="validarEdicionCultivo()"  color="red" class="text-white" :loading="useCultivo.loading">
+                        <q-btn v-if="accion !== 1" @click="validarEdicionCultivo()" color="red" class="text-white"
+                            :loading="useCultivo.loading">
                             Editar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
@@ -72,20 +75,21 @@
                         <div style="display: flex; gap:15px; justify-content: center; ">
 
                             <!-- boton de editar -->
-                            <q-btn color="primary" @click="traerCultivos(props.row)" >
+                            <q-btn color="primary" @click="traerCultivos(props.row)">
                                 <q-tooltip>
                                     Editar
                                 </q-tooltip>
                                 <i class="fas fa-pencil-alt">
                                 </i></q-btn>
                             <!-- botons de activado y desactivado -->
-                            <q-btn v-if="props.row.estado == 1" @click="deshabilitarCultivo(props.row)"  color="negative">
+                            <q-btn v-if="props.row.estado == 1" @click="deshabilitarCultivo(props.row)"
+                                color="negative">
                                 <q-tooltip>
                                     Desactivar
                                 </q-tooltip>
                                 <i class="fas fa-times">
                                 </i></q-btn>
-                            <q-btn v-else color="positive" @click="habilitarCultivos(props.row)" >
+                            <q-btn v-else color="positive" @click="habilitarCultivos(props.row)">
                                 <q-tooltip>
                                     Activar
                                 </q-tooltip><i class="fas fa-check">
@@ -131,25 +135,26 @@ function cerrar() {
 
 const columns = ref([
     {
-        name: 'idParcela',
-        required: true,
-        label: 'detalle Parcela',
-        align: 'center',
-        field: (row) => row.idParcela.detalle,
-        sortable: true
-    },
-    {
         name: 'nombre',
         required: true,
-        label: 'nombre del cultivo',
+        label: 'Nombre del Cultivo',
         align: 'center',
         field: 'nombre',
         sortable: true
     },
     {
+        name: 'idParcela',
+        required: true,
+        label: 'Detalle Parcela',
+        align: 'center',
+        field: (row) => row.idParcela.detalle,
+        sortable: true
+    },
+
+    {
         name: 'tipo',
         required: true,
-        label: 'tipo cultivo',
+        label: 'Tipo Cultivo',
         align: 'center',
         field: 'tipo',
         sortable: true
@@ -202,7 +207,7 @@ function filterFn(val, update, abort) {
 
 
 
-async function listarCultivo(){
+async function listarCultivo() {
     const r = await useCultivo.listarCultivo()
     rows.value = r.data.cultivo.reverse()
     console.log(r.data.cultivo)
@@ -216,8 +221,8 @@ const listarCultivosActivo = async () => {
             color: "green",
         });
         console.log("hola");
-        
-        
+
+
     } catch (error) {
         console.error("Error al listar Parcela activos:", error);
         Notify.create("Error al obtener Parcela de Usuarios activos");
@@ -237,15 +242,15 @@ const listarCultivosInactivo = async () => {
         Notify.create("Error al obtener listado de Parcela inactivos");
     }
 };
-function validarCultivo(){
+function validarCultivo() {
     // let validacionnumeros = /^[0-9]+$/; 
-    if(idParcela.value ==""){
-        Notify.create("Se debe agregar el numero de la Parcela"); 
-    }else if(nombre.value ==""|| nombre.value.trim().length === 0){
+    if (idParcela.value == "") {
+        Notify.create("Se debe agregar el numero de la Parcela");
+    } else if (nombre.value == "" || nombre.value.trim().length === 0) {
         Notify.create("Se debe agregar el nombre del cultivo");
-    }else if(tipo.value ==""|| tipo.value.trim().length === 0){
+    } else if (tipo.value == "" || tipo.value.trim().length === 0) {
         Notify.create("Se debe agregar el tipo de cultivo ");
-    }else {
+    } else {
         Notify.create({
             type: "positive",
             message: "Cultivo agregado exitosamente",
@@ -256,7 +261,7 @@ function validarCultivo(){
     }
 }
 
-function traerCultivos(cultivo){
+function traerCultivos(cultivo) {
     accion.value = 2
     alert.value = true
     id.value = cultivo._id
@@ -264,20 +269,20 @@ function traerCultivos(cultivo){
         label: cultivo.idParcela.detalle,
         value: cultivo.idParcela._id
     }
-    
-    nombre.value = cultivo. nombre
+
+    nombre.value = cultivo.nombre
     tipo.value = cultivo.tipo
 }
 
-function validarEdicionCultivo(){
+function validarEdicionCultivo() {
     // let validacionnumeros = /^[0-9]+$/; 
-    if(idParcela.value ==""){
-        Notify.create("Se debe agregar el numero de la Parcela"); 
-    }else if(nombre.value ==""|| nombre.value.trim().length === 0){
+    if (idParcela.value == "") {
+        Notify.create("Se debe agregar el numero de la Parcela");
+    } else if (nombre.value == "" || nombre.value.trim().length === 0) {
         Notify.create("Se debe agregar el nombre del cultivo");
-    }else if(tipo.value ==""|| tipo.value.trim().length === 0){
+    } else if (tipo.value == "" || tipo.value.trim().length === 0) {
         Notify.create("Se debe agregar el tipo de cultivo ");
-    }else {
+    } else {
         Notify.create({
             type: "positive",
             message: "Cultivo agregado exitosamente",
@@ -289,27 +294,27 @@ function validarEdicionCultivo(){
 }
 
 
-async function editarCultivo(){
-    try{
-        await useCultivo.putCultivo(id.value,{
-            idParcela:idParcela.value.value,
+async function editarCultivo() {
+    try {
+        await useCultivo.putCultivo(id.value, {
+            idParcela: idParcela.value.value,
             nombre: nombre.value,
             tipo: tipo.value
-        }) 
+        })
 
         listarCultivo()
 
-    }catch (error){
+    } catch (error) {
         console.error('Error de actualizar Cultivo', error)
         Notify.create('Ocurrio un error al editar datos del Cultivo')
     }
 }
 
-async function agregarCultivo(){
+async function agregarCultivo() {
     const r = await useCultivo.postCultivo({
-            idParcela:idParcela.value.value,
-            nombre: nombre.value,
-            tipo: tipo.value
+        idParcela: idParcela.value.value,
+        nombre: nombre.value,
+        tipo: tipo.value
     })
     cerrar()
     listarCultivo()
@@ -318,9 +323,9 @@ async function agregarCultivo(){
 
 
 
-async function habilitarCultivos(cultivos){
+async function habilitarCultivos(cultivos) {
     const res = await useCultivo.putCultivoActiva(cultivos._id)
-    .then((response) => {
+        .then((response) => {
             console.log(response);
             listarCultivo()
         })
@@ -331,9 +336,9 @@ async function habilitarCultivos(cultivos){
         })
 }
 
-async function deshabilitarCultivo(cultivos){
+async function deshabilitarCultivo(cultivos) {
     const res = await useCultivo.putCultivoInactiva(cultivos._id)
-    .then((response) => {
+        .then((response) => {
             console.log(response);
             listarCultivo()
         })
@@ -344,17 +349,17 @@ async function deshabilitarCultivo(cultivos){
         })
 }
 
-function Limpiar(){
+function Limpiar() {
     idParcela.value = ''
     nombre.value = ''
     tipo.value = ''
-    }
+}
 
 onMounted(() => {
-   listarCultivo() 
-   listarParcela()
-    
-    
+    listarCultivo()
+    listarParcela()
+
+
 
 })
 

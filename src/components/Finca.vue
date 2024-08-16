@@ -1,179 +1,173 @@
 <template>
     <div>
         <div style="display: flex; justify-content: flex-end;margin-left: 5%;  margin-right: 5%">
-            <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Finca</q-btn>
-            <q-btn-dropdown color="green" icon="visibility" label="Filtrar"
+            <q-btn style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar
+                Finca</q-btn>
+            <q-btn-dropdown color="blue" icon="visibility" label="Filtrar"
                 style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
                 class="q-my-md q-ml-md">
                 <q-list>
                     <q-item clickable v-ripple @click="listarFincas()">
                         <q-item-section>Listar Todos</q-item-section>
                     </q-item>
-                    <q-item clickable v-ripple @click="listarFincaActivos()">
+                    <q-item clickable v-ripple @click="listarFincasActivas()">
                         <q-item-section>Listar Activos</q-item-section>
                     </q-item>
-                    <q-item clickable v-ripple @click="listarFincaInactivo()">
+                    <q-item clickable v-ripple @click="listarFincasInactivas()">
                         <q-item-section>Listar Inactivos</q-item-section>
                     </q-item>
                 </q-list>
             </q-btn-dropdown>
 
-            <div style="margin-left: 5%; text-align: end; margin-right: 5%">
-                <q-btn style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md"
-                    @click="abrir()">Registrar
-                    Finca</q-btn>
-            </div>
-            <div>
-                <q-dialog v-model="alert" persistent>
-                    <q-card class="" style="width: 700px">
-                        <q-card-section style="background-color:#009B44; margin-bottom: 20px">
-                            <div class="text-h6 text-white">
-                                {{ accion == 1 ? "Agregar Finca" : "Editar Finca " + nombreF }}
-                            </div>
-                        </q-card-section>
-                        <q-select outlined v-model="idUsuario" use-input hide-selected fill-input input-debounce="0"
-                            class="q-my-md q-mx-md" :options="opticons" @filter="filterFn"
-                            label="Selecciona el Responsable de la Finca">
-                            <template v-slot:no-option>
-                                <q-item>
-                                    <q-item-section class="text-grey">
-                                        Sin resultados
-                                    </q-item-section>
-                                </q-item>
+        </div>
+        <div>
+            <q-dialog v-model="alert" persistent>
+                <q-card class="" style="width: 700px">
+                    <q-card-section style="background-color:#009B44; margin-bottom: 20px">
+                        <div class="text-h6 text-white">
+                            {{ accion == 1 ? "Agregar Finca" : "Editar Finca " + nombreF }}
+                        </div>
+                    </q-card-section>
+                    <q-select outlined v-model="idUsuario" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" :options="options" @filter="filterFn"
+                        label="Selecciona el Responsable de la Finca">
+                        <template v-slot:no-option>
+                            <q-item>
+                                <q-item-section class="text-grey">
+                                    Sin resultados
+                                </q-item-section>
+                            </q-item>
+                        </template>
+                    </q-select>
+                    <q-input outlined v-model="nombre" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Nombre de la Finca" type="text" />
+                    <q-input outlined v-model="ruc" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="R.U.C de la Finca" type="tel" required pattern="[0-9]+"
+                        maxlength="10" />
+                    <q-select outlined v-model="departamento" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" :options="opcionesDepa" @filter="filterFnDepa"
+                        @update:model-value="onDepartmentChange" label="Selecciona el Departamento donde está la Finca">
+                        <template v-slot:no-option>
+                            <q-item>
+                                <q-item-section class="text-grey">
+                                    Sin resultados
+                                </q-item-section>
+                            </q-item>
+                        </template>
+                    </q-select>
+                    <q-select outlined v-model="ciudad" use-input hide-selected fill-input input-debounce="0"
+                        :disable="!departamento" @filter="filterFnMun" :options="opcionesMun" class="q-my-md q-mx-md"
+                        label="Selecciona la Ciudad donde está la Finca">
+                        <template v-slot:no-option>
+                            <q-item>
+                                <q-item-section class="text-grey">
+                                    Sin resultados
+                                </q-item-section>
+                            </q-item>
+                        </template>
+                    </q-select>
+                    <q-input outlined v-model="direccion" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Direccion donde esta la Finca" type="text" />
+                    <q-input outlined v-model="ubicacion" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ubicacion donde esta la Finca" type="text" />
+                    <q-input outlined v-model="area" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Area de la Finca" type="text" />
+                    <q-card-actions align="right">
+                        <q-btn v-if="accion === 1" @click="validarIngresoFincas()" color="red" class="text-white"
+                            :loading="useFinca.loading">Agregar
+                            <template v-slot:loading>
+                                <q-spinner color="primary" size="1em" />
                             </template>
-                        </q-select>
-                        <q-input outlined v-model="nombre" use-input hide-selected fill-input input-debounce="0"
-                            class="q-my-md q-mx-md" label="Nombre de la Finca" type="text" />
-                        <q-input outlined v-model="ruc" use-input hide-selected fill-input input-debounce="0"
-                            class="q-my-md q-mx-md" label="R.U.C de la Finca" type="tel" required pattern="[0-9]+"
-                            maxlength="10" />
-                        <q-select outlined v-model="departamento" use-input hide-selected fill-input input-debounce="0"
-                            class="q-my-md q-mx-md" :options="opcionesDepa" @filter="filterFnDepa"
-                            @update:model-value="onDepartmentChange"
-                            label="Selecciona el Departamento donde está la Finca">
-                            <template v-slot:no-option>
-                                <q-item>
-                                    <q-item-section class="text-grey">
-                                        Sin resultados
-                                    </q-item-section>
-                                </q-item>
+                        </q-btn>
+                        <q-btn v-if="accion !== 1" @click="validarEdicionFinca()" color="red" class="text-white"
+                            :loading="useFinca.loading">
+                            Editar
+                            <template v-slot:loading>
+                                <q-spinner color="primary" size="1em" />
                             </template>
-                        </q-select>
-                        <q-select outlined v-model="ciudad" use-input hide-selected fill-input input-debounce="0"
-                            :disable="!departamento" @filter="filterFnMun" :options="opcionesMun"
-                            class="q-my-md q-mx-md" label="Selecciona la Ciudad donde está la Finca">
-                            <template v-slot:no-option>
-                                <q-item>
-                                    <q-item-section class="text-grey">
-                                        Sin resultados
-                                    </q-item-section>
-                                </q-item>
-                            </template>
-                        </q-select>
-                        <q-input outlined v-model="direccion" use-input hide-selected fill-input input-debounce="0"
-                            class="q-my-md q-mx-md" label="Direccion donde esta la Finca" type="text" />
-                        <q-input outlined v-model="ubicacion" use-input hide-selected fill-input input-debounce="0"
-                            class="q-my-md q-mx-md" label="Ubicacion donde esta la Finca" type="text" />
-                        <q-input outlined v-model="area" use-input hide-selected fill-input input-debounce="0"
-                            class="q-my-md q-mx-md" label="Area de la Finca" type="text" />
-                        <q-card-actions align="right">
-                            <q-btn v-if="accion === 1" @click="validarIngresoFincas()" color="red" class="text-white"
-                                :loading="useFinca.loading">Agregar
-                                <template v-slot:loading>
-                                    <q-spinner color="primary" size="1em" />
-                                </template>
+                        </q-btn>
+                        <q-btn label="Cerrar" color="black" outline @click="cerrar()" />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+        </div>
+
+        <!-- Tabla de limites de las fincas -->
+        <div>
+            <q-dialog v-model="modalLimite" persistent>
+                <q-card class="" style="width: 700px">
+                    <q-card-section style="background-color:#009B44; margin-bottom: 20px">
+                        <div class="text-h6 text-white">
+                            {{ "Limites de la finca" + nombreF }}
+                        </div>
+                    </q-card-section>
+                    <q-table title="Limites de la Finca" title-class="text-red text-weight-bolder text-h4"
+                        table-header-class="text-black font-weight-bold" :rows="rows" :columns="columnas" row-key="name"
+                        style="width: 90%;">
+                        <template v-slot:body-cell-estado="props">
+                            <q-td :props="props">
+                                <p style="color: green;" v-if="props.row.estado == 1">Activo</p>
+                                <p style="color: red;" v-else>Inactivo</p>
+                            </q-td>
+                        </template>
+                        <template v-slot:body-cell-opciones="props">
+                            <q-td :props="props">
+                                <div style="display: flex; gap:15px; justify-content: center; ">
+
+                                </div>
+                            </q-td>
+                        </template>
+                    </q-table>
+                    <q-card-actions align="right">
+                        <q-btn label="Cerrar" color="black" outline @click="cerrar2()" />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+        </div>
+
+        <div style="display: flex; justify-content: center">
+            <q-table title="Fincas" title-class="text-green text-weight-bolder text-h4"
+                table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
+                style="width: 90%;">
+                <template v-slot:body-cell-estado="props">
+                    <q-td :props="props">
+                        <p style="color: green;" v-if="props.row.estado == 1">Activo</p>
+                        <p style="color: red;" v-else>Inactivo</p>
+                    </q-td>
+                </template>
+                <template v-slot:body-cell-opciones="props">
+                    <q-td :props="props">
+                        <div style="display: flex; gap:15px; justify-content: center; ">
+                            <q-btn color="teal" @click="abrirLimites(props.row)">
+                                <q-tooltip>
+                                    Ver Limites de la Finca
+                                </q-tooltip>
+                                <i class="fas fa-border-all"></i>
                             </q-btn>
-                            <q-btn v-if="accion !== 1" @click="validarEdicionFinca()" color="red" class="text-white"
-                                :loading="useFinca.loading">
-                                Editar
-                                <template v-slot:loading>
-                                    <q-spinner color="primary" size="1em" />
-                                </template>
-                            </q-btn>
-                            <q-btn label="Cerrar" color="black" outline @click="cerrar()" />
-                        </q-card-actions>
-                    </q-card>
-                </q-dialog>
-            </div>
+                            <!-- boton de editar -->
+                            <q-btn color="primary" @click="traerFincas(props.row)">
+                                <q-tooltip>
+                                    Editar
+                                </q-tooltip>
+                                <i class="fas fa-pencil-alt">
+                                </i></q-btn>
+                            <!-- botons de activado y desactivado -->
+                            <q-btn v-if="props.row.estado == 1" @click="deshabilitarFinca(props.row)" color="negative">
+                                <q-tooltip>
+                                    Desacticar
+                                </q-tooltip>
+                                <i class="fas fa-times">
+                                </i></q-btn>
+                            <q-btn v-else color="positive" @click="habilitarFinca(props.row)">
+                                <q-tooltip>
+                                    Acticar
+                                </q-tooltip><i class="fas fa-check">
 
-            <!-- Tabla de limites de las fincas -->
-            <div>
-                <q-dialog v-model="modalLimite" persistent>
-                    <q-card class="" style="width: 700px">
-                        <q-card-section style="background-color:#009B44; margin-bottom: 20px">
-                            <div class="text-h6 text-white">
-                                {{ "Limites de la finca" + nombreF }}
-                            </div>
-                        </q-card-section>
-                        <q-table title="Limites de la Finca" title-class="text-red text-weight-bolder text-h4"
-                            table-header-class="text-black font-weight-bold" :rows="rows" :columns="columnas"
-                            row-key="name" style="width: 90%;">
-                            <template v-slot:body-cell-estado="props">
-                                <q-td :props="props">
-                                    <p style="color: green;" v-if="props.row.estado == 1">Activo</p>
-                                    <p style="color: red;" v-else>Inactivo</p>
-                                </q-td>
-                            </template>
-                            <template v-slot:body-cell-opciones="props">
-                                <q-td :props="props">
-                                    <div style="display: flex; gap:15px; justify-content: center; ">
-
-                                    </div>
-                                </q-td>
-                            </template>
-                        </q-table>
-                        <q-card-actions align="right">
-                            <q-btn label="Cerrar" color="black" outline @click="cerrar2()" />
-                        </q-card-actions>
-                    </q-card>
-                </q-dialog>
-            </div>
-
-            <div style="display: flex; justify-content: center">
-                <q-table title="Fincas" title-class="text-green text-weight-bolder text-h4"
-                    table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
-                    style="width: 90%;">
-                    <template v-slot:body-cell-estado="props">
-                        <q-td :props="props">
-                            <p style="color: green;" v-if="props.row.estado == 1">Activo</p>
-                            <p style="color: red;" v-else>Inactivo</p>
-                        </q-td>
-                    </template>
-                    <template v-slot:body-cell-opciones="props">
-                        <q-td :props="props">
-                            <div style="display: flex; gap:15px; justify-content: center; ">
-                                <q-btn color="teal" @click="abrirLimites(props.row)">
-                                    <q-tooltip>
-                                        Ver Limites de la Finca
-                                    </q-tooltip>
-                                    <i class="fas fa-border-all"></i>
-                                </q-btn>
-                                <!-- boton de editar -->
-                                <q-btn color="primary" @click="traerFincas(props.row)">
-                                    <q-tooltip>
-                                        Editar
-                                    </q-tooltip>
-                                    <i class="fas fa-pencil-alt">
-                                    </i></q-btn>
-                                <!-- botons de activado y desactivado -->
-                                <q-btn v-if="props.row.estado == 1" @click="deshabilitarFinca(props.row)"
-                                    color="negative">
-                                    <q-tooltip>
-                                        Desacticar
-                                    </q-tooltip>
-                                    <i class="fas fa-times">
-                                    </i></q-btn>
-                                <q-btn v-else color="positive" @click="habilitarFinca(props.row)">
-                                    <q-tooltip>
-                                        Acticar
-                                    </q-tooltip><i class="fas fa-check">
-
-                                    </i></q-btn>
-                            </div>
-                        </q-td>
-                    </template>
-                </q-table>
-            </div>
+                                </i></q-btn>
+                        </div>
+                    </q-td>
+                </template>
+            </q-table>
         </div>
     </div>
 </template>
@@ -258,7 +252,7 @@ const columnas = ref([
     {
         name: 'oeste',
         required: true,
-        label: 'Oestee Finca',
+        label: 'Oeste Finca',
         align: 'center',
         field: 'oeste',
         sortable: true
@@ -301,7 +295,7 @@ const columns = ref([
     {
         name: 'ciudad',
         required: true,
-        label: 'Ciudad',
+        label: 'Municipio',
         align: 'center',
         field: 'ciudad',
         sortable: true
@@ -422,11 +416,48 @@ function filterFnMun(val, update, abort) {
 }
 
 
+// Listar Fincas Estados Fincas
+
+
 async function listarFincas() {
     const r = await useFinca.listarFincas()
     rows.value = r.data.fincas.reverse()
     console.log(r.data.fincas);
 };
+
+async function listarFincasActivas() {
+    try {
+        const r = await useFinca.ListarFincasActivo()
+        rows.value = r.FincaActiva.reverse()
+        Notify.create({
+            message: "Listado de Fincas Activas",
+            color: "green",
+        });
+        console.log(r.FincaActiva)
+    } catch (error) {
+        console.error("Error al listar Fincas activas:", error);
+        Notify.create("Error al obtener Fincas de Usuarios activas");
+    }
+
+}
+
+async function listarFincasInactivas() {
+    try {
+        const r = await useFinca.ListarFincasInactivo()
+        rows.value = r.FincaInactiva.reverse()
+        Notify.create({
+            message: "Listado de Fincas Inactivas",
+            color: "green",
+        });
+        console.log(r.FincaInactiva)
+
+    } catch (error) {
+        console.error("Error al listar Fincas Inactivas:", error);
+        Notify.create("Error al obtener Fincas de Usuarios Inactivas");
+    }
+
+}
+
 
 function validarIngresoFincas() {
     let validacionnumeros = /^[0-9]+$/;
@@ -530,39 +561,10 @@ function traerFincas(finca) {
     area.value = finca.area;
 }
 
-const listarFincaActivos = async () => {
-    try {
-        const res = await useFinca.ListarFincasActivo();
-        rows.value = res.FincaActiva;
-        Notify.create({
-            message: "Listado de Fincas Activos",
-            color: "green",
-        });
-    } catch (error) {
-        console.error("Error al listar Fincas activos:", error);
-        Notify.create("Error al obtener Fincas de Usuarios activos");
-    }
-};
 
-
-const listarFincaInactivo = async () => {
-    try {
-        const res = await useFinca.ListarFincasInactivo();
-        rows.value = res.FincaActiva
-            ;
-        Notify.create({
-            message: "Listado de Fincas Inactivos",
-            color: "green",
-        });
-    } catch (error) {
-        console.error("Error al listar Fincas inactivos:", error);
-        Notify.create("Error al obtener listado de Fincas inactivos");
-    }
-};
 
 function validarEdicionFinca() {
     let validacionnumeros = /^[0-9]+$/;
-
     if (idUsuario.value == "") {
         Notify.create("Se debe agregar un Responsable de la Finca");
     } else if (nombre.value == "" || nombre.value.trim().length === 0) {
@@ -570,17 +572,17 @@ function validarEdicionFinca() {
     } else if (ruc.value == "") {
         Notify.create("Se debe agregar un R.U.C de la Finca");
     } else if (!validacionnumeros.test(ruc.value)) {
-        Notify.create("El R.U.C de la Finca debe ser un numero");
-    } else if (departamento.value == "" || departamento.value.trim().length === 0) {
+        Notify.create("El R.U.C de la Finca debe ser un número");
+    } else if (!departamento.value || departamento.value.label.trim().length === 0) {
         Notify.create("Se debe agregar un Departamento de la Finca");
-    } else if (ciudad.value == "" || ciudad.value.trim().length === 0) {
+    } else if (!ciudad.value || ciudad.value.label.trim().length === 0) {
         Notify.create("Se debe agregar una Ciudad de la Finca");
     } else if (direccion.value == "" || direccion.value.trim().length === 0) {
-        Notify.create("Se debe agregar una Direccion de la Finca");
+        Notify.create("Se debe agregar una Dirección de la Finca");
     } else if (ubicacion.value == "" || ubicacion.value.trim().length === 0) {
-        Notify.create("Se debe agregar una Ubicacion de la Finca");
+        Notify.create("Se debe agregar una Ubicación de la Finca");
     } else if (area.value == "" || area.value.trim().length === 0) {
-        Notify.create("Se debe agregar una Area de la Finca");
+        Notify.create("Se debe agregar un Área de la Finca");
     } else {
         editarFinca()
         Limpiar()
@@ -598,8 +600,8 @@ async function editarFinca() {
             idUsuario: idUsuario.value.value,
             nombre: nombre.value,
             ruc: ruc.value,
-            departamento: departamento.value,
-            ciudad: ciudad.value,
+            departamento: departamento.value.label,
+            ciudad: ciudad.value.label,
             direccion: direccion.value,
             ubicacion: ubicacion.value,
             area: area.value
@@ -627,6 +629,7 @@ onMounted(() => {
     listarUsuarios()
     listarFincas()
     ListarDepartamentos()
+
 })
 
 </script>

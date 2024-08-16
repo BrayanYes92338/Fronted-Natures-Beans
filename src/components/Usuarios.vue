@@ -1,16 +1,12 @@
 <template>
   <div>
- <div style="display: flex; justify-content: flex-end; margin-left: 5%; margin-right: 5%; ">
-  <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">
-    Registrar Usuario
-  </q-btn>
-  <q-btn-dropdown
-        color="green"
-        icon="visibility"
-        label="Filtrar"
+    <div style="display: flex; justify-content: flex-end; margin-left: 5%; margin-right: 5%; ">
+      <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">
+        Registrar Usuario
+      </q-btn>
+      <q-btn-dropdown color="green" icon="visibility" label="Filtrar"
         style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
-        class="q-my-md q-ml-md"
-      >
+        class="q-my-md q-ml-md">
         <q-list>
           <q-item clickable v-ripple @click="listarUsuarios()">
             <q-item-section>Listar Todos</q-item-section>
@@ -23,133 +19,38 @@
           </q-item>
         </q-list>
       </q-btn-dropdown>
-
-
-
-
-</div>
+    </div>
 
     <!-- AGREGAR USUARIO -->
     <div>
       <q-dialog v-model="alert" persistent>
         <q-card class="" style="width: 700px">
-          <q-card-section
-            style="background-color: #009b44; margin-bottom: 20px"
-          >
+          <q-card-section style="background-color: #009b44; margin-bottom: 20px">
             <div class="text-h6 text-white">Agregar Usuario</div>
           </q-card-section>
-          <q-input
-            outlined
-            v-model="nombre"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Nombre del Usuario"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="direccion"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Direccion del Usuario"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="documento"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Documento del Usuario"
-            type="tel"
-            required
-            pattern="[0-9]+"
-            maxlength="10"
-          />
-          <q-input
-            outlined
-            v-model="correo"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Correo del Usuario"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="password"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            :type="isPwd ? 'password' : 'text'"
-            class="q-my-md q-mx-md"
-            label="Contraseña"
-          >
+          <q-input outlined v-model="nombre" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Nombre del Usuario" type="text" />
+          <q-input outlined v-model="direccion" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Direccion del Usuario" type="text" />
+          <q-input outlined v-model="documento" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Documento del Usuario" type="tel" required pattern="[0-9]+" maxlength="10" />
+          <q-input outlined v-model="correo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Correo del Usuario" type="text" />
+          <q-input outlined v-model="password" use-input hide-selected fill-input input-debounce="0"
+            :type="isPwd ? 'password' : 'text'" class="q-my-md q-mx-md" label="Contraseña">
             <template v-slot:append>
-              <q-icon
-                name="fas fa-eye"
-                class="cursor-pointer"
-                v-if="isPwd"
-                @click="togglePasswordVisibility"
-              />
-              <q-icon
-                name="fas fa-eye-slash"
-                class="cursor-pointer"
-                v-else
-                @click="togglePasswordVisibility"
-              />
+              <q-icon name="fas fa-eye" class="cursor-pointer" v-if="isPwd" @click="togglePasswordVisibility" />
+              <q-icon name="fas fa-eye-slash" class="cursor-pointer" v-else @click="togglePasswordVisibility" />
             </template>
           </q-input>
-          <q-input
-            outlined
-            v-model="telefono"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Telefono del Usuario"
-            type="tel"
-            required
-            pattern="[0-9]+"
-            maxlength="10"
-          />
-          <q-select
-            outlined
-            v-model="rol"
-            :options="['GESTOR']"
-            label="Seleccione el Rol del Usuario"
-            class="q-my-md q-mx-md"
-          />
-          <q-input
-            outlined
-            v-model="municipio"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Municipio del Usuario"
-            type="text"
-          />
+          <q-input outlined v-model="telefono" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Telefono del Usuario" type="tel" required pattern="[0-9]+" maxlength="10" />
+          <q-select outlined v-model="rol" :options="['GESTOR']" label="Seleccione el Rol del Usuario"
+            class="q-my-md q-mx-md" />
+          <q-input outlined v-model="municipio" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Municipio del Usuario" type="text" />
           <q-card-actions align="right">
-            <q-btn
-              color="red"
-              class="text-white"
-              :loading="useUsuario.loading"
-              @click="validarUsuario()"
-            >
+            <q-btn color="red" class="text-white" :loading="useUsuario.loading" @click="validarUsuario()">
               Agregar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -164,91 +65,24 @@
     <div>
       <q-dialog v-model="alerta" persistent>
         <q-card class="" style="width: 700px">
-          <q-card-section
-            style="background-color: #009b44; margin-bottom: 20px"
-          >
+          <q-card-section style="background-color: #009b44; margin-bottom: 20px">
             <div class="text-h6 text-white">Editar Usuario</div>
           </q-card-section>
-          <q-input
-            outlined
-            v-model="nombre"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Nombre del Usuario"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="direccion"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Direccion del Usuario"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="documento"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Documento del Usuario"
-            type="tel"
-            required
-            pattern="[0-9]+"
-            maxlength="10"
-          />
-          <q-input
-            outlined
-            v-model="correo"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Correo del Usuario"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="telefono"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Telefono del Usuario"
-            type="tel"
-            required
-            pattern="[0-9]+"
-            maxlength="10"
-          />
+          <q-input outlined v-model="nombre" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Nombre del Usuario" type="text" />
+          <q-input outlined v-model="direccion" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Direccion del Usuario" type="text" />
+          <q-input outlined v-model="documento" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Documento del Usuario" type="tel" required pattern="[0-9]+" maxlength="10" />
+          <q-input outlined v-model="correo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Correo del Usuario" type="text" />
+          <q-input outlined v-model="telefono" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Telefono del Usuario" type="tel" required pattern="[0-9]+" maxlength="10" />
 
-          <q-input
-            outlined
-            v-model="municipio"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Municipio del Usuario"
-            type="text"
-          />
+          <q-input outlined v-model="municipio" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Municipio del Usuario" type="text" />
           <q-card-actions align="right">
-            <q-btn
-              @click="validarEdicionUsuario()"
-              color="red"
-              class="text-white"
-              :loading="useUsuario.loading"
-            >
+            <q-btn @click="validarEdicionUsuario()" color="red" class="text-white" :loading="useUsuario.loading">
               Editar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -261,15 +95,9 @@
     </div>
     <!-- Tabla Usuarios -->
     <div style="display: flex; justify-content: center">
-      <q-table
-        title="Usuarios"
-        title-class="text-red text-weight-bolder text-h4"
-        table-header-class="text-black font-weight-bold"
-        :rows="rows"
-        :columns="columns"
-        row-key="name"
-        style="width: 90%"
-      >
+      <q-table title="Usuarios" title-class="text-red text-weight-bolder text-h4"
+        table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
+        style="width: 90%">
         <template v-slot:body-cell-estado="props">
           <q-td :props="props">
             <p style="color: green" v-if="props.row.estado == 1">Activo</p>
@@ -282,24 +110,13 @@
               <!-- boton de editar -->
               <q-btn color="primary" @click="traerInfo(props.row)">
                 <q-tooltip> Editar </q-tooltip>
-                <i class="fas fa-pencil-alt"> </i
-              ></q-btn>
+                <i class="fas fa-pencil-alt"> </i></q-btn>
               <!-- botons de activado y desactivado -->
-              <q-btn
-                v-if="props.row.estado == 1"
-                @click="deshabilitarUsuario(props.row)"
-                color="negative"
-              >
+              <q-btn v-if="props.row.estado == 1" @click="deshabilitarUsuario(props.row)" color="negative">
                 <q-tooltip> Desacticar </q-tooltip>
-                <i class="fas fa-times"> </i
-              ></q-btn>
-              <q-btn
-                v-else
-                color="positive"
-                @click="habilitarUsuaro(props.row)"
-              >
-                <q-tooltip> Acticar </q-tooltip><i class="fas fa-check"> </i
-              ></q-btn>
+                <i class="fas fa-times"> </i></q-btn>
+              <q-btn v-else color="positive" @click="habilitarUsuaro(props.row)">
+                <q-tooltip> Acticar </q-tooltip><i class="fas fa-check"> </i></q-btn>
             </div>
           </q-td>
         </template>
@@ -340,7 +157,7 @@ const cambiarAccion = async () => {
     } else if (rol.value === 'Listar Inactivos') {
       await listarUsuarioInactivo();
     } else {
-      await listarUsuarios(); 
+      await listarUsuarios();
     }
   } catch (error) {
     console.error("Error al cambiar la acción:", error);
@@ -623,7 +440,7 @@ const listarUsuarioInactivo = async () => {
   } catch (error) {
     console.error("Error al listar Usuarios inactivos:", error);
     Notify.create("Error al obtener listado de Usuarios inactivos");
-  } 
+  }
 };
 function limpiar() {
   nombre.value = "";

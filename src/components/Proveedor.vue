@@ -132,6 +132,9 @@ const columns = ref([
     align: "center",
     field: "nombre",
     sortable: true,
+    format: (val) => {
+      return val.charAt(0).toUpperCase() + val.slice(1);
+    }
   },
   {
     name: "direccion",

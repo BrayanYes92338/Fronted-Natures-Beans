@@ -94,16 +94,15 @@
 
         <!-- Tabla de limites de las fincas -->
         <div>
-            <q-dialog v-model="modalLimite" persistent>
+            <q-dialog v-model="modalLimite" persistent full-width>
                 <q-card class="" style="width: 700px">
                     <q-card-section style="background-color:#009B44; margin-bottom: 20px">
                         <div class="text-h6 text-white">
-                            {{ "Limites de la finca" + nombreF }}
+                            Limites de la finca
                         </div>
                     </q-card-section>
-                    <q-table title="Limites de la Finca" title-class="text-red text-weight-bolder text-h4"
-                        table-header-class="text-black font-weight-bold" :rows="rows" :columns="columnas" row-key="name"
-                        style="width: 90%;">
+                    <q-table table-header-class="text-black font-weight-bold" :rows="rows" :columns="columnas"
+                        row-key="name" style="width: 100%;">
                         <template v-slot:body-cell-estado="props">
                             <q-td :props="props">
                                 <p style="color: green;" v-if="props.row.estado == 1">Activo</p>
@@ -175,7 +174,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { Notify } from 'quasar';
-import axios from 'axios';
 import { useUsuarioStore } from "../stores/usuario.js"
 import { useFincaStore } from "../stores/finca.js"
 import { useDepartamentoStore } from "../stores/departamento.js"
@@ -195,7 +193,7 @@ let departamento = ref("");
 let ciudad = ref("");
 let direccion = ref("");
 let ubicacion = ref("");
-let limites = ref([])
+let limites = ref([]);
 let norte = ref("");
 let sur = ref("");
 let este = ref("");
@@ -557,7 +555,6 @@ function traerFincas(finca) {
     }
     direccion.value = finca.direccion;
     ubicacion.value = finca.ubicacion;
-    norte.value = finca.norte;
     area.value = finca.area;
 }
 

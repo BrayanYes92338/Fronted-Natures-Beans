@@ -1,7 +1,22 @@
 <template>
   <div>
-    <div style="margin-left: 5%; text-align: end; margin-right: 5%">
+    <div style="display: flex; justify-content: flex-end;margin-left: 5%;margin-right: 5%">
       <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar proveedor</q-btn>
+      <q-btn-dropdown color="green" icon="visibility" label="Filtrar"
+                style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
+                class="q-my-md q-ml-md">
+                <q-list>
+                    <q-item clickable v-ripple @click="listarProveedor()">
+                        <q-item-section>Listar Todos</q-item-section>
+                    </q-item>
+                    <q-item clickable v-ripple @click="listarProveedorActivo()">
+                        <q-item-section>Listar Activos</q-item-section>
+                    </q-item>
+                    <q-item clickable v-ripple @click="listarProveedorInactivo()">
+                        <q-item-section>Listar Inactivos</q-item-section>
+                    </q-item>
+                </q-list>
+            </q-btn-dropdown>
       <!-- AQUI VA EL SELECT -->
       <!-- <q-select outlined v-model="listar" :options="['LISTAR TODO', 'LISTAR ACTIVOS', 'LISTAR INACTIVOS']" label="LISTAR"
             class="q-my-md q-mx-md"/> -->
@@ -165,6 +180,39 @@ async function listarProveedor() {
   rows.value = r.data.proveedor.reverse();
   console.log(r.data.proveedor);
 }
+const listarProveedorActivo = async () => {
+    try {
+        const res = await useProveedor.listarProveedorActivos();
+        rows.value = res.data.proveedorActivo;
+        Notify.create({
+            message: "Listado de Proveedores Activos",
+            color: "green",
+        });
+        console.log("hola");
+        
+        
+    } catch (error) {
+        console.error("Error al listar Proveedor activos:", error);
+        Notify.create("Error al obtener Proveedor de Usuarios activos");
+    }
+};
+
+const listarProveedorInactivo = async () => {
+    try {
+        const res = await useProveedor.listarProveedorInactivos();
+        rows.value = res.data.proveedorInactivo;
+
+            console.log(res);
+            
+        Notify.create({
+            message: "Listado de Proveedor Inactivos",
+            color: "green",
+        });
+    } catch (error) {
+        console.error("Error al listar Proveedor inactivos:", error);
+        Notify.create("Error al obtener listado de Proveedor inactivos");
+    }
+};
 async function agregarProveedor() {
   const r = await useProveedor.postProveedor({
     nombre: nombre.value,

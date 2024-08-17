@@ -4,7 +4,7 @@ import { Notify } from "quasar";
 import { ref } from "vue";
 import { useUsuarioStore } from "./usuario.js";
 
-export const  useFincaStore = defineStore('finca', () => {
+export const useFincaStore = defineStore('finca', () => {
     let loading = ref(false);
     let fincas = ref([]);
     const useUsuario = useUsuarioStore();
@@ -18,7 +18,7 @@ export const  useFincaStore = defineStore('finca', () => {
                 }
             })
             fincas.value = response.data;
-            return response;    
+            return response;
 
         } catch (error) {
             console.error(' Error al obtener lista de Fincas:', error)
@@ -27,93 +27,125 @@ export const  useFincaStore = defineStore('finca', () => {
             loading.value = false;
         }
     }
+    let ListarFincasActivo = async () => {
 
-    const postFincas = async (data) =>{
-        try{
-           loading.value = true;
-           let res = await axios.post("api/fincas/agregar", data, {
-            headers: {
-                token: useUsuario.token
-            }
-        })
-        return res;
-        }catch (error){
+        try {
+            let res = await axios.get("api/fincas/listarFincaActivas", {
+                headers: {
+                    token: useUsuario.token
+                },
+            });
+            console.log(res);
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    };
+    let ListarFincasInactivo = async () => {
+
+        try {
+            let res = await axios.get("api/fincas/listarFincaInactivas", {
+                headers: {
+                    token: useUsuario.token
+
+                },
+            });
+            console.log(res);
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    };
+    const postFincas = async (data) => {
+        try {
+            loading.value = true;
+            let res = await axios.post("api/fincas/agregar", data, {
+                headers: {
+                    token: useUsuario.token
+                }
+            })
+            return res;
+        } catch (error) {
             loading.value = true
             console.log(error);
             Notify.create({
                 type: "negative",
                 message: error.response.data.errors[0].msg,
             });
-        }finally{
+        } finally {
             loading.value = false;
         }
     }
 
-    const putFincas = async (id, data)=>{
-        try{
-           loading.value = true; 
-           const r = axios.put(`api/fincas/editar/${id}`, data, {
-            headers: {
-                token: useUsuario.token
-            }
-           })
-           return r
-        }catch (error){
+    const putFincas = async (id, data) => {
+        try {
+            loading.value = true;
+            const r = axios.put(`api/fincas/editar/${id}`, data, {
+                headers: {
+                    token: useUsuario.token
+                }
+            })
+            return r
+        } catch (error) {
             loading.value = true
             console.log(error);
             Notify.create({
                 type: "negative",
                 message: error.response.data.errors[0].msg,
-            
+
             })
-        }finally{
+        } finally {
             loading.value = false;
         }
     }
 
-    const putFincaActivar = async (id)=>{
-        try{
+    const putFincaActivar = async (id) => {
+        try {
             loading.value = true;
-            const r = await axios.put(`api/fincas/activar/${id}`, {},{
+            const r = await axios.put(`api/fincas/activar/${id}`, {}, {
                 headers: {
                     token: useUsuario.token
                 }
             })
             return r
-        }catch (error){
+        } catch (error) {
             loading.value = true
             console.log(error)
             Notify.create({
                 type: "negative",
                 message: error.response.data.errors[0].msg,
             });
-        }finally{
+        } finally {
             loading.value = false;
         }
     }
 
-    const putFincaDesactivar = async (id)=>{
-        try{
+    const putFincaDesactivar = async (id) => {
+        try {
             loading.value = true;
-            const r = await axios.put(`api/fincas/desactivar/${id}`, {},{
+            const r = await axios.put(`api/fincas/desactivar/${id}`, {}, {
                 headers: {
                     token: useUsuario.token
                 }
             })
             return r
-        }catch (error){
+        } catch (error) {
             loading.value = true
             console.log(error)
             Notify.create({
                 type: "negative",
                 message: error.response.data.errors[0].msg,
             });
-        }finally{
-            loading.value = false; 
+        } finally {
+            loading.value = false;
         }
     }
 
-    return {listarFincas, postFincas,putFincas,  putFincaActivar, putFincaDesactivar, loading, fincas}
+
+    return { listarFincas,ListarFincasActivo, ListarFincasInactivo, postFincas, putFincas, putFincaActivar, putFincaDesactivar,  loading, fincas }
+
 
 },
     {

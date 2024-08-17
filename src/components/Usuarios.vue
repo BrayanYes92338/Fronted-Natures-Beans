@@ -1,8 +1,26 @@
 <template>
   <div>
-    <div style="margin-left: 5%; text-align: end; margin-right: 5%">
-      <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Usuario</q-btn>
+    <div style="display: flex; justify-content: flex-end; margin-left: 5%; margin-right: 5%; ">
+      <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">
+        Registrar Usuario
+      </q-btn>
+      <q-btn-dropdown color="green" icon="visibility" label="Filtrar"
+        style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
+        class="q-my-md q-ml-md">
+        <q-list>
+          <q-item clickable v-ripple @click="listarUsuarios()">
+            <q-item-section>Listar Todos</q-item-section>
+          </q-item>
+          <q-item clickable v-ripple @click="listarUsuarioActivos()">
+            <q-item-section>Listar Activos</q-item-section>
+          </q-item>
+          <q-item clickable v-ripple @click="listarUsuarioInactivo()">
+            <q-item-section>Listar Inactivos</q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
     </div>
+
     <!-- AGREGAR USUARIO -->
     <div>
       <q-dialog v-model="alert" persistent>
@@ -129,6 +147,25 @@ let accion = ref(1);
 let alert = ref(false);
 let isPwd = ref(true);
 let alerta = ref(false);
+
+const cambiarAccion = async () => {
+  try {
+    if (rol.value === 'Listar Todo') {
+      await listarUsuarios();
+    } else if (rol.value === 'Listar Activos') {
+      await listarUsuarioActivos();
+    } else if (rol.value === 'Listar Inactivos') {
+      await listarUsuarioInactivo();
+    } else {
+      await listarUsuarios();
+    }
+  } catch (error) {
+    console.error("Error al cambiar la acción:", error);
+    Notify.create("Error al cambiar la acción");
+  }
+};
+
+
 
 function abrir() {
   accion.value = 1;
@@ -365,26 +402,46 @@ async function habilitarUsuaro(usuario) {
 }
 
 async function deshabilitarUsuario(usuario) {
+  const res = await useUsuario
+    .putDesactivarUsuario(usuario._id)
+    .then((response) => {
+      console.log(response);
+      listarUsuarios();
+    })
 
-if (useUsuario.user._id === usuario._id) {
-    Notify.create("No puedes desactivar la cuenta en uso");
-} else {
-    const res = await useUsuario.putDesactivarUsuario(usuario._id)
-        .then((response) => {
-            console.log(response);
-            listarUsuarios()
-        })
-
-        .catch((error) => {
-            console.error('Error de Usuario', error);
-            Notify.create('Error al deshabilitar el Usuario')
-        })
+    .catch((error) => {
+      console.error("Error de Usuario", error);
+      Notify.create("Error al deshabilitar el Usuario");
+    });
 }
 
+const listarUsuarioActivos = async () => {
+  try {
+    const res = await useUsuario.ListarUsuarioActivo();
+    rows.value = res.usuarios;
+    Notify.create({
+      message: "Listado de Usuarios Activos",
+      color: "green",
+    });
+  } catch (error) {
+    console.error("Error al listar Usuarios activos:", error);
+    Notify.create("Error al obtener listado de Usuarios activos");
+  }
+};
 
-}
-
-
+const listarUsuarioInactivo = async () => {
+  try {
+    const res = await useUsuario.ListarUsuarioInactivo();
+    rows.value = res.usuarios;
+    Notify.create({
+      message: "Listado de Usuarios Inactivos",
+      color: "green",
+    });
+  } catch (error) {
+    console.error("Error al listar Usuarios inactivos:", error);
+    Notify.create("Error al obtener listado de Usuarios inactivos");
+  }
+};
 function limpiar() {
   nombre.value = "";
   direccion.value = "";

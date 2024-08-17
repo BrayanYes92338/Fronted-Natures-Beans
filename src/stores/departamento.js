@@ -23,7 +23,7 @@ export const useDepartamentoStore = defineStore('departamento', ()=>{
     return {
         loading,
         departamentos,
-        listarDepartamento
+        listarDepartamento,
     }
 
 },

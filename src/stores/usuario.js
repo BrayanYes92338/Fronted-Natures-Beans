@@ -26,6 +26,44 @@ export const useUsuarioStore = defineStore("usuario", () => {
             loading.value = false;
         }
     };
+    let ListarUsuarioActivo = async () => {
+        loading.value =true;
+  
+          try {
+            let res = await axios.get("api/usuarios/activos",{
+              headers: {
+                token: token.value
+
+              },
+            });
+            console.log(res);
+            return res.data;
+          } catch (error) {
+            console.log(error);
+            return error;
+          }finally {
+            loading.value = false;
+          }
+        };
+        let ListarUsuarioInactivo = async () => {
+          loading.value =true;
+  
+          try {
+            let res = await axios.get("api/usuarios/inactivos",{
+              headers: {
+                token: token.value
+
+              },
+            });
+            console.log(res);
+            return res.data;
+          } catch (error) {
+            console.log(error);
+            return error;
+          }finally {
+            loading.value = false;
+          }
+        };
 
     const listarUsuarioRol = async ()=>{
         try{
@@ -183,7 +221,7 @@ export const useUsuarioStore = defineStore("usuario", () => {
         }
     }
 
-    return { listarUsuarios,listarUsuarioRol, postUsuarios, putUsuario, putActivarUsuario, putDesactivarUsuario, Login,usuarioGetEmail, enviarCorreo, actualizarContra, token, loading, usuarios, user };
+    return { listarUsuarios,listarUsuarioRol, postUsuarios, putUsuario, putActivarUsuario, putDesactivarUsuario, Login,usuarioGetEmail, enviarCorreo, actualizarContra, token, loading, usuarios, user ,ListarUsuarioActivo,ListarUsuarioInactivo};
 }, {
     persist: true,
 });

@@ -29,7 +29,7 @@
             </template>
           </q-select>
           <q-input outlined v-model="diasTransplante" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="dias de Transplante" type="text" />
+            class="q-my-md q-mx-md" label="dias de Transplante" type="tel" required pattern="[0-9]+" maxlength="999" />
           <q-select outlined v-model="estadoFenológico" :options="['Germinación', 'Emergencia', 'Crecimiento Vegetativo', 'Desarrollo de Yemas/Floración', 'Fructificación','Maduración', 'Cosecha','Senescencia', 'Dormancia (en algunos cultivos)']" label="Seleccione el Estado Fenológico"
             class="q-my-md q-mx-md" />
           <q-input outlined v-model="horaInicio" use-input hide-selected fill-input input-debounce="0"
@@ -37,9 +37,10 @@
           <q-input outlined v-model="horaFin" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="hora Fin" type="time" />
           <q-input outlined v-model="dosis" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="dosis (litro/hora)" type="tel" />
+            class="q-my-md q-mx-md" label="dosis (litro/hora)" type="tel" required pattern="[0-9]+" maxlength="999"/>
           <q-input outlined v-model="cantidadAgua" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="cantidad de Agua" type="tel" />
+            class="q-my-md q-mx-md" label="cantidad de Agua" type="tel" 
+            />
           <q-card-actions align="right">
             <q-btn v-if="accion === 1" @click="validarIngresoRiego()" color="red" class="text-white"
               :loading="useRiego.loading">Agregar
@@ -316,6 +317,8 @@ function validarIngresoRiego() {
     Notify.create("Se debe seleccionar el Empleado");
   } else if (diasTransplante.value == "" || diasTransplante.value.trim().length === 0) {
     Notify.create("Se debe agregar dias Transplante");
+  } else if (!validacionnumeros.test(diasTransplante.value)) {
+      Notify.create("Los dias de Transplante solo debe llevar numeros"); 
   } else if (estadoFenológico.value == "" || estadoFenológico.value.trim().length === 0) {
     Notify.create("Se debe agregar estado Fenológico");
   } else if (horaInicio.value == "" || horaInicio.value.trim().length === 0) {
@@ -323,9 +326,13 @@ function validarIngresoRiego() {
   } else if (horaFin.value == "" || horaFin.value.trim().length === 0) {
     Notify.create("Se debe agregar hora Final");
   } else if (dosis.value == "") {
-    Notify.create("Se debe agregar dosis");
+    Notify.create("Se debe agregar dosis"); 
+  } else if (!validacionnumeros.test(dosis.value)) {
+    Notify.create("La dosis solo debe llevar numeros");  
   } else if (cantidadAgua.value == "") {
     Notify.create("Se debe agregar cantidad de Agua");
+  } else if (!validacionnumeros.test(cantidadAgua.value)) {
+    Notify.create("La cantidad de Agua solo debe llevar numeros");  
   } else {
     agregarRiego();
     Limpiar();
@@ -386,6 +393,8 @@ function validarEdicionRiego() {
     Notify.create("Se debe seleccionar el Empleado");
   } else if (diasTransplante.value == "" || diasTransplante.value.trim().length === 0) {
     Notify.create("Se debe agregar dias Transplante");
+  } else if (!validacionnumeros.test(diasTransplante.value)) {
+      Notify.create("Los dias de Transplante solo debe llevar numeros"); 
   } else if (estadoFenológico.value == "" || estadoFenológico.value.trim().length === 0) {
     Notify.create("Se debe agregar estado Fenológico");
   } else if (horaInicio.value == "" || horaInicio.value.trim().length === 0) {
@@ -393,10 +402,14 @@ function validarEdicionRiego() {
   } else if (horaFin.value == "" || horaFin.value.trim().length === 0) {
     Notify.create("Se debe agregar hora Final");
   } else if (dosis.value == "") {
-    Notify.create("Se debe agregar dosis");
+    Notify.create("Se debe agregar dosis"); 
+  } else if (!validacionnumeros.test(dosis.value)) {
+    Notify.create("La dosis solo debe llevar numeros");  
   } else if (cantidadAgua.value == "") {
     Notify.create("Se debe agregar cantidad de Agua");
-  } else {
+  } else if (!validacionnumeros.test(cantidadAgua.value)) {
+    Notify.create("La cantidad de Agua solo debe llevar numeros");  
+  } else  {
     editarRiego();
     Limpiar();
     cerrar();

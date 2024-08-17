@@ -78,6 +78,11 @@
             <i class="fas fa-truck"></i>Proveedor
           </router-link>
         </div>
+        <div class="item">
+          <router-link class="opciones" to="/produccion">
+            <i class="fas fa-boxes"></i> Produccion
+          </router-link>
+        </div>
 
       </div>
       <div class="btn-cerrar">

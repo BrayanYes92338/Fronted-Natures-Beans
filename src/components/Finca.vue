@@ -91,6 +91,39 @@
                 </q-card>
             </q-dialog>
         </div>
+        <div>
+            <q-dialog persistent v-model="alerta">
+                <q-card class="" style="width: 700px">
+                    <q-card-section style="background-color: #009b44; margin-bottom: 20px">
+                        <div class="text-h6 text-white">
+                            {{ accion == 1 ? "Agregar Limites" : "Editar Limites" }}
+                        </div>
+                    </q-card-section>
+                    <q-input outlined v-model="norte" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ingrese el Norte de la Finca" type="text" />
+                    <q-input outlined v-model="sur" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ingrese el Sur de la Finca" type="text" />
+                    <q-input outlined v-model="este" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ingrese el Este de la Finca" type="text" />
+                    <q-input outlined v-model="oeste" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ingrese el Oeste de la Finca" type="text" />
+                    <q-card-actions align="right">
+                        <q-btn v-if="accion2 === 1" color="red" class="text-white" :loading="useFinca.loading">Agregar
+                            <template v-slot:loading>
+                                <q-spinner color="primary" size="1em" />
+                            </template>
+                        </q-btn>
+                        <q-btn v-if="accion2 !== 1" color="red" class="text-white" :loading="useFinca.loading">
+                            Editar
+                            <template v-slot:loading>
+                                <q-spinner color="primary" size="1em" />
+                            </template>
+                        </q-btn>
+                        <q-btn label="Cerrar" color="black" outline @click="cerrar3()" />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+        </div>
 
         <!-- Tabla de limites de las fincas -->
         <div>
@@ -101,24 +134,38 @@
                             Limites de la finca
                         </div>
                     </q-card-section>
-                    <q-table table-header-class="text-black font-weight-bold" :rows="rows" :columns="columnas"
-                        row-key="name" style="width: 100%;">
-                        <template v-slot:body-cell-estado="props">
-                            <q-td :props="props">
-                                <p style="color: green;" v-if="props.row.estado == 1">Activo</p>
-                                <p style="color: red;" v-else>Inactivo</p>
-                            </q-td>
-                        </template>
+                    <q-table v-if="limites.length > 0" table-header-class="text-black font-weight-bold" :rows="limites"
+                        :columns="columnas" row-key="name" style="width: 100%;">
                         <template v-slot:body-cell-opciones="props">
                             <q-td :props="props">
                                 <div style="display: flex; gap:15px; justify-content: center; ">
-
                                 </div>
                             </q-td>
                         </template>
+                        <template >
+                            <q-td :props="props">
+                                <q-btn color="primary"><i class="fas fa-pencil-alt"></i>
+                                    <q-tooltip>
+                                        Editar
+                                    </q-tooltip>
+                                </q-btn>
+                            </q-td>
+                        </template>
+
                     </q-table>
                     <q-card-actions align="right">
-                        <q-btn label="Cerrar" color="black" outline @click="cerrar2()" />
+                        <q-btn @click="abrir2()" color="green" class="text-white" :loading="useFinca.loading">
+                            Agregar Limites de la Finca
+                            <template v-slot:loading>
+                                <q-spinner color="primary" size="1em" />
+                            </template>
+                        </q-btn>
+                        <q-btn @click="cerrar2()" color="red" class="text-white" :loading="useFinca.loading">
+                            Cerrar
+                            <template v-slot:loading>
+                                <q-spinner color="primary" size="1em" />
+                            </template>
+                        </q-btn>
                     </q-card-actions>
                 </q-card>
             </q-dialog>
@@ -137,11 +184,11 @@
                 <template v-slot:body-cell-opciones="props">
                     <q-td :props="props">
                         <div style="display: flex; gap:15px; justify-content: center; ">
-                            <q-btn color="teal" @click="abrirLimites(props.row)">
+                            <q-btn color="green" @click="abrirLimites(props.row)">
                                 <q-tooltip>
                                     Ver Limites de la Finca
                                 </q-tooltip>
-                                <i class="fas fa-border-all"></i>
+                                <i class="fas fa-map-marker-alt"></i>
                             </q-btn>
                             <!-- boton de editar -->
                             <q-btn color="primary" @click="traerFincas(props.row)">
@@ -160,9 +207,8 @@
                             <q-btn v-else color="positive" @click="habilitarFinca(props.row)">
                                 <q-tooltip>
                                     Acticar
-                                </q-tooltip><i class="fas fa-check">
-
-                                </i></q-btn>
+                                </q-tooltip><i class="fas fa-check"></i>
+                            </q-btn>
                         </div>
                     </q-td>
                 </template>
@@ -186,6 +232,7 @@ let rows = ref([]);
 let alert = ref(false);
 let id = ref('');
 let accion = ref(1);
+let accion2 = ref(1);
 let idUsuario = ref("");
 let nombre = ref("");
 let ruc = ref("");
@@ -201,10 +248,18 @@ let oeste = ref("");
 let area = ref("");
 let nombreF = ref("")
 let modalLimite = ref(false);
+let alerta = ref(false)
+let idLimite = ref("")
 
 function abrir() {
     accion.value = 1
     alert.value = true;
+}
+
+function abrir2() {
+    accion2.value = 1
+    alerta.value = true;
+    modalLimite.value = false;
 }
 
 function cerrar() {
@@ -218,8 +273,14 @@ function cerrar2() {
 
 }
 
-function abrirLimites() {
+function cerrar3() {
+    alerta.value = false;
     modalLimite.value = true;
+}
+
+function abrirLimites(finca) {
+    modalLimite.value = true;
+    idLimite = finca._id
 }
 
 const columnas = ref([
@@ -255,7 +316,25 @@ const columnas = ref([
         field: 'oeste',
         sortable: true
     },
+    {
+        name: 'opciones',
+        required: true,
+        label: 'Opciones',
+        align: 'center',
+        field: 'opciones',
+        sortable: true
+    },
 ])
+
+// Listar Limites de cada Finca
+
+
+function traerSeguimiento(data) {
+    norte.value = data
+    sur.value = data
+    este.value = data
+    oeste.value = data
+}
 
 const columns = ref([
     {

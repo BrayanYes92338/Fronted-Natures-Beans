@@ -1,7 +1,7 @@
 <template>
    <div>
        <div style="margin-left: 5%; text-align: end; margin-right: 5%">
-           <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Clima</q-btn>
+           <q-btn  style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar Clima</q-btn>
        </div>
        <div>
            <q-dialog v-model="alert" persistent>
@@ -64,7 +64,7 @@
        </div>
        
        <div style="display: flex; justify-content: center">
-           <q-table title="Climas" title-class="text-red text-weight-bolder text-h4"
+           <q-table title="Climas" title-class="text-green text-weight-bolder text-h4"
                table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
                style="width: 90%; margin-bottom: 5%;">
               

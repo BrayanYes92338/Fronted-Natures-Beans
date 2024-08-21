@@ -1,8 +1,8 @@
 <template>
     <div>
         <div style="display: flex; justify-content: flex-end;margin-left: 5%; margin-right: 5%">
-            <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Empleado</q-btn>
-            <q-btn-dropdown color="green" icon="visibility" label="Filtrar"
+            <q-btn  style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar Empleado</q-btn>
+            <q-btn-dropdown color="blue" icon="visibility" label="Filtrar"
                 style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
                 class="q-my-md q-ml-md">
                 <q-list>
@@ -61,7 +61,7 @@
             </q-dialog>
         </div>
         <div style="display: flex; justify-content: center">
-            <q-table title="Empleados" title-class="text-red text-weight-bolder text-h4"
+            <q-table title="Empleados" title-class="text-green text-weight-bolder text-h4"
                 table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
                 style="width: 90%; margin-bottom: 5%;">
                 <template v-slot:body-cell-estado="props">
@@ -216,15 +216,15 @@ const listarEmpleadosActivo = async () => {
         const res = await useEmpleado.ListarEmpleadoActivo();
         rows.value = res.empleado;
         Notify.create({
-            message: "Listado de Parcela Activos",
+            message: "Listado de Empleados Activos",
             color: "green",
         });
         console.log("hola");
         
         
     } catch (error) {
-        console.error("Error al listar Parcela activos:", error);
-        Notify.create("Error al obtener Parcela de Usuarios activos");
+        console.error("Error al listar Empleados activos:", error);
+        Notify.create("Error al obtener Empleados de Usuarios activos");
     }
 };
 
@@ -236,12 +236,12 @@ const listarEmpleadosInactivo = async () => {
             console.log(res);
             
         Notify.create({
-            message: "Listado de Parcela Inactivos",
+            message: "Listado de Empleados Inactivos",
             color: "green",
         });
     } catch (error) {
-        console.error("Error al listar Parcela inactivos:", error);
-        Notify.create("Error al obtener listado de Parcela inactivos");
+        console.error("Error al listar Empleados inactivos:", error);
+        Notify.create("Error al obtener listado de Empleados inactivos");
     }
 };
 

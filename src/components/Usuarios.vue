@@ -1,10 +1,10 @@
 <template>
   <div>
     <div style="display: flex; justify-content: flex-end; margin-left: 5%; margin-right: 5%; ">
-      <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">
+      <q-btn  style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md"@click="abrir()">
         Registrar Usuario
       </q-btn>
-      <q-btn-dropdown color="green" icon="visibility" label="Filtrar"
+      <q-btn-dropdown color="blue" icon="visibility" label="Filtrar"
         style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
         class="q-my-md q-ml-md">
         <q-list>
@@ -95,7 +95,7 @@
     </div>
     <!-- Tabla Usuarios -->
     <div style="display: flex; justify-content: center">
-      <q-table title="Usuarios" title-class="text-red text-weight-bolder text-h4"
+      <q-table title="Usuarios" title-class="text-green text-weight-bolder text-h4"
         table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
         style="width: 90%">
         <template v-slot:body-cell-estado="props">
@@ -402,7 +402,10 @@ async function habilitarUsuaro(usuario) {
 }
 
 async function deshabilitarUsuario(usuario) {
-  const res = await useUsuario
+  if (useUsuario.user._id === usuario._id) {
+        Notify.create("No puedes desactivar la cuenta en uso");
+    } else {
+      const res = await useUsuario
     .putDesactivarUsuario(usuario._id)
     .then((response) => {
       console.log(response);
@@ -413,6 +416,8 @@ async function deshabilitarUsuario(usuario) {
       console.error("Error de Usuario", error);
       Notify.create("Error al deshabilitar el Usuario");
     });
+    }
+
 }
 
 const listarUsuarioActivos = async () => {

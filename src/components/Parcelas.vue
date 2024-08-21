@@ -1,8 +1,8 @@
 <template>
     <div>
         <div style="display: flex; justify-content: flex-end;margin-left: 5%;  margin-right: 5%">
-            <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Parcela</q-btn>
-            <q-btn-dropdown color="green" icon="visibility" label="Filtrar"
+            <q-btn  style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar Parcela</q-btn>
+            <q-btn-dropdown color="blue" icon="visibility" label="Filtrar"
                 style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
                 class="q-my-md q-ml-md">
                 <q-list>
@@ -80,7 +80,7 @@
             </q-dialog>
         </div>
         <div style="display: flex; justify-content: center">
-            <q-table title="Parcelas" title-class="text-red text-weight-bolder text-h4"
+            <q-table title="Parcelas" title-class="text-green text-weight-bolder text-h4"
                 table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
                 style="width: 90%;">
                 <template v-slot:body-cell-estado="props">
@@ -263,12 +263,12 @@ async function listarFincas() {
 const listarParcelaActivo = async () => {
     try {
         const res = await useParcela.ListarParcelaActivo();
-        rows.value = res.parcela;
+        rows.value = res.parcelas.reverse();
         Notify.create({
             message: "Listado de Parcela Activos",
             color: "green",
         });
-        console.log("hola");
+        console.log(res.parcelas);
         
         
     } catch (error) {
@@ -279,21 +279,22 @@ const listarParcelaActivo = async () => {
 
 const listarParcelasInactivo = async () => {
     try {
-        const res = await useParcela.ListarParcelaInactivo();
-        
-        rows.value = res.parcela;
-
-            console.log(res);
-            
+        const res = await useParcela.ListarParcelaInactivo(); 
+        rows.value = res.parcelas.reverse();  
         Notify.create({
             message: "Listado de Parcela Inactivos",
             color: "green",
         });
+
+        console.log(res.parcelas);
+        
     } catch (error) {
         console.error("Error al listar Parcela inactivos:", error);
         Notify.create("Error al obtener listado de Parcela inactivos");
     }
 };
+
+
 function filterFn(val, update, abort) {
     update(() => {
         const needle = val.toLowerCase();

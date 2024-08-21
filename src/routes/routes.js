@@ -12,7 +12,10 @@ import Parcela from "../components/Parcelas.vue";
 import Cultivo from "../components/Cultivo.vue";
 import Riego from "../components/Riego.vue";
 import Produccion from "../components/Produccion.vue";
+import Comprador from "../components/Comprador.vue";
+import Proceso from "../components/Proceso.vue";
 import CambioContra from "../components/CambioContra.vue";
+
 
 
 const auth = (to, from, next) => {
@@ -53,6 +56,8 @@ const routes = [
             { path: "/cultivo", component: Cultivo, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/riego", component: Riego, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/produccion", component: Produccion, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
+            { path: "/comprador", component: Comprador, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
+            { path: "/proceso", component: Proceso, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
         ]
     },
     { path: "/actualizar", component: CambioContra } 

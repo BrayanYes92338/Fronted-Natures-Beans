@@ -39,8 +39,8 @@
                     </q-select>
                     <q-input outlined v-model="nombre" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="nombre del cultivo" type="text" />
-                    <q-input outlined v-model="tipo" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label="tipo Cultivo" type="text" />
+                        <q-select outlined v-model="tipo" :options="['frutas', 'Cereales', 'Leguminosas', 'Hortalizas', 'Frutales', 'Tubérculos y Raíces', 'Oleaginosas']" label="Seleccione el tipo Cultivo"
+                        class="q-my-md q-mx-md" />
                     <q-card-actions align="right">
                         <q-btn v-if="accion === 1" @click="validarCultivo()" color="red" class="text-white"
                             :loading="useCultivo.loading">Agregar
@@ -63,7 +63,7 @@
         <div style="display: flex; justify-content: center">
             <q-table title="Cultivos" title-class="text-red text-weight-bolder text-h4"
                 table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
-                style="width: 90%;">
+                style="width: 90%; margin-bottom: 5%;">
                 <template v-slot:body-cell-estado="props">
                     <q-td :props="props">
                         <p style="color: green;" v-if="props.row.estado == 1">Activo</p>

@@ -83,6 +83,16 @@
             <i class="fas fa-boxes"></i> Produccion
           </router-link>
         </div>
+        <div class="item">
+          <router-link class="opciones" to="/comprador">
+            <i class="fas fa-shopping-cart"></i> Comprador
+          </router-link>
+        </div>
+        <div class="item">
+          <router-link class="opciones" to="/proceso">
+            <i class="fas fa-cogs"></i> Proceso
+          </router-link>
+        </div>
 
       </div>
       <div class="btn-cerrar">

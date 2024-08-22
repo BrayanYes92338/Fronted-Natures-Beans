@@ -107,7 +107,7 @@
                     <q-input outlined v-model="oeste" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Ingrese el Oeste de la Finca" type="text" />
                     <q-card-actions align="right">
-                        <q-btn color="red" class="text-white" :loading="useFinca.loading" @click="">
+                        <q-btn color="red" class="text-white" :loading="useFinca.loading" @click="agregarLimitesFinca()" >
                             Agregar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
@@ -134,7 +134,7 @@
                     <q-input outlined v-model="oeste" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Ingrese el Oeste de la Finca" type="text" />
                     <q-card-actions align="right">
-                        <q-btn color="red" class="text-white" :loading="useFinca.loading" @click="">
+                        <q-btn color="red" class="text-white" :loading="useFinca.loading" @click="editarLimitesFinca()" >
                             Editar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
@@ -160,7 +160,7 @@
                             <q-td :props="props">
                                 <div style="display: flex; gap:15px; justify-content: center; ">
                                     <!-- boton de editar -->
-                                    <q-btn color="primary">
+                                    <q-btn color="primary" @click="traerDatosLimites(props.row)">
                                         <q-tooltip>
                                             Editar Limites de Finca
                                         </q-tooltip>
@@ -270,6 +270,7 @@ let nombreF = ref("")
 let modalLimite = ref(false);
 let alerta = ref(false)
 let idLimite = ref("")
+let idLimite2 = ref("")
 let alerta2 = ref(false)
 
 
@@ -415,14 +416,14 @@ async function editarLimitesFinca() {
         } else if (oeste.value == "" || oeste.value.trim().length === 0) {
             Notify.create("Se debe agregar la Logintud de la zona oeste de la Finca");
         } else {
-            for (i = 0; i < limites.length; i++) {
-                const informacion = limites.value[i]
-                if (informacion._id === idLimite) {
-                    informacion.norte = norte.value
-                    informacion.sur = sur.value
-                    informacion.este = este.value
-                    informacion.oeste = oeste.value
-                    console.log(informacion);
+            for (let i = 0; i < limites.value.length; i++) {
+                const info = limites.value[i]
+                if (info._id === idLimite) {
+                    info.norte = norte.value
+                    info.sur = sur.value
+                    info.este = este.value
+                    info.oeste = oeste.value
+                    console.log(info);
                     break
                 }
             }

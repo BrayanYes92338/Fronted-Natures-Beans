@@ -14,6 +14,7 @@ import Riego from "../components/Riego.vue";
 import Produccion from "../components/Produccion.vue";
 import Comprador from "../components/Comprador.vue";
 import Proceso from "../components/Proceso.vue";
+import Insumo from "../components/Insumo.vue";
 import CambioContra from "../components/CambioContra.vue";
 
 
@@ -58,8 +59,8 @@ const routes = [
             { path: "/produccion", component: Produccion, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/comprador", component: Comprador, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/proceso", component: Proceso, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
-
-        ]
+            {path: "/insumo", component: Insumo, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } }
+        ]   
     },
     { path: "/actualizar", component: CambioContra } 
 ];

@@ -69,7 +69,12 @@
           </div>
           <div class="sub-menu" v-show="subMenus.finca">
           <router-link class="opciones" to="/riego">
-            <i class="fas fa-tint"></i>Riego
+            <i class="fas fa-tint"></i>Riegos
+          </router-link>
+        </div>
+        <div class="sub-menu" v-show="subMenus.finca">
+          <router-link class="opciones" to="/insumo">
+            <i class="fas fa-clipboard-list"></i>Insumos
           </router-link>
         </div>
         </div>

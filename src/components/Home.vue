@@ -94,6 +94,21 @@
             <i class="fas fa-cogs"></i> Proceso
           </router-link>
         </div>
+         <div class="item">
+          <router-link class="opciones" to="/elaboracionSustrato">
+            <i class="fas fa-cogs"></i> Elaboracion Sustrato
+          </router-link>
+        </div>
+          <div class="item">
+          <router-link class="opciones" to="/maquinaria">
+            <i class="fas fa-cogs"></i> Maquinaria
+          </router-link>
+        </div>
+          <div class="item">
+          <router-link class="opciones" to="/controlPlaga">
+            <i class="fas fa-cogs"></i> Control Plaga
+          </router-link>
+        </div>
         
       </div>
       <div class="btn-cerrar">

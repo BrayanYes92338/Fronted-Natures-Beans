@@ -15,6 +15,13 @@ import Produccion from "../components/Produccion.vue";
 import Comprador from "../components/Comprador.vue";
 import Proceso from "../components/Proceso.vue";
 import CambioContra from "../components/CambioContra.vue";
+import ElaboracionSustrato from "../components/ElaboracionSustrato.vue";
+import Maquinaria from "../components/Maquinaria.vue";
+import ControlPlaga from "../components/ControlPlaga.vue";
+
+
+
+
 
 
 
@@ -58,6 +65,10 @@ const routes = [
             { path: "/produccion", component: Produccion, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/comprador", component: Comprador, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/proceso", component: Proceso, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
+            { path: "/elaboracionSustrato", component: ElaboracionSustrato, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
+            { path: "/maquinaria", component: Maquinaria, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
+            { path: "/controlPlaga", component: ControlPlaga, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
+
 
         ]
     },

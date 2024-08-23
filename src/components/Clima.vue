@@ -5,7 +5,7 @@
        </div>
        <div>
            <q-dialog v-model="alert" persistent>
-               <q-card class="" style="width: 700px">
+               <q-card class="" style="width: 700px" >
                    <q-card-section style="background-color:#009B44; margin-bottom: 20px">
                        <div class="text-h6 text-white">
                            {{ accion == 1 ? "Agregar Clima" : "Editar Clima "}}
@@ -33,8 +33,8 @@
                        </q-item>
                        </template>
                    </q-select>
-                   <q-input outlined v-model="tipoClima" use-input hide-selected fill-input input-debounce="0"
-                       class="q-my-md q-mx-md" label="Nombre del  tipo de Clima" type="text" />
+                   <q-select outlined v-model="tipoClima" :options="['Heladas', 'Granizo', 'Lluvias']" label="Seleccione el tipo de Clima"
+                        class="q-my-md q-mx-md" />
                    <q-input outlined v-model="horaInicio" use-input hide-selected fill-input input-debounce="0"
                        class="q-my-md q-mx-md" label="hora de Inicio" type="text" />    
                    <q-input outlined v-model="horaFinal" use-input hide-selected fill-input input-debounce="0"
@@ -66,7 +66,7 @@
        <div style="display: flex; justify-content: center">
            <q-table title="Climas" title-class="text-green text-weight-bolder text-h4"
                table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
-               style="width: 90%;">
+               style="width: 90%; margin-bottom: 5%;">
               
                <template v-slot:body-cell-opciones="props">
                    <q-td :props="props">

@@ -8,6 +8,7 @@
     </q-header>
     <q-page-container>
       <div class="cuerpo">
+        <!-- AQUI VA   -->
         <div class="formulario" v-if="modal1">
           <q-form @submit="cambiar" class="form">
             <img src="../img/Nature Beans Logo v3.png" alt="Logo Natures Beans" class="loguito">
@@ -35,6 +36,7 @@
             <button class="btn" type="submit">Cambiar Contraseña</button>
           </q-form>
         </div>
+        <!-- ACA VA  -->
         <div class="carta" v-if="modal2">
           <q-card class="q-mt-md carta-tarjeta">
             <q-card-section class="card-content">
@@ -71,6 +73,8 @@ import { useUsuarioStore } from '../stores/usuario.js'
 let useUsuario = useUsuarioStore()
 let route = useRoute()
 let router = useRouter()
+// configurar aqui const modal1 = ref(true);
+// const modal2 = ref(false);
 const modal1 = ref(true);
 const modal2 = ref(false);
 
@@ -82,7 +86,7 @@ let passwordLogin2 = ref("")
 let isPwd = ref(true);
 let isPwd2 = ref(true);
 
-
+// acttivar esto
 if (!correo.value || correo.value === undefined) {
   Notify.create("No tiene permisos")
   router.push("/")
@@ -179,9 +183,68 @@ function cambiar() {
     padding: 30px 30px;
     margin-bottom: 80px;
     width: 400px;
-   
+  }
+  }
+  @media(max-width: 690px){
+    .carta-tarjeta {
+      width: 550px;
+    }
+}
+@media(max-width: 590px){
+  .carta-tarjeta {
+    width: 450px;
   }
 }
+@media(max-width: 490px){
+  .carta-tarjeta {
+    width: 350px;
+  }
+ 
+}
 
+  @media(max-width: 470px){
+    .form {
+      width: 350px;
+    }
+    .titulo-footer {
+      font-size: 13px;
+      text-align: right;
+    }
+}
+@media(max-width: 390px){
+  .carta-tarjeta {
+    width: 250px;    
+  }
+  .card-content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+   
+  .form {
+    width: 300px;
+  }
+  .text-h4{
+    font-size: large;
+    font-weight: bolder;
+  }
+}
+@media(max-width: 330px){
+  .form {
+    width: 250px;
+  }
+  .titulo{
+    font-size: xx-large;
+    font-weight: bolder;
+  }
+  .loguito{
+    width: 95px;
+    height: 95px;
+  }
+  .titulo-footer {
+    font-size: 11px;
+    text-align: right;
+  }
+}
 
 </style>

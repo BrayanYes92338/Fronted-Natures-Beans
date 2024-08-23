@@ -64,7 +64,7 @@
     <div style="display: flex; justify-content: center">
       <q-table title="Riegos" title-class="text-green text-weight-bolder text-h4"
         table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
-        style="width: 90%">
+        style="width: 90%; margin-bottom: 5%;">
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props">
             <div style="display: flex; gap: 15px; justify-content: center">

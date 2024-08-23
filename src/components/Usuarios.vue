@@ -97,7 +97,7 @@
     <div style="display: flex; justify-content: center">
       <q-table title="Usuarios" title-class="text-green text-weight-bolder text-h4"
         table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
-        style="width: 90%">
+        style="width: 90%; margin-bottom: 5%;">
         <template v-slot:body-cell-estado="props">
           <q-td :props="props">
             <p style="color: green" v-if="props.row.estado == 1">Activo</p>

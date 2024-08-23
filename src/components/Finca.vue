@@ -154,7 +154,7 @@
                             Limites de la finca {{ nombreF }}
                         </div>
                     </q-card-section>
-                    <q-table v-if="limites.length > 0" table-header-class="text-black font-weight-bold" :rows="limites"
+                    <!----><q-table v-if="limites.length > 0" table-header-class="text-black font-weight-bold" :rows="limites" 
                         :columns="columnas" row-key="name">
                         <template v-slot:body-cell-opciones="props">
                             <q-td :props="props">
@@ -185,7 +185,12 @@
                             </template>
                         </q-btn> -->
 
-                        <q-btn label="Agregar" color="black" outline @click="abrir2(props?.row)" />
+                        <q-btn label="Agregar" v-if="limites.length === 0" color="black" outline @click="abrir2(props?.row)" />
+                        <q-btn label="Agregar" v-else color="black" outline disable>
+                            <q-tooltip>
+                                La finca ya cuenta con limites
+                            </q-tooltip>
+                        </q-btn>
                         <q-btn label="Cerrar" color="black" outline @click="cerrar2()" />
                     </q-card-actions>
                 </q-card>
@@ -421,16 +426,14 @@ async function editarLimitesFinca() {
             for (let i = 0; i < limites.value.length; i++) {
                 const info = limites.value[i]
 
-                if (info._id === idLimite) {
+                if (info._id === idLimite.value) {
                     info.norte = norte.value
                     info.sur = sur.value
                     info.este = este.value
                     info.oeste = oeste.value
-                    console.log(info);
                     break
                 }
             }
-            console.log(limites.value)
 alerta2.value = false
             await useFinca.putFincas(idDeLimites.value, {
                 limites: limites.value

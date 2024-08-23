@@ -154,7 +154,7 @@
                             Limites de la finca {{ nombreF }}
                         </div>
                     </q-card-section>
-                    <q-table v-if="limites.length > 0" table-header-class="text-black font-weight-bold" :rows="limites"
+                    <!----><q-table v-if="limites.length > 0" table-header-class="text-black font-weight-bold" :rows="limites" 
                         :columns="columnas" row-key="name">
                         <template v-slot:body-cell-opciones="props">
                             <q-td :props="props">
@@ -172,20 +172,26 @@
                     </q-table>
                     <h4 v-else>La Finca {{ nombreF }}, aun no tiene registrado los limites</h4>
                     <q-card-actions align="right">
-                        <q-btn @click="abrir2(props?.row)" color="green" class="text-white" :loading="useFinca.loading">
+                        <!-- <q-btn @click="abrir2(props?.row)" color="green" class="text-white" :loading="useFinca.loading">
                             Agregar Limites de la Finca
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
                             </template>
                         </q-btn>
-
-
                         <q-btn @click="cerrar2()" color="red" class="text-white" :loading="useFinca.loading">
                             Cerrar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
                             </template>
+                        </q-btn> -->
+
+                        <q-btn label="Agregar" v-if="limites.length === 0" color="black" outline @click="abrir2(props?.row)" />
+                        <q-btn label="Agregar" v-else color="black" outline disable>
+                            <q-tooltip>
+                                La finca ya cuenta con limites
+                            </q-tooltip>
                         </q-btn>
+                        <q-btn label="Cerrar" color="black" outline @click="cerrar2()" />
                     </q-card-actions>
                 </q-card>
             </q-dialog>
@@ -194,7 +200,7 @@
         <div style="display: flex; justify-content: center">
             <q-table title="Fincas" title-class="text-green text-weight-bolder text-h4"
                 table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
-                style="width: 90%; margin-bottom: 5%;">
+                style="width: 90%;">
                 <template v-slot:body-cell-estado="props">
                     <q-td :props="props">
                         <p style="color: green;" v-if="props.row.estado == 1">Activo</p>
@@ -270,7 +276,7 @@ let nombreF = ref("")
 let modalLimite = ref(false);
 let alerta = ref(false)
 let idLimite = ref("")
-let idLimite2 = ref("")
+let idDeLimites = ref("")
 let alerta2 = ref(false)
 
 
@@ -309,7 +315,7 @@ function cerrar4() {
 
 function abrirLimites(finca) {
     modalLimite.value = true;
-    idLimite.value = finca._id
+    idDeLimites.value = finca._id
     limites.value = finca.limites
     nombreF.value = finca.nombre
 }
@@ -367,6 +373,7 @@ function traerDatosLimites(data) {
     este.value = data.este;
     oeste.value = data.oeste;
     idLimite.value = data._id
+    console.log(data)
 
 }
 
@@ -391,7 +398,7 @@ async function agregarLimitesFinca() {
                 oeste: oeste.value,
             }
             limites.value.push(nuevosLimites)
-            await useFinca.putFincas(idLimite.value, {
+            await useFinca.putFincas(idDeLimites.value, {
                 limites: limites.value
             })
             listarFincas()
@@ -418,16 +425,17 @@ async function editarLimitesFinca() {
         } else {
             for (let i = 0; i < limites.value.length; i++) {
                 const info = limites.value[i]
-                if (info._id === idLimite) {
+
+                if (info._id === idLimite.value) {
                     info.norte = norte.value
                     info.sur = sur.value
                     info.este = este.value
                     info.oeste = oeste.value
-                    console.log(info);
                     break
                 }
             }
-            await useFinca.putFincas(idLimite.value, {
+alerta2.value = false
+            await useFinca.putFincas(idDeLimites.value, {
                 limites: limites.value
             })
             listarFincas()

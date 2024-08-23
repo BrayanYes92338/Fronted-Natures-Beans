@@ -25,7 +25,7 @@
                 <q-card class="" style="width: 700px">
                     <q-card-section style="background-color:#009B44; margin-bottom: 20px">
                         <div class="text-h6 text-white">
-                            {{ accion == 1 ? "Agregar Finca" : "Editar Finca " + nombreF }}
+                            {{ accion == 1 ? "Agregar Finca" : "Editar Finca " }}
                         </div>
                     </q-card-section>
                     <q-select outlined v-model="idUsuario" use-input hide-selected fill-input input-debounce="0"
@@ -91,35 +91,101 @@
                 </q-card>
             </q-dialog>
         </div>
-
-        <!-- Tabla de limites de las fincas -->
+        <!-- Modal para agregar Limites de la fFinca -->
         <div>
-            <q-dialog v-model="modalLimite" persistent>
+            <q-dialog persistent v-model="alerta">
                 <q-card class="" style="width: 700px">
+                    <q-card-section style="background-color: #009b44; margin-bottom: 20px">
+                        <div class="text-h6 text-white">Agregar Limites de la Finca {{ nombreF }}</div>
+                    </q-card-section>
+                    <q-input outlined v-model="norte" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ingrese el Norte de la Finca" type="text" />
+                    <q-input outlined v-model="sur" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ingrese el Sur de la Finca" type="text" />
+                    <q-input outlined v-model="este" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ingrese el Este de la Finca" type="text" />
+                    <q-input outlined v-model="oeste" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ingrese el Oeste de la Finca" type="text" />
+                    <q-card-actions align="right">
+                        <q-btn color="red" class="text-white" :loading="useFinca.loading" @click="agregarLimitesFinca()" >
+                            Agregar
+                            <template v-slot:loading>
+                                <q-spinner color="primary" size="1em" />
+                            </template>
+                        </q-btn>
+                        <q-btn label="Cerrar" color="black" outline @click="cerrar3()" />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+        </div>
+        <!-- Modelo Para editar Datos de Limite de la Finca -->
+        <div>
+            <q-dialog persistent v-model="alerta2">
+                <q-card class="" style="width: 700px">
+                    <q-card-section style="background-color: #009b44; margin-bottom: 20px">
+                        <div class="text-h6 text-white">Editar Limites de la Finca {{ nombreF }}</div>
+                    </q-card-section>
+                    <q-input outlined v-model="norte" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ingrese el Norte de la Finca" type="text" />
+                    <q-input outlined v-model="sur" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ingrese el Sur de la Finca" type="text" />
+                    <q-input outlined v-model="este" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ingrese el Este de la Finca" type="text" />
+                    <q-input outlined v-model="oeste" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Ingrese el Oeste de la Finca" type="text" />
+                    <q-card-actions align="right">
+                        <q-btn color="red" class="text-white" :loading="useFinca.loading" @click="editarLimitesFinca()" >
+                            Editar
+                            <template v-slot:loading>
+                                <q-spinner color="primary" size="1em" />
+                            </template>
+                        </q-btn>
+                        <q-btn label="Cerrar" color="black" outline @click="cerrar4()" />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+        </div>
+        <!-- Tabla de los seguimientos de la Finca -->
+        <div>
+            <q-dialog v-model="modalLimite" persistent full-width>
+                <q-card class="">
                     <q-card-section style="background-color:#009B44; margin-bottom: 20px">
                         <div class="text-h6 text-white">
-                            {{ "Limites de la finca" + nombreF }}
+                            Limites de la finca {{ nombreF }}
                         </div>
                     </q-card-section>
-                    <q-table title="Limites de la Finca" title-class="text-red text-weight-bolder text-h4"
-                        table-header-class="text-black font-weight-bold" :rows="rows" :columns="columnas" row-key="name"
-                        style="width: 90%;">
-                        <template v-slot:body-cell-estado="props">
-                            <q-td :props="props">
-                                <p style="color: green;" v-if="props.row.estado == 1">Activo</p>
-                                <p style="color: red;" v-else>Inactivo</p>
-                            </q-td>
-                        </template>
+                    <q-table v-if="limites.length > 0" table-header-class="text-black font-weight-bold" :rows="limites"
+                        :columns="columnas" row-key="name">
                         <template v-slot:body-cell-opciones="props">
                             <q-td :props="props">
                                 <div style="display: flex; gap:15px; justify-content: center; ">
-
+                                    <!-- boton de editar -->
+                                    <q-btn color="primary" @click="traerDatosLimites(props.row)">
+                                        <q-tooltip>
+                                            Editar Limites de Finca
+                                        </q-tooltip>
+                                        <i class="fas fa-pencil-alt">
+                                        </i></q-btn>
                                 </div>
                             </q-td>
                         </template>
                     </q-table>
+                    <h4 v-else>La Finca {{ nombreF }}, aun no tiene registrado los limites</h4>
                     <q-card-actions align="right">
-                        <q-btn label="Cerrar" color="black" outline @click="cerrar2()" />
+                        <q-btn @click="abrir2(props?.row)" color="green" class="text-white" :loading="useFinca.loading">
+                            Agregar Limites de la Finca
+                            <template v-slot:loading>
+                                <q-spinner color="primary" size="1em" />
+                            </template>
+                        </q-btn>
+
+
+                        <q-btn @click="cerrar2()" color="red" class="text-white" :loading="useFinca.loading">
+                            Cerrar
+                            <template v-slot:loading>
+                                <q-spinner color="primary" size="1em" />
+                            </template>
+                        </q-btn>
                     </q-card-actions>
                 </q-card>
             </q-dialog>
@@ -138,11 +204,11 @@
                 <template v-slot:body-cell-opciones="props">
                     <q-td :props="props">
                         <div style="display: flex; gap:15px; justify-content: center; ">
-                            <q-btn color="teal" @click="abrirLimites(props.row)">
+                            <q-btn color="green" @click="abrirLimites(props.row)">
                                 <q-tooltip>
                                     Ver Limites de la Finca
                                 </q-tooltip>
-                                <i class="fas fa-border-all"></i>
+                                <i class="fas fa-map-marker-alt"></i>
                             </q-btn>
                             <!-- boton de editar -->
                             <q-btn color="primary" @click="traerFincas(props.row)">
@@ -160,22 +226,21 @@
                                 </i></q-btn>
                             <q-btn v-else color="positive" @click="habilitarFinca(props.row)">
                                 <q-tooltip>
-                                    Acticar
-                                </q-tooltip><i class="fas fa-check">
-
-                                </i></q-btn>
+                                    Activar
+                                </q-tooltip><i class="fas fa-check"></i>
+                            </q-btn>
                         </div>
                     </q-td>
                 </template>
             </q-table>
         </div>
+
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { Notify } from 'quasar';
-import axios from 'axios';
 import { useUsuarioStore } from "../stores/usuario.js"
 import { useFincaStore } from "../stores/finca.js"
 import { useDepartamentoStore } from "../stores/departamento.js"
@@ -195,7 +260,7 @@ let departamento = ref("");
 let ciudad = ref("");
 let direccion = ref("");
 let ubicacion = ref("");
-let limites = ref([])
+let limites = ref([]);
 let norte = ref("");
 let sur = ref("");
 let este = ref("");
@@ -203,10 +268,20 @@ let oeste = ref("");
 let area = ref("");
 let nombreF = ref("")
 let modalLimite = ref(false);
+let alerta = ref(false)
+let idLimite = ref("")
+let idLimite2 = ref("")
+let alerta2 = ref(false)
+
 
 function abrir() {
     accion.value = 1
     alert.value = true;
+}
+
+function abrir2(data) {
+    alerta.value = true;
+    modalLimite.value = false;
 }
 
 function cerrar() {
@@ -220,11 +295,26 @@ function cerrar2() {
 
 }
 
-function abrirLimites() {
+function cerrar3() {
+    alerta.value = false;
     modalLimite.value = true;
 }
 
-const columnas = ref([
+
+function cerrar4() {
+    alerta2.value = false;
+    modalLimite.value = true;
+
+}
+
+function abrirLimites(finca) {
+    modalLimite.value = true;
+    idLimite.value = finca._id
+    limites.value = finca.limites
+    nombreF.value = finca.nombre
+}
+
+let columnas = ref([
     {
         name: 'norte',
         required: true,
@@ -257,7 +347,98 @@ const columnas = ref([
         field: 'oeste',
         sortable: true
     },
+    {
+        name: 'opciones',
+        required: true,
+        label: 'Opciones',
+        align: 'center',
+        field: 'opciones',
+        sortable: true
+    },
 ])
+
+// Listar Limites de cada Finca
+
+
+function traerDatosLimites(data) {
+    alerta2.value = true;
+    norte.value = data.norte;
+    sur.value = data.sur;
+    este.value = data.este;
+    oeste.value = data.oeste;
+    idLimite.value = data._id
+
+}
+
+
+
+async function agregarLimitesFinca() {
+    try {
+        if (norte.value == "" || norte.value.trim().length === 0) {
+            Notify.create("Se debe agregar la Logintud de la zona norte de la Finca");
+        } else if (sur.value == "" || sur.value.trim().length === 0) {
+            Notify.create("Se debe agregar la Logintud de la zona sur de la Finca");
+
+        } else if (este.value == "" || este.value.trim().length === 0) {
+            Notify.create("Se debe agregar la Logintud de la zona este de la Finca");
+        } else if (oeste.value == "" || oeste.value.trim().length === 0) {
+            Notify.create("Se debe agregar la Logintud de la zona oeste de la Finca");
+        } else {
+            let nuevosLimites = {
+                norte: norte.value,
+                sur: sur.value,
+                este: este.value,
+                oeste: oeste.value,
+            }
+            limites.value.push(nuevosLimites)
+            await useFinca.putFincas(idLimite.value, {
+                limites: limites.value
+            })
+            listarFincas()
+            cerrar3()
+
+        }
+    } catch (error) {
+        console.error('Error de Finca', error)
+        Notify.create('Ocurrio un error al ingresar datos de la Finca')
+    }
+}
+
+async function editarLimitesFinca() {
+    try {
+        if (norte.value == "" || norte.value.trim().length === 0) {
+            Notify.create("Se debe agregar la Logintud de la zona norte de la Finca");
+        } else if (sur.value == "" || sur.value.trim().length === 0) {
+            Notify.create("Se debe agregar la Logintud de la zona sur de la Finca");
+
+        } else if (este.value == "" || este.value.trim().length === 0) {
+            Notify.create("Se debe agregar la Logintud de la zona este de la Finca");
+        } else if (oeste.value == "" || oeste.value.trim().length === 0) {
+            Notify.create("Se debe agregar la Logintud de la zona oeste de la Finca");
+        } else {
+            for (let i = 0; i < limites.value.length; i++) {
+                const info = limites.value[i]
+                if (info._id === idLimite) {
+                    info.norte = norte.value
+                    info.sur = sur.value
+                    info.este = este.value
+                    info.oeste = oeste.value
+                    console.log(info);
+                    break
+                }
+            }
+            await useFinca.putFincas(idLimite.value, {
+                limites: limites.value
+            })
+            listarFincas()
+        }
+
+    } catch (error) {
+        console.error('Error de Finca', error)
+        Notify.create('Ocurrio un error al editar datos de la Finca')
+    }
+}
+
 
 const columns = ref([
     {
@@ -544,7 +725,6 @@ function traerFincas(finca) {
         value: finca.idUsuario._id
     };
     nombre.value = finca.nombre;
-    nombreF.value = finca.nombre;
     ruc.value = finca.ruc;
     const departamentoSeleccionado = Departamentos.find(dep => dep.label === finca.departamento);
     departamento.value = departamentoSeleccionado;
@@ -557,7 +737,6 @@ function traerFincas(finca) {
     }
     direccion.value = finca.direccion;
     ubicacion.value = finca.ubicacion;
-    norte.value = finca.norte;
     area.value = finca.area;
 }
 
@@ -622,6 +801,10 @@ function Limpiar() {
     direccion.value = ""
     ubicacion.value = ""
     area.value = ""
+    norte.value = ""
+    sur.value = ""
+    este.value = ""
+    oeste.value = ""
 }
 
 

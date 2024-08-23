@@ -1,8 +1,8 @@
 <template>
   <div>
     <div style="display: flex; justify-content: flex-end;margin-left: 5%;margin-right: 5%">
-      <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar proveedor</q-btn>
-      <q-btn-dropdown color="green" icon="visibility" label="Filtrar"
+      <q-btn style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar proveedor</q-btn>
+      <q-btn-dropdown color="blue" icon="visibility" label="Filtrar"
                 style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
                 class="q-my-md q-ml-md">
                 <q-list>
@@ -61,7 +61,7 @@
     </div>
 
     <div style="display: flex; justify-content: center">
-      <q-table title="Proveedores" title-class="text-red text-weight-bolder text-h4"
+      <q-table title="Proveedores" title-class="text-green text-weight-bolder text-h4"
         table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
         style="width: 90%; margin-bottom: 5%;">
         <template v-slot:body-cell-estado="props">
@@ -132,6 +132,9 @@ const columns = ref([
     align: "center",
     field: "nombre",
     sortable: true,
+    format: (val) => {
+      return val.charAt(0).toUpperCase() + val.slice(1);
+    }
   },
   {
     name: "direccion",

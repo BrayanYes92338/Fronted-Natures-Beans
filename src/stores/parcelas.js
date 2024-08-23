@@ -30,7 +30,7 @@ export const useParcelaStore = defineStore("parcela",()=>{
         let ListarParcelaActivo = async () => {
   
             try {
-              let res = await axios.get("api/parcela/activos",{
+              let res = await axios.get("api/parcela/listarParcelaActiva",{
                 headers: {
                   token: useUsuario.token
                 },
@@ -45,7 +45,7 @@ export const useParcelaStore = defineStore("parcela",()=>{
           let ListarParcelaInactivo = async () => {
     
             try {
-              let res = await axios.get("api/parcela/inactivos",{
+              let res = await axios.get("api/parcela/listarParcelaInactiva",{
                 headers: {
                   token: useUsuario.token
   

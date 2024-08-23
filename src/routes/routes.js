@@ -58,6 +58,7 @@ const routes = [
             { path: "/produccion", component: Produccion, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/comprador", component: Comprador, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/proceso", component: Proceso, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
+
         ]
     },
     { path: "/actualizar", component: CambioContra } 

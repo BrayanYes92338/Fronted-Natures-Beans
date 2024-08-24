@@ -96,7 +96,7 @@
   let descripcion = ref("");
   let estadoFenológico = ref("");
   let  fechaFinal = ref("");
-  
+  let today = new Date().toISOString().split('T')[0]
   
   function abrir() {
     accion.value = 1;
@@ -165,21 +165,21 @@
       },
       },
       {
-      name: "fechaFinal",
-      required: true,
-      label: "Fecha Final",
-      align: "center",
-      field: "fechaFinal",
-      sortable: true,
-        format: (val) => {
-              if (!val) return '';
-              const fechaIngreso = new Date(val);
-              const dia = String(fechaIngreso.getDate()+ 1).padStart(2, '0');
-              const mes = String(fechaIngreso.getMonth() + 1).padStart(2, '0'); 
-              const año = fechaIngreso.getFullYear();
-              return `${dia}-${mes}-${año}`;
-            }
-    },
+    name: 'fechaFinal',
+    required: true,
+    label: 'Fecha Final',
+    align: 'center',
+    field: (row) => row.fechaFinal.split("T")[0],
+    sortable: true,
+    format: (val) => {
+      const fechaFinal = new Date(val);
+      return fechaFinal.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+});
+}
+},
     {
       name: "opciones",
       required: true,
@@ -190,6 +190,12 @@
     },
   ]);
   
+
+
+
+
+
+
   //  listar cultivos
   
   let cultivos = [];
@@ -299,7 +305,7 @@
     };
     tipo.value = proceso.tipo;
     descripcion.value = proceso.descripcion;
-    fechaFinal.value = proceso.fechaFinal;
+    fechaFinal.value = proceso.fechaFinal.split("T")[0];
   }
   
   function validarEdicionProceso() {

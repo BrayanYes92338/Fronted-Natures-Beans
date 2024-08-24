@@ -93,6 +93,13 @@
             <i class="fas fa-cogs"></i> Proceso
           </router-link>
         </div>
+        <div class="item">
+          <router-link class="opciones" to="/nomina">
+            <i class="fas fa-file-invoice"></i> Nomina
+          </router-link>
+        </div>
+        
+        
 
       </div>
       <div class="btn-cerrar">

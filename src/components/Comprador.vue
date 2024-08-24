@@ -1,8 +1,8 @@
 <template>
     <div>
         <div style="display: flex; justify-content: flex-end;margin-left: 5%;  margin-right: 5%">
-            <q-btn color="green" class="q-my-md q-ml-md" @click="abrir()">Registrar Comprador</q-btn> <q-btn-dropdown
-                color="blue" icon="visibility" label="Filtrar"
+            <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Comprador</q-btn> <q-btn-dropdown
+                color="green" icon="visibility" label="Filtrar"
                 style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
                 class="q-my-md q-ml-md">
                 <q-list>
@@ -77,7 +77,7 @@
             </q-dialog>
         </div>
         <div style="display: flex; justify-content: center">
-            <q-table title="Compradores" title-class="text-green text-weight-bolder text-h4"
+            <q-table title="Compradores" title-class="text-red text-weight-bolder text-h4"
                 table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
                 style="width: 90%; margin-bottom: 5%;">
                 <template v-slot:body-cell-estado="props">
@@ -352,7 +352,7 @@ function validarComprador() {
       Notify.create("Se debe agregar un nombre de Comprdor");
     } else if (tipoDocumento.value == "" || tipoDocumento.value.trim().length === 0) {
         Notify.create("Se debe agregar el tipo de Documento ");
-    }else if (documento.value == "" ) {
+    }else if (documento.value == "" || documento.value.trim().length === 0) {
       Notify.create("Se debe agregar un documento del Comprador");
     } else if (!validacionnumeros.test(documento.value)) {
       Notify.create("El documento solo debe llevar numeros");
@@ -362,13 +362,13 @@ function validarComprador() {
       Notify.create("El telefono solo debe llevar numeros");
     }  else if (direccion.value == "" || direccion.value.trim().length === 0) {
       Notify.create("Se debe agregar una direccion del comprador");
-    } else if (cantidad.value == "" ) {
+    } else if (cantidad.value == "" || cantidad.value.trim().length === 0) {
       Notify.create("Se debe agregar cantidad");
     } else if (!validacionnumeros.test(cantidad.value)) {
       Notify.create("El cantidad solo debe llevar numeros");
     } else if (nguiaTransporte.value == "" || nguiaTransporte.value.trim().length === 0) {
         Notify.create("Se debe agregar un N° guia Transporte");
-    } else if (valor.value == "" ) {
+    } else if (valor.value == "" ||valor.value.trim().length === 0) {
       Notify.create("Se debe agregar valor");
     } else if (!validacionnumeros.test(valor.value)) {
       Notify.create("El cantidad solo debe llevar numeros");
@@ -515,14 +515,14 @@ async function deshabilitarComprador(comprador) {
 }
 
 function Limpiar() {
-    idProduccion.value = ""
-    especie.value = ""
-    nombre.value = ""
-    tipoDocumento.value = ""
-    documento.value = ""
-    telefono.value = ""
-    cantidad.value = ""
-    nguiaTransporte.value = ""
+    idProduccion.value.value = "",
+    especie.value = "",
+    nombre.value = "",
+    tipoDocumento.value = "",
+    documento.value = "",
+    telefono.value = "",
+    cantidad.value = "",
+    nguiaTransporte.value = "",
     valor.value = ""
 }
 

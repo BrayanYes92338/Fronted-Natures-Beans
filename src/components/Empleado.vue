@@ -49,7 +49,7 @@
                                 <q-spinner color="primary" size="1em" />
                             </template>
                         </q-btn>
-                        <q-btn v-if="accion !== 1" @click="validarEdicionEmpleado() " color="red" class="text-white" :loading="useEmpleado.loading" >
+                        <q-btn v-if="accion !== 1" @click="validarEdicionEmpleado()" color="red" class="text-white" :loading="useEmpleado.loading" >
                             Editar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
@@ -214,12 +214,12 @@ async function listarEmplados() {
 const listarEmpleadosActivo = async () => {
     try {
         const res = await useEmpleado.ListarEmpleadoActivo();
-        rows.value = res.empleado;
+        rows.value = res.empleadoActivo.reverse();
         Notify.create({
             message: "Listado de Empleados Activos",
             color: "green",
         });
-        console.log("hola");
+        console.log(res.empleadoActivo);
         
         
     } catch (error) {
@@ -231,9 +231,9 @@ const listarEmpleadosActivo = async () => {
 const listarEmpleadosInactivo = async () => {
     try {
         const res = await useEmpleado.ListarEmpleadoInactivo();
-        rows.value = res.empleado;
+        rows.value = res.empleadoInactivo.reverse();
 
-            console.log(res);
+            console.log(res.empleadoInactivo);
             
         Notify.create({
             message: "Listado de Empleados Inactivos",

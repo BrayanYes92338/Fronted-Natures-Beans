@@ -1,7 +1,7 @@
 <template>
    <div>
        <div style="margin-left: 5%; text-align: end; margin-right: 5%">
-           <q-btn  style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar Clima</q-btn>
+           <q-btn style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar Clima</q-btn>
        </div>
        <div>
            <q-dialog v-model="alert" persistent>

@@ -1,15 +1,15 @@
 <template>
     <div>
         <div style="display: flex; justify-content: flex-end;margin-left: 5%;  margin-right: 5%">
-            <q-btn color="red" class="q-my-md q-ml-md" @click="abrir()">Registrar Comprador</q-btn> <q-btn-dropdown
-                color="green" icon="visibility" label="Filtrar"
+            <q-btn color="green" class="q-my-md q-ml-md" @click="abrir()">Registrar Comprador</q-btn> <q-btn-dropdown
+                color="blue" icon="visibility" label="Filtrar"
                 style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
                 class="q-my-md q-ml-md">
                 <q-list>
                     <q-item clickable v-ripple @click="listarComprador()">
                         <q-item-section>Listar Todos</q-item-section>
                     </q-item>
-                    <q-item clickable v-ripple @click="listarCompradorInactivo()">
+                    <q-item clickable v-ripple @click="ListarCompradorActivo()">
                         <q-item-section>Listar Activos</q-item-section>
                     </q-item>
                     <q-item clickable v-ripple @click="listarCompradorInactivo()">
@@ -77,7 +77,7 @@
             </q-dialog>
         </div>
         <div style="display: flex; justify-content: center">
-            <q-table title="Compradores" title-class="text-red text-weight-bolder text-h4"
+            <q-table title="Compradores" title-class="text-green text-weight-bolder text-h4"
                 table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
                 style="width: 90%; margin-bottom: 5%;">
                 <template v-slot:body-cell-estado="props">
@@ -255,9 +255,13 @@ const columns = ref([
         name: 'valor',
         required: true,
         label: 'valor',
-        align: 'center',
+        align: 'center',        
         field: 'valor',
-        sortable: true
+        sortable: true,
+            format: (val) => {
+            if (val === null || val === undefined) return '';
+            return Number(val).toLocaleString('es-ES'); 
+        }
     },
     {
         name: 'estado',
@@ -312,7 +316,7 @@ async function listarComprador() {
     rows.value = r.data.comprador.reverse()
     console.log(r.data.comprador)
 }
-const listarCompradorsActivo = async () => {
+const ListarCompradorActivo = async () => {
     try {
         const res = await useComprador.ListarCompradorActivo();
         rows.value = res.comprador;
@@ -459,7 +463,6 @@ async function editarComprador() {
             nguiaTransporte: nguiaTransporte.value,
             valor: valor.value
         })
-
         listarComprador()
 
     } catch (error) {
@@ -515,14 +518,15 @@ async function deshabilitarComprador(comprador) {
 }
 
 function Limpiar() {
-    idProduccion.value.value = "",
-    especie.value = "",
-    nombre.value = "",
-    tipoDocumento.value = "",
-    documento.value = "",
-    telefono.value = "",
-    cantidad.value = "",
-    nguiaTransporte.value = "",
+    idProduccion.value = ""
+    especie.value = ""
+    nombre.value = ""
+    tipoDocumento.value = ""
+    documento.value = ""
+    telefono.value = ""
+    direccion.value = ""
+    cantidad.value = ""
+    nguiaTransporte.value = ""
     valor.value = ""
 }
 

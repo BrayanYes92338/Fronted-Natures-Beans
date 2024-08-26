@@ -250,10 +250,31 @@ const columns = ref([
    {
     name: "fechaCompra",
     required: true,
-    label: "fechaCompra",
+    label: "fecha de Compra",
     align: "center",
     field: "fechaCompra",
     sortable: true,
+     format: (val) => {
+      if (!val) return "";
+
+      const fechaIngreso = new Date(val);
+      const fechaColombia = new Date(
+        fechaIngreso.toLocaleString("en-US", { timeZone: "America/Bogota" })
+      );
+
+      return (
+        fechaColombia.toLocaleDateString("es-CO", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        }) +
+        " " +
+        fechaColombia.toLocaleTimeString("es-CO", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      );
+    },
     
   },
  

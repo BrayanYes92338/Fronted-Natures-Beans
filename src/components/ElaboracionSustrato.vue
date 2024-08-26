@@ -126,19 +126,24 @@
             type="text"
             required
           />
+<q-select
+  outlined
+  v-model="MetodoAplicacion"
+  :options="[
+    'Mezcla Manual', 
+    'Mezcla Mecánica', 
+    'Aplicación Directa', 
+    'Aplicación en Capas', 
+    'Incorporación de Aditivos', 
+    'Esterilización del Sustrato', 
+    'Enriquecimiento con Microorganismos', 
+    'Aplicación de Cobertura'
+  ]"
+  label="Seleccione el Método de Aplicación"
+  class="q-my-md q-mx-md"
+  required
+/>
 
-          <q-input
-            outlined
-            v-model="MetodoAplicacion"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="Método de Aplicación"
-            type="text"
-            required
-          />
 
           <q-card-actions align="right">
             <q-btn
@@ -217,7 +222,10 @@ const idProceso = ref(null);
 const productocomercial = ref("");
 const ingredienteActivo = ref("");
 const dosisUtilizada = ref("");
-const MetodoAplicacion = ref("");
+const MetodoAplicacion = ref(null);
+
+
+
 
 function abrir() {
   accion.value = 1;
@@ -278,19 +286,15 @@ const columns = ref([
     align: "center",
     field: "dosisUtilizada",
     sortable: true,
-    
   },
-   {
+  {
     name: "MetodoAplicacion",
     required: true,
     label: "Metodo Aplicacion",
     align: "center",
     field: "MetodoAplicacion",
     sortable: true,
-    
   },
- 
-  
 
   {
     name: "opciones",
@@ -362,12 +366,12 @@ async function listarElaboracion() {
 
 function validarIngresoagregarElaboracion() {
   let validacionnumeros = /^[0-9]+$/;
-  
-  if (idProceso.value == null ) {
+
+  if (idProceso.value == null) {
     Notify.create("Se debe seleccionar el Proceso");
-  } else if (idEmpleadooperario.value == null ) {
+  } else if (idEmpleadooperario.value == null) {
     Notify.create("Se debe seleccionar el Operario");
-  } else if (idEmpleadoresponsable.value == null ) {
+  } else if (idEmpleadoresponsable.value == null) {
     Notify.create("Se debe seleccionar el Responsable");
   } else if (productocomercial.value.trim().length === 0) {
     Notify.create("Se debe agregar el Producto Comercial");
@@ -380,17 +384,16 @@ function validarIngresoagregarElaboracion() {
   } else if (MetodoAplicacion.value.trim().length === 0) {
     Notify.create("Se debe agregar el Método de Aplicación");
   } else {
-    agregarElaboracion(); 
+    agregarElaboracion();
     listarElaboracion();
     Limpiar();
     cerrar();
     Notify.create({
       type: "positive",
-      message: "Riego agregado exitosamente",
+      message: "Elaboracion de Sustrato agregado exitosamente",
     });
   }
 }
-
 
 async function agregarElaboracion() {
   const r = await useElaboracion.postElaboracionSustrato({
@@ -405,7 +408,7 @@ async function agregarElaboracion() {
 
   cerrar();
   Limpiar();
-  listarRiegos();
+  listarElaboracion();
   console.log(r);
 }
 
@@ -413,7 +416,7 @@ function traerRiego(riego) {
   alert.value = true;
   accion.value = 2;
   id.value = riego._id;
-    idProceso.value = {
+  idProceso.value = {
     label: riego.idProceso.descripcion,
     value: riego.idProceso._id,
   };
@@ -429,17 +432,16 @@ function traerRiego(riego) {
   ingredienteActivo.value = riego.ingredienteActivo;
   dosisUtilizada.value = riego.dosisUtilizada;
   MetodoAplicacion.value = riego.MetodoAplicacion;
-
 }
 
 function validarEdicionElaboracion() {
   let validacionnumeros = /^[0-9]+$/;
 
-  if (idProceso.value == null ) {
+  if (idProceso.value == null) {
     Notify.create("Se debe seleccionar el Proceso");
-  } else if (idEmpleadooperario.value == null ) {
+  } else if (idEmpleadooperario.value == null) {
     Notify.create("Se debe seleccionar el Operario");
-  } else if (idEmpleadoresponsable.value == null ) {
+  } else if (idEmpleadoresponsable.value == null) {
     Notify.create("Se debe seleccionar el Responsable");
   } else if (productocomercial.value.trim().length === 0) {
     Notify.create("Se debe agregar el Producto Comercial");
@@ -452,7 +454,7 @@ function validarEdicionElaboracion() {
   } else if (MetodoAplicacion.value.trim().length === 0) {
     Notify.create("Se debe agregar el Método de Aplicación");
   } else {
-    editarElaboracion(); 
+    editarElaboracion();
     listarElaboracion();
     Limpiar();
     cerrar();
@@ -466,19 +468,21 @@ function validarEdicionElaboracion() {
 async function editarElaboracion() {
   try {
     await useElaboracion.putElaboracionSustrato(id.value, {
-     idEmpleadoresponsable: idEmpleadooperario.value.value,
-    idEmpleadooperario: idEmpleadooperario.value.value,
-    idProceso: idProceso.value.value,
-    productocomercial: productocomercial.value,
-    ingredienteActivo: ingredienteActivo.value,
-    dosisUtilizada: dosisUtilizada.value,
-    MetodoAplicacion: MetodoAplicacion.value,
+      idEmpleadoresponsable: idEmpleadooperario.value.value,
+      idEmpleadooperario: idEmpleadooperario.value.value,
+      idProceso: idProceso.value.value,
+      productocomercial: productocomercial.value,
+      ingredienteActivo: ingredienteActivo.value,
+      dosisUtilizada: dosisUtilizada.value,
+      MetodoAplicacion: MetodoAplicacion.value,
     });
     listarElaboracion();
-    cerrar()
+    cerrar();
   } catch (error) {
     console.error("Error de actualizar Elaboracion de sustrato", error);
-    Notify.create("Ocurrio un error al editar datos del Elaboracion de sustrato");
+    Notify.create(
+      "Ocurrio un error al editar datos del Elaboracion de sustrato"
+    );
   }
 }
 

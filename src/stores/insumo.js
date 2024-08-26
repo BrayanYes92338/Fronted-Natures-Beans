@@ -50,7 +50,7 @@ export const UseInsumoStore = defineStore("insumo", ()=>{
         }
     }
 
-    const putInsumos = async (data,id)=>{
+    const putInsumos = async (id,data)=>{
         try{
             loading.value = true;
             let r = await axios.put(`api/insumo/editar/${id}`, data, {

@@ -114,12 +114,19 @@
             <i class="fas fa-cogs"></i> Control Plaga
           </router-link>
         </div>
+
         <div class="item">
           <router-link class="opciones" to="/nomina">
             <i class="fas fa-file-invoice"></i> Nómina
           </router-link>
         </div>
 
+          <div class="item">
+          <router-link class="opciones" to="/mantenimiento">
+            <i class="fas fa-cogs"></i> Mantenimiento
+          </router-link>
+        </div>
+        
       </div>
       <div class="btn-cerrar">
         <button class="cerrar-sesion" @click="cerrarSesion()">

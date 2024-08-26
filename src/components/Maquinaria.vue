@@ -27,7 +27,7 @@
       input-debounce="0"
       class="q-my-md q-mx-md"
       :options="opciones"
-      @filter="filtrarProveedor"
+      @filter="filtrarFn"
       label="Seleccionar el Proveedor"
     >
       <template v-slot:no-option>
@@ -250,10 +250,31 @@ const columns = ref([
    {
     name: "fechaCompra",
     required: true,
-    label: "fechaCompra",
+    label: "fecha de Compra",
     align: "center",
     field: "fechaCompra",
     sortable: true,
+     format: (val) => {
+      if (!val) return "";
+
+      const fechaIngreso = new Date(val);
+      const fechaColombia = new Date(
+        fechaIngreso.toLocaleString("en-US", { timeZone: "America/Bogota" })
+      );
+
+      return (
+        fechaColombia.toLocaleDateString("es-CO", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        }) +
+        " " +
+        fechaColombia.toLocaleTimeString("es-CO", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      );
+    },
     
   },
  
@@ -299,7 +320,14 @@ async function listarCultivos() {
 let proveedor = [];
 let dates = {};
 const opciones = ref(proveedor);
-
+function filtrarFn(val, update, abort) {
+  update(() => {
+    const needle = val.toLowerCase();
+    opciones.value = proveedor.filter(
+      (v) => v.label.toLowerCase().indexOf(needle) > -1
+    );
+  });
+}
 async function listarProveedor() {
   const data = await useProveedor.listarProveedor();
   data.data.proveedor.forEach((item) => {
@@ -312,14 +340,7 @@ async function listarProveedor() {
   console.log(dates);
 }
 
-function filtrarFn(val, update, abort) {
-  update(() => {
-    const needle = val.toLowerCase();
-    opciones.value = empleados.filter(
-      (v) => v.label.toLowerCase().indexOf(needle) > -1
-    );
-  });
-}
+
 
 async function listarMaquinarias() {
   const r = await useMaquinaria.listarMaquinaria();

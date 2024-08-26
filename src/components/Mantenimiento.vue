@@ -60,7 +60,7 @@
             input-debounce="0"
             class="q-my-md q-mx-md"
             :options="opcionesMaquinaria"
-            @filter="filtrarProveedor"
+            @filter="filtrarMaquinaria"
             label="Seleccionar el Maquinaria"
           >
             <template v-slot:no-option>
@@ -81,7 +81,7 @@
             input-debounce="0"
             class="q-my-md q-mx-md"
             :options="opcionesEmpleados"
-            @filter="filtrarProveedor"
+            @filter="filtrarEmpleado"
             label="Seleccionar el Responsable"
           >
             <template v-slot:no-option>
@@ -307,7 +307,12 @@ function filterFn(val, update, abort) {
 let maquinaria = [];
 let datos = {};
 const opcionesMaquinaria = ref(maquinaria);
-
+function filtrarMaquinaria(val, update, abort) {
+    update(() => {
+      const needle = val.toLowerCase();
+      opcionesMaquinaria.value = maquinaria.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
+    });
+  }
 async function getMaquinarias() {
   const data = await useMantenimiento.listarMaquinaria();
   data.data.maquinas.forEach((item) => {
@@ -346,7 +351,12 @@ function filtrarFn(val, update, abort) {
 let empleados = [];
 let datesEmpleados = {};
 const opcionesEmpleados = ref(empleados);
-
+function filtrarEmpleado(val, update, abort) {
+    update(() => {
+      const needle = val.toLowerCase();
+      opcionesEmpleados.value = empleados.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
+    });
+  }
 async function listarEmpleados() {
   const data = await useEmpleado.listarEmpleado();
   data.data.empleado.forEach((item) => {

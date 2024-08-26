@@ -33,7 +33,7 @@
             input-debounce="0"
             class="q-my-md q-mx-md"
             :options="options"
-            @filter="filtrarProceso"
+            @filter="filterFn"
             label="Seleccionar el Proceso"
           >
             <template v-slot:no-option>
@@ -76,7 +76,7 @@
             input-debounce="0"
             class="q-my-md q-mx-md"
             :options="opciones"
-            @filter="filtrarResponsable"
+            @filter="filtrarEmpleado"
             label="Seleccionar el Responsable"
           >
             <template v-slot:no-option>
@@ -315,7 +315,7 @@ const options = ref(proceso);
 function filterFn(val, update, abort) {
   update(() => {
     const needle = val.toLowerCase();
-    options.value = cultivos.filter(
+    options.value = proceso.filter(
       (v) => v.label.toLowerCase().indexOf(needle) > -1
     );
   });
@@ -336,7 +336,14 @@ async function listarCultivos() {
 let empleados = [];
 let dates = {};
 const opciones = ref(empleados);
-
+function filtrarEmpleado(val, update, abort) {
+  update(() => {
+    const needle = val.toLowerCase();
+    opciones.value = empleados.filter(
+      (v) => v.label.toLowerCase().indexOf(needle) > -1
+    );
+  });
+}
 async function listarEmpleados() {
   const data = await useEmpleado.listarEmpleado();
   data.data.empleado.forEach((item) => {

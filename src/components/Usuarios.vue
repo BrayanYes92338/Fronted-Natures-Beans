@@ -70,7 +70,7 @@
             </template>
           </q-select>
           <q-card-actions align="right">
-            <q-btn color="red" class="text-white" :loading="useUsuario.loading" @click="agregarUsuarios()">
+            <q-btn color="red" class="text-white" :loading="useUsuario.loading" @click="validarUsuario()">
               Agregar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -121,7 +121,7 @@
             </template>
           </q-select>
           <q-card-actions align="right">
-            <q-btn @click="editarUsuario()" color="red" class="text-white" :loading="useUsuario.loading">
+            <q-btn @click="validarEdicionUsuario()" color="red" class="text-white" :loading="useUsuario.loading">
               Editar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -361,7 +361,7 @@ async function agregarUsuarios() {
   });
   listarUsuarios();
   cerrar();
-  console.log(r);
+  console.log( departamento.value.label);
 }
 
 async function validarUsuario() {
@@ -388,13 +388,14 @@ async function validarUsuario() {
       Notify.create("El telefono solo debe llevar numeros");
     } else if (rol.value == "" || rol.value.trim().length === 0) {
       Notify.create("Se debe agregar un rol de Usuario");
-    } else if (departamento.value || departamento.value.label.trim().length === 0) {
-      Notify.create("Se debe agregar un Departamento donde viveel Usuario");
-    } else if (municipio.value == "" || municipio.value.trim().length === 0) {
-      Notify.create("Se debe agregar un municipio de Usuario");
-    } else {
+    }else if (!departamento.value || String(departamento.value).trim() === "") {
+    Notify.create("Se debe agregar un Departamento donde vive el Usuario");
+  } else if (!municipio.value || String(municipio.value).trim() === "") {
+    Notify.create("Se debe agregar un municipio de Usuario");
+  }else {
        agregarUsuarios();
       limpiar();
+      cerrar2()
       Notify.create({
         type: "positive",
         message: "Usuario agregado exitosamente",
@@ -425,27 +426,31 @@ function traerInfo(usuario) {
 function validarEdicionUsuario() {
   let validacionnumeros = /^[0-9]+$/;
   let validacionCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (nombre.value == "" || nombre.value.trim().length === 0) {
+  
+  if (nombre.value.trim() === "") {
     Notify.create("Se debe agregar un nombre de Usuario");
-  } else if (direccion.value == "" || direccion.value.trim().length === 0) {
+  } else if (direccion.value.trim() === "") {
     Notify.create("Se debe agregar una direccion de Usuario");
-  } else if (documento.value == "" || documento.value.trim().length === 0) {
+  } else if (documento.value.trim() === "") {
     Notify.create("Se debe agregar un documento de Usuario");
   } else if (!validacionnumeros.test(documento.value)) {
     Notify.create("El documento solo debe llevar numeros");
-  } else if (correo.value == "" || correo.value.trim().length === 0) {
+  } else if (correo.value.trim() === "") {
     Notify.create("Se debe agregar un correo de Usuario");
   } else if (!validacionCorreo.test(correo.value)) {
     Notify.create("El correo del usuario no es valido");
-  } else if (telefono.value == "" || telefono.value.trim().length === 0) {
+  } else if (telefono.value.trim() === "") {
     Notify.create("Se debe agregar un telefono de Usuario");
   } else if (!validacionnumeros.test(telefono.value)) {
     Notify.create("El telefono solo debe llevar numeros");
-  } else if (departamento.value || departamento.value.label.trim().length === 0) {
-      Notify.create("Se debe agregar un Departamento donde vive el Usuario");
-    } else if (municipio.value == "" || municipio.value.trim().length === 0) {
-      Notify.create("Se debe agregar un municipio de Usuario");
-    }  else {
+  } else if (!departamento.value || String(departamento.value).trim() === "") {
+
+    Notify.create("Se debe agregar un Departamento donde vive el Usuario");
+  } else if (!municipio.value || String(municipio.value).trim() === "") {
+  console.log(municipio.value);
+  
+    Notify.create("Se debe agregar un municipio de Usuario");
+  } else {
     editarUsuario();
     limpiar();
     cerrar2();
@@ -456,6 +461,7 @@ function validarEdicionUsuario() {
   }
 }
 
+
 async function editarUsuario() {
   try {
     await useUsuario.putUsuario(id.value, {
@@ -465,8 +471,10 @@ async function editarUsuario() {
       correo: correo.value,
       telefono: telefono.value,
      departamento: departamento.value.label,
-     municipio: municipio.value.label,
+     municipio: municipio.value.value,
     });
+    console.log( departamento.value);
+    
     listarUsuarios();
     limpiar();
   } catch (error) {

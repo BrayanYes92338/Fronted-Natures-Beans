@@ -319,7 +319,7 @@ async function listarComprador() {
 const ListarCompradorActivo = async () => {
     try {
         const res = await useComprador.ListarCompradorActivo();
-        rows.value = res.comprador;
+        rows.value =  res.compradores.reverse();
         Notify.create({
             message: "Listado de Compradores Activos",
             color: "green",
@@ -336,7 +336,7 @@ const ListarCompradorActivo = async () => {
 const listarCompradorInactivo = async () => {
     try {
         const res = await useComprador.ListarCompradorInactivo();
-        rows.value = res.comprador;
+        rows.value = res.compradores.reverse();
         Notify.create({
             message: "Listado de Compradores Inactivos",
             color: "green",

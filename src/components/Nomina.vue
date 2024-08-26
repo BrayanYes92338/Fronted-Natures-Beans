@@ -256,7 +256,7 @@ const listarNominaInactiva = async () => {
     } catch (error) {
         console.error("Error al listar Nomina inactiva", error);
         Notify.create("Error al obtener listado de Nomina inactiva");
-    }
+    }
 };
 
 

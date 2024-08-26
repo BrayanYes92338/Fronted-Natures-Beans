@@ -370,7 +370,7 @@ async function listarEmpleados() {
 }
 async function listarMantenimiento() {
   const r = await useMantenimiento.listarMantenimiento();
-  rows.value = r.data.mantenimiento;
+  rows.value = r.data.mantenimiento.reverse();
   console.log(r);
 }
 const listarMantenimientoActivo = async () => {

@@ -41,7 +41,7 @@
                         class="q-my-md q-mx-md" label="especie " type="text" />
                     <q-input outlined v-model="nombre" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Nombre del comprador" type="text" />
-                        <q-select outlined v-model="tipoDocumento" :options="['Cédula Ciudadanía', 'NIT', 'Pasaporte', 'otro']" label="Seleccione el tipo de documento"
+                        <q-select outlined v-model="tipoDocumento" :options="['Cédula Ciudadanía','NIT','Pasaporte','otro']" label="Seleccione el tipo de documento"
                         class="q-my-md q-mx-md" />
                     <q-input outlined v-model="documento" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="documento del comprador" type="tel" required pattern="[0-9]+"
@@ -51,12 +51,12 @@
                         maxlength="10" />   
                     <q-input outlined v-model="direccion" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Direccion del comprador" type="text" />
-                        <q-input outlined v-model=" cantidad" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label=" cantidad " type="number" />   
+                        <q-input outlined v-model="cantidad" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="cantidad" type="number" />   
                     <q-input outlined v-model="nguiaTransporte" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="N° de guia de Transporte del comprador" type="text" /> 
-                    <q-input outlined v-model=" valor" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label=" valor " type="number" />    
+                    <q-input outlined v-model="valor" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="valor" type="number" />    
                     <q-card-actions align="right">
                         <q-btn v-if="accion === 1" @click="validarComprador()" color="red" class="text-white"
                             :loading="useComprador.loading">Agregar

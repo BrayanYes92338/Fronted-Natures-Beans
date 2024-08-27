@@ -116,7 +116,12 @@
         </div>
         <div class="item">
           <router-link class="opciones" to="/nomina">
-            <i class="fas fa-file-invoice"></i> Nómina
+            <i class="fas fa-file-invoice"></i> Nomina
+          </router-link>
+        </div>
+        <div class="item">
+          <router-link class="opciones" to="/semilla">
+            <i class="fas fa-spa"></i> Semillas
           </router-link>
         </div>
 

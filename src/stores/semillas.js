@@ -5,36 +5,37 @@ import { ref } from "vue";
 import { useUsuarioStore } from "./usuario.js";
 
 
-export const useNominaStore = defineStore('nomina', () => {
+export const useSemillaStore = defineStore('semilla', () => {
     let loading = ref(false);
-    let nominas = ref([]);
+    let semilla = ref([]);
     const useUsuario = useUsuarioStore();
-    const listarNominas = async () => {
+    const listarSemilla = async () => {
         try {
             loading.value = true;
-            const response = await axios.get('api/nomina/listar', {
+            const response = await axios.get('api/semilla/listar', {
                 headers: {
                     token: useUsuario.token
                 }
             })
-            nominas.value = response.data;
+            semilla.value = response.data;
             return response;
         } catch (error) {
-            console.error(' Error al obtener lista de Nominas:', error)
+            console.error(' Error al obtener lista de semillas:', error)
             throw error
         } finally {
             loading.value = false;
         }
     }
 
-    let ListarNominaActiva = async () => {
+    let listarSemillaActiva = async () => {
   
         try {
-          let res = await axios.get("api/nomina/activar",{
+          let res = await axios.get("api/semilla/activos",{
             headers: {
               token: useUsuario.token
             },
           });
+          
           console.log(res);
           return res.data;
         } catch (error) {
@@ -43,10 +44,10 @@ export const useNominaStore = defineStore('nomina', () => {
         }
       }
 
-      let listarNominaInactiva = async () => {
+      let listarSemillaInactiva = async () => {
 
         try {
-          let res = await axios.get("api/nomina/desactivar",{
+          let res = await axios.get("api/semilla/inactivos",{
             headers: {
               token: useUsuario.token
 
@@ -60,10 +61,10 @@ export const useNominaStore = defineStore('nomina', () => {
         }
       }
 
-    const postNomina = async (data) => {
+    const postSemilla = async (data) => {
         try {
             loading.value = true;
-            let res = await axios.post('api/nomina/agregar', data, {
+            let res = await axios.post('api/semilla/agregar', data, {
                 headers: {
                     token: useUsuario.token
                 }
@@ -82,10 +83,10 @@ export const useNominaStore = defineStore('nomina', () => {
     }
 
 
-    const putNomina = async (id, data) => {
+    const putSemilla= async (id, data) => {
         try {
             loading.value = true;
-            let r = await axios.put(`api/nomina/editar/${id}`, data, {
+            let r = await axios.put(`api/semilla/editar/${id}`, data, {
                 headers: {
                     token: useUsuario.token
                 }
@@ -103,10 +104,10 @@ export const useNominaStore = defineStore('nomina', () => {
         }
     }
 
-    const putNominaActiva = async (id) => {
+    const putSemillaActiva = async (id) => {
         try {
             loading.value = true;
-            let r = await axios.put(`/api/nomina/activar/${id}`, {}, {
+            let r = await axios.put(`/api/semilla/activar/${id}`, {}, {
                 headers: {
                     token: useUsuario.token
                 }
@@ -125,10 +126,10 @@ export const useNominaStore = defineStore('nomina', () => {
         }
     }
 
-    const putNominaInactiva = async (id) => {
+    const putSemillaDesactivar = async (id) => {
         try {
             loading.value = true;
-            let r = await axios.put(`api/nomina/desactivar/${id}`, {}, {
+            let r = await axios.put(`api/semilla/desactivar/${id}`, {}, {
                 headers: {
                     token: useUsuario.token
                 }
@@ -146,7 +147,7 @@ export const useNominaStore = defineStore('nomina', () => {
             loading.value = false;
         }
     }
-    return { listarNominas, ListarNominaActiva, listarNominaInactiva, postNomina, putNominaActiva, putNominaInactiva,  putNomina, loading, nominas }
+    return { listarSemilla, listarSemillaActiva, listarSemillaInactiva, postSemilla, putSemilla,putSemillaActiva, putSemillaDesactivar, loading, semilla }
 
 }, {
     persist: true

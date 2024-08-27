@@ -51,7 +51,7 @@
                         maxlength="10" />   
                     <q-input outlined v-model="direccion" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Direccion del comprador" type="text" />
-                        <q-input outlined v-model=" cantidad" use-input hide-selected fill-input input-debounce="0"
+                    <q-input outlined v-model=" cantidad" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label=" cantidad " type="number" />   
                     <q-input outlined v-model="nguiaTransporte" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="N° de guia de Transporte del comprador" type="text" /> 

@@ -444,6 +444,7 @@ const listarSemillaInactiva = async () => {
   }
   
 
+
   async function habilitarSemilla(semilla){
     const res = await useSemilla.putSemillaActiva(semilla._id)
     .then((response) => {

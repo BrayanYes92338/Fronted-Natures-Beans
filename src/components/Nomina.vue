@@ -81,7 +81,7 @@
                             <!-- botons de activado y desactivado -->
                             <q-btn v-if="props.row.estado == 1" @click="deshabilitarNomina(props.row)"  color="negative">
                                 <q-tooltip>
-                                    Desactivar
+                                    Desacticar
                                 </q-tooltip>
                                 <i class="fas fa-times">
                                 </i></q-btn>
@@ -170,16 +170,16 @@ const columns = ref([
         sortable: true
     },
     {
-        name: 'valor',
-         required: true,
-        label: 'Valor Nómina',
-        align: 'center',
-        field: 'valor',
-        sortable: true,
-        format: (val) => {
-            if (val === null || val === undefined) return '';
-            return Number(val).toLocaleString('es-ES'); 
-        }
+  name: 'valor',
+  required: true,
+  label: 'Valor Nómina',
+  align: 'center',
+  field: 'valor',
+  sortable: true,
+  format: (val) => {
+    if (val === null || val === undefined) return '';
+    return Number(val).toLocaleString('es-ES'); 
+  }
 },
     {
         name: 'estado',
@@ -228,12 +228,12 @@ function filtrarFn(val, update, abort) {
 const listarNominaActiva = async () => {
     try {
         const res = await useNomina.ListarNominaActiva();
-        rows.value = res.nomina.reverse();
+        rows.value = res.nominas.reverse();
         Notify.create({
             message: "Listado de Nomina Activa",
             color: "green",
         });
-        console.log(res.nomina);
+        console.log(res.nominas);
         
         
     } catch (error) {
@@ -245,19 +245,28 @@ const listarNominaActiva = async () => {
 const listarNominaInactiva = async () => {
     try {
         const res = await useNomina.listarNominaInactiva(); 
-        rows.value = res.nomina.reverse();  
+        rows.value = res.nominas.reverse();  
         Notify.create({
             message: "Listado de Nomina Inactiva",
             color: "green",
         });
 
-        console.log(res.nomina);
+        console.log(res.nominas);
         
     } catch (error) {
         console.error("Error al listar Nomina inactiva", error);
         Notify.create("Error al obtener listado de Nomina inactiva");
     }
 };
+
+
+// function filterFn(val, update, abort) {
+//     update(() => {
+//         const needle = val.toLowerCase();
+//         options.value = fincas.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
+//     });
+// };
+
 
 
 // Filtrar Datos de las Nominas

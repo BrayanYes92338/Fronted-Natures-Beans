@@ -117,12 +117,7 @@
 
         <div class="item">
           <router-link class="opciones" to="/nomina">
-            <i class="fas fa-file-invoice"></i> Nomina
-          </router-link>
-        </div>
-        <div class="item">
-          <router-link class="opciones" to="/semilla">
-            <i class="fas fa-spa"></i> Semillas
+            <i class="fas fa-file-invoice"></i> Nómina
           </router-link>
         </div>
 
@@ -132,6 +127,12 @@
           </router-link>
         </div>
         
+        <div class="item">
+          <router-link class="opciones" to="/semilla">
+            <i class="fas fa-spa"></i> Semilla
+          </router-link>
+        </div>
+
       </div>
       <div class="btn-cerrar">
         <button class="cerrar-sesion" @click="cerrarSesion()">

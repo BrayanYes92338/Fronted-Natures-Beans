@@ -304,9 +304,9 @@ function filtrarFn(val, update, abort) {
 }
 
 async function listarRiegos() {
-  const r = await useRiego.listarRiegos();
-  rows.value = r.data.riegos.reverse();
-  console.log(r.data.riegos);
+ const r = await useRiego.listarRiegos()
+ rows.value = r.data.riegos.reverse()
+ console.log(r.data.riegos)
 }
 
 function validarIngresoRiego() {

@@ -20,8 +20,6 @@ import ElaboracionSustrato from "../components/ElaboracionSustrato.vue";
 import Maquinaria from "../components/Maquinaria.vue";
 import ControlPlaga from "../components/ControlPlaga.vue";
 import Nomina from "../components/Nomina.vue";
-import Semilla from "../components/Semillas.vue";
-
 
 
 
@@ -73,10 +71,7 @@ const routes = [
             { path: "/maquinaria", component: Maquinaria, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             { path: "/controlPlaga", component: ControlPlaga, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             {path: "/insumo", component: Insumo, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
-            {path: "/nomina", component: Nomina, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
-            {path: "/semilla", component: Semilla, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
-           
-
+            {path: "/nomina", component: Nomina, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } }
         ]   
 
     },

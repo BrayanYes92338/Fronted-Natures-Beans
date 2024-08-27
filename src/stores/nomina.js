@@ -30,7 +30,7 @@ export const useNominaStore = defineStore('nomina', () => {
     let ListarNominaActiva = async () => {
   
         try {
-          let res = await axios.get("api/nomina/activar",{
+          let res = await axios.get("api/nomina/activos",{
             headers: {
               token: useUsuario.token
             },
@@ -46,7 +46,7 @@ export const useNominaStore = defineStore('nomina', () => {
       let listarNominaInactiva = async () => {
 
         try {
-          let res = await axios.get("api/nomina/desactivar",{
+          let res = await axios.get("api/nomina/inactivos",{
             headers: {
               token: useUsuario.token
 
@@ -57,8 +57,8 @@ export const useNominaStore = defineStore('nomina', () => {
         } catch (error) {
           console.log(error);
           return error;
-        }
-      }
+        }
+ }
 
     const postNomina = async (data) => {
         try {

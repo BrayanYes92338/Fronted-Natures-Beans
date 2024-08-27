@@ -245,7 +245,7 @@
   
   async function listarRiegos() {
     const r = await useControlPlaga.listarControlPlaga();
-    rows.value = r.data.controlPlagas
+    rows.value = r.data.controlPlagas.reverse()
     ;
     console.log(r.data.controlPlagas
     );

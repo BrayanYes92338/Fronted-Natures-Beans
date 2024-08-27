@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="display: flex; justify-content: flex-end; margin-left: 5%; margin-right: 5%; ">
-      <q-btn  style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md"@click="abrir()">
+      <q-btn style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">
         Registrar Usuario
       </q-btn>
       <q-btn-dropdown color="blue" icon="visibility" label="Filtrar"
@@ -47,8 +47,28 @@
             class="q-my-md q-mx-md" label="Telefono del Usuario" type="tel" required pattern="[0-9]+" maxlength="10" />
           <q-select outlined v-model="rol" :options="['GESTOR']" label="Seleccione el Rol del Usuario"
             class="q-my-md q-mx-md" />
-          <q-input outlined v-model="municipio" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Municipio del Usuario" type="text" />
+          <q-select outlined v-model="departamento" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opcionesDepa" @filter="filterFnDepa"
+            @update:model-value="onDepartmentChange" label="Selecciona el Departament Recide el Usuario">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-select outlined v-model="municipio" use-input hide-selected fill-input input-debounce="0"
+            :disable="!departamento" @filter="filterFnMun" :options="opcionesMun" class="q-my-md q-mx-md"
+            label="Selecciona el Municipio donde vive el Usuario">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
           <q-card-actions align="right">
             <q-btn color="red" class="text-white" :loading="useUsuario.loading" @click="validarUsuario()">
               Agregar
@@ -78,9 +98,28 @@
             class="q-my-md q-mx-md" label="Correo del Usuario" type="text" />
           <q-input outlined v-model="telefono" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="Telefono del Usuario" type="tel" required pattern="[0-9]+" maxlength="10" />
-
-          <q-input outlined v-model="municipio" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Municipio del Usuario" type="text" />
+          <q-select outlined v-model="departamento" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opcionesDepa" @filter="filterFnDepa"
+            @update:model-value="onDepartmentChange" label="Selecciona el Departament Recide el Usuario">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-select outlined v-model="municipio" use-input hide-selected fill-input input-debounce="0"
+            :disable="!departamento" @filter="filterFnMun" :options="opcionesMun" class="q-my-md q-mx-md"
+            label="Selecciona el Municipio donde vive el Usuario">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
           <q-card-actions align="right">
             <q-btn @click="validarEdicionUsuario()" color="red" class="text-white" :loading="useUsuario.loading">
               Editar
@@ -130,8 +169,10 @@ import { ref, onMounted } from "vue";
 import { Notify } from "quasar";
 import { useUsuarioStore } from "../stores/usuario";
 import { QIcon } from "quasar";
+import { useDepartamentoStore } from "../stores/departamento.js"
 
 const useUsuario = useUsuarioStore();
+const useDepartamento = useDepartamentoStore()
 
 let rows = ref([]);
 let nombre = ref("");
@@ -141,6 +182,7 @@ let correo = ref("");
 let password = ref("");
 let telefono = ref("");
 let rol = ref("");
+let departamento = ref("")
 let municipio = ref("");
 let id = ref("");
 let accion = ref(1);
@@ -148,22 +190,7 @@ let alert = ref(false);
 let isPwd = ref(true);
 let alerta = ref(false);
 
-const cambiarAccion = async () => {
-  try {
-    if (rol.value === 'Listar Todo') {
-      await listarUsuarios();
-    } else if (rol.value === 'Listar Activos') {
-      await listarUsuarioActivos();
-    } else if (rol.value === 'Listar Inactivos') {
-      await listarUsuarioInactivo();
-    } else {
-      await listarUsuarios();
-    }
-  } catch (error) {
-    console.error("Error al cambiar la acción:", error);
-    Notify.create("Error al cambiar la acción");
-  }
-};
+
 
 
 
@@ -236,6 +263,14 @@ const columns = ref([
     sortable: true,
   },
   {
+    name: "departamento",
+    required: true,
+    label: "Departamento Usuario",
+    align: "center",
+    field: "departamento",
+    sortable: true,
+  },
+  {
     name: "municipio",
     required: true,
     label: "Municipio Usuario",
@@ -261,6 +296,51 @@ const columns = ref([
   },
 ]);
 
+// Listar Departamentos
+
+let Departamentos = []
+const opcionesDepa = ref(Departamentos)
+
+function filterFnDepa(val, update, abort) {
+  update(() => {
+    const needle = val.toLowerCase();
+    opcionesDepa.value = Departamentos.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
+  });
+};
+
+
+async function ListarDepartamentos() {
+  const data = await useDepartamento.listarDepartamento();
+  Departamentos = data.data.map(item => ({
+    label: item.departamento,
+    value: item.ciudades
+  }));
+  opcionesDepa.value = [...Departamentos];
+}
+
+// Listar Municipios
+
+let Municipios = [];
+let dateMun = {};
+const opcionesMun = ref(Municipios);
+
+function onDepartmentChange(departamentoSeleccionado) {
+  Municipios = departamentoSeleccionado ? departamentoSeleccionado.value.map(municipio=> ({
+    label: municipio,
+    value: municipio
+  })) : [];
+  opcionesMun.value = [...Municipios];
+  municipio.value = null;
+}
+
+function filterFnMun(val, update, abort) {
+  update(() => {
+    const needle = val.toLowerCase();
+    opcionesMun.value = Municipios.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
+  });
+}
+
+
 async function listarUsuarios() {
   const r = await useUsuario.listarUsuarios();
   console.log(r.data.usuario);
@@ -276,15 +356,16 @@ async function agregarUsuarios() {
     password: password.value,
     telefono: telefono.value,
     rol: rol.value,
-    municipio: municipio.value,
+    departamento: departamento.value.label,
+    municipio: municipio.value.label,
   });
   listarUsuarios();
   cerrar();
-  console.log(r);
+  console.log( departamento.value.label);
 }
 
 async function validarUsuario() {
-  try {
+
     let validacionnumeros = /^[0-9]+$/;
     let validacionCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (nombre.value == "" || nombre.value.trim().length === 0) {
@@ -307,23 +388,20 @@ async function validarUsuario() {
       Notify.create("El telefono solo debe llevar numeros");
     } else if (rol.value == "" || rol.value.trim().length === 0) {
       Notify.create("Se debe agregar un rol de Usuario");
-    } else if (municipio.value == "" || municipio.value.trim().length === 0) {
-      Notify.create("Se debe agregar un municipio de Usuario");
-    } else {
-      await agregarUsuarios();
+    }else if (!departamento.value || String(departamento.value).trim() === "") {
+    Notify.create("Se debe agregar un Departamento donde vive el Usuario");
+  } else if (!municipio.value || String(municipio.value).trim() === "") {
+    Notify.create("Se debe agregar un municipio de Usuario");
+  }else {
+       agregarUsuarios();
       limpiar();
+      cerrar2()
       Notify.create({
         type: "positive",
         message: "Usuario agregado exitosamente",
       });
     }
-  } catch (error) {
-    console.error("Error al agregar el Usuario:", error);
-    Notify.create({
-      type: "negative",
-      message: error.response.data.errors[0].msg,
-    });
-  }
+
 }
 
 function traerInfo(usuario) {
@@ -333,30 +411,44 @@ function traerInfo(usuario) {
   documento.value = usuario.documento;
   correo.value = usuario.correo;
   telefono.value = usuario.telefono;
-  municipio.value = usuario.municipio;
+  const departamentoSeleccionado = Departamentos.find(dep => dep.label === usuario.departamento);
+  departamento.value = departamentoSeleccionado;
+  if (departamentoSeleccionado) {
+    const ciudades = departamentoSeleccionado.value;
+    const ciudadSeleccionada = ciudades.find(municipio => municipio === usuario.municipio);
+    Municipios = ciudades.map(municipio => ({ label: municipio, value: municipio }));
+    opcionesMun.value = [...Municipios];
+    municipio.value = { label: ciudadSeleccionada, value: ciudadSeleccionada };
+  }
   id.value = usuario._id;
 }
 
 function validarEdicionUsuario() {
   let validacionnumeros = /^[0-9]+$/;
   let validacionCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (nombre.value == "" || nombre.value.trim().length === 0) {
+  
+  if (nombre.value.trim() === "") {
     Notify.create("Se debe agregar un nombre de Usuario");
-  } else if (direccion.value == "" || direccion.value.trim().length === 0) {
+  } else if (direccion.value.trim() === "") {
     Notify.create("Se debe agregar una direccion de Usuario");
-  } else if (documento.value == "" || documento.value.trim().length === 0) {
+  } else if (documento.value.trim() === "") {
     Notify.create("Se debe agregar un documento de Usuario");
   } else if (!validacionnumeros.test(documento.value)) {
     Notify.create("El documento solo debe llevar numeros");
-  } else if (correo.value == "" || correo.value.trim().length === 0) {
+  } else if (correo.value.trim() === "") {
     Notify.create("Se debe agregar un correo de Usuario");
   } else if (!validacionCorreo.test(correo.value)) {
     Notify.create("El correo del usuario no es valido");
-  } else if (telefono.value == "" || telefono.value.trim().length === 0) {
+  } else if (telefono.value.trim() === "") {
     Notify.create("Se debe agregar un telefono de Usuario");
   } else if (!validacionnumeros.test(telefono.value)) {
     Notify.create("El telefono solo debe llevar numeros");
-  } else if (municipio.value == "" || municipio.value.trim().length === 0) {
+  } else if (!departamento.value || String(departamento.value).trim() === "") {
+
+    Notify.create("Se debe agregar un Departamento donde vive el Usuario");
+  } else if (!municipio.value || String(municipio.value).trim() === "") {
+  console.log(municipio.value);
+  
     Notify.create("Se debe agregar un municipio de Usuario");
   } else {
     editarUsuario();
@@ -369,6 +461,7 @@ function validarEdicionUsuario() {
   }
 }
 
+
 async function editarUsuario() {
   try {
     await useUsuario.putUsuario(id.value, {
@@ -377,8 +470,11 @@ async function editarUsuario() {
       documento: documento.value,
       correo: correo.value,
       telefono: telefono.value,
-      municipio: municipio.value,
+     departamento: departamento.value.label,
+     municipio: municipio.value.value,
     });
+    console.log( departamento.value);
+    
     listarUsuarios();
     limpiar();
   } catch (error) {
@@ -403,20 +499,20 @@ async function habilitarUsuaro(usuario) {
 
 async function deshabilitarUsuario(usuario) {
   if (useUsuario.user._id === usuario._id) {
-        Notify.create("No puedes desactivar la cuenta en uso");
-    } else {
-      const res = await useUsuario
-    .putDesactivarUsuario(usuario._id)
-    .then((response) => {
-      console.log(response);
-      listarUsuarios();
-    })
+    Notify.create("No puedes desactivar la cuenta en uso");
+  } else {
+    const res = await useUsuario
+      .putDesactivarUsuario(usuario._id)
+      .then((response) => {
+        console.log(response);
+        listarUsuarios();
+      })
 
-    .catch((error) => {
-      console.error("Error de Usuario", error);
-      Notify.create("Error al deshabilitar el Usuario");
-    });
-    }
+      .catch((error) => {
+        console.error("Error de Usuario", error);
+        Notify.create("Error al deshabilitar el Usuario");
+      });
+  }
 
 }
 
@@ -455,10 +551,12 @@ function limpiar() {
   password.value = "";
   telefono.value = "";
   rol.value = "";
+  departamento.value = "";
   municipio.value = "";
 }
 
 onMounted(() => {
   listarUsuarios();
+  ListarDepartamentos()
 });
 </script>

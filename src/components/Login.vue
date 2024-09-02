@@ -11,7 +11,7 @@
     <div class="wrapper">
       <div class="from-box login text-center">
         <img src="../img/Nature Beans Logo v5.png" alt="" class="logo1">
-        <h2>INGRESAR</h2>
+        <h2 class="ingresar">INGRESAR</h2>
         <q-form @submit="Login2">
           <q-input class="q-mt-sm" outlined v-model="documento" label="Documento de Identidad" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor ingresa tu Número de Documento']" />
@@ -48,7 +48,8 @@
           </div>
           <button class="btn" type="submit">Ingresar</button>
         </q-form>
-        <button @click="dialog = true"><a>¿Olvidaste tu contraseña?</a></button>
+        <!-- <button @click="dialog = true"><a>¿Olvidaste tu contraseña?</a></button> -->
+        <a href="#" @click="dialog = true" class="olv">¿Olvidaste tu contraseña?</a>
       </div>
     </div>
   </div>
@@ -160,12 +161,24 @@ function limpiar() {
 }
 
 </script>
-<style>
+<style scoped>
 .logo1 {
   width: 280px;
   height: 130px;
 }
 
+.olv{
+  font-size: 15px;
+  color: #009B44;
+  /* font-weight: bold; */
+  text-decoration: underline;
+  margin-bottom: 10px;
+  transition: background-color 0.3s;
+}
+.olv:hover {
+  color: #22c268;
+ 
+}
 .contenedor1 {
   display: flex;
   align-items: center;
@@ -361,10 +374,53 @@ a {
 
 @media(max-width: 1240px) {
   .wrapper {
-
     width: 30%;
-
   }
+}
+
+@media(max-width: 905px) {
+  .wrapper {
+    width: 40%;
+  }
+
+  .logo1 {
+    width: 250px;
+    height: 130px;
+  }
+}
+
+@media(max-width: 725px) {
+
+  .logo1 {
+    width: 220px;
+    height: 130px;
+  }
+
+}
+
+@media(max-width: 650px) {
+
+  .logo1 {
+    width: 150px;
+    height: 130px;
+  }
+
+}
+
+@media(max-width: 535px) {
+
+  h2 {
+    font-size: medium;
+  }
+
+}
+
+
+@media(max-width: 1100px) {
+  .logo1 {
+      width: 220px;
+      height: 130px;
+    }
 }
 
 @media(max-width: 905px) {
@@ -402,52 +458,54 @@ a {
   h2 {
     font-size: medium;
   }
-
 }
 
-
-@media(max-width: 1240px) {
+@media(max-width: 760px) {
   .wrapper {
-
-    width: 30%;
-
-  }
-}
-
-@media(max-width: 905px) {
-  .wrapper {
-
     width: 40%;
   }
 
   .logo1 {
-    width: 250px;
+    width: 200px;
     height: 130px;
   }
 }
 
-@media(max-width: 725px) {
+@media(max-width: 620px) {
+  .wrapper {
+    width: 40%;
+  }
 
+  h2{
+    font-size: medium;
+  }
   .logo1 {
-    width: 220px;
-    height: 130px;
+    width: 180px;
+    height: 100px;
   }
-
 }
 
-@media(max-width: 650px) {
+@media(max-width: 570px) {
+  .wrapper {
+    width: 40%;
+    font-size: small;
+  }
 
   .logo1 {
     width: 150px;
-    height: 130px;
+    height: 100px;
   }
-
 }
 
-@media(max-width: 535px) {
+@media(max-width: 500px) {
+  .wrapper {
+    width: 35%;
+    font-size: x-small;
+  }
 
-  h2 {
-    font-size: medium;
+  .logo1 {
+    width: 110px;
+    height: 100px;
   }
 }
 </style>

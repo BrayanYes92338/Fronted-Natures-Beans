@@ -176,10 +176,10 @@ const columns = ref([
   align: 'center',
   field: 'valor',
   sortable: true,
-  format: (val) => {
-    if (val === null || val === undefined) return '';
-    return Number(val).toLocaleString('es-ES'); 
-  }
+  format: (valor) => {
+            // Formatear el precio como pesos colombianos
+            return valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+        }
 },
     {
         name: 'estado',

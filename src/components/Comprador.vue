@@ -37,26 +37,28 @@
                             </q-item>
                         </template>
                     </q-select>
-                    <q-input outlined v-model="especie" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label="especie " type="text" />
+                    <q-select outlined v-model="especie"
+                        :options="['Tubérculos', 'Frutas', 'Verduras', 'Legumbres', 'Cereales y Granos', 'Hierbas y Especias', 'Otros Cultivos Especializados']"
+                        label="Seleccione el Tipo de Cultivo" class="q-my-md q-mx-md" />
                     <q-input outlined v-model="nombre" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Nombre del comprador" type="text" />
-                        <q-select outlined v-model="tipoDocumento" :options="['Cédula Ciudadanía','NIT','Pasaporte','otro']" label="Seleccione el tipo de documento"
-                        class="q-my-md q-mx-md" />
+                    <q-select outlined v-model="tipoDocumento"
+                        :options="['Cédula Ciudadanía', 'Tarjeta de Identidad', 'Pasaporte', 'otro']"
+                        label="Seleccione el tipo de documento" class="q-my-md q-mx-md" />
                     <q-input outlined v-model="documento" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="documento del comprador" type="tel" required pattern="[0-9]+"
                         maxlength="10" />
                     <q-input outlined v-model="telefono" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="telefono del comprador" type="tel" required pattern="[0-9]+"
-                        maxlength="10" />   
+                        maxlength="10" />
                     <q-input outlined v-model="direccion" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Direccion del comprador" type="text" />
-                        <q-input outlined v-model="cantidad" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label="cantidad" type="number" />   
+                    <q-input outlined v-model="cantidad" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="cantidad" type="tel" />
                     <q-input outlined v-model="nguiaTransporte" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label="N° de guia de Transporte del comprador" type="text" /> 
+                        class="q-my-md q-mx-md" label="N° de guia de Transporte del comprador" type="text" />
                     <q-input outlined v-model="valor" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label="valor" type="number" />    
+                        class="q-my-md q-mx-md" label="valor" type="tel" />
                     <q-card-actions align="right">
                         <q-btn v-if="accion === 1" @click="validarComprador()" color="red" class="text-white"
                             :loading="useComprador.loading">Agregar
@@ -96,12 +98,13 @@
                                     Editar
                                 </q-tooltip>
                                 <i class="fas fa-pencil-alt"> </i></q-btn>
-                                <!-- botons de activado y desactivado -->
-                                <q-btn v-if="props.row.estado == 1" @click="deshabilitarComprador(props.row)" color="negative">
-                                  <q-tooltip> Desactivar </q-tooltip>
-                                  <i class="fas fa-times"> </i></q-btn>
-                                <q-btn v-else color="positive" @click="habilitarComprador(props.row)">
-                                  <q-tooltip> Activar </q-tooltip><i class="fas fa-check"> </i></q-btn>
+                            <!-- botons de activado y desactivado -->
+                            <q-btn v-if="props.row.estado == 1" @click="deshabilitarComprador(props.row)"
+                                color="negative">
+                                <q-tooltip> Desactivar </q-tooltip>
+                                <i class="fas fa-times"> </i></q-btn>
+                            <q-btn v-else color="positive" @click="habilitarComprador(props.row)">
+                                <q-tooltip> Activar </q-tooltip><i class="fas fa-check"> </i></q-btn>
                         </div>
                     </q-td>
                 </template>
@@ -150,47 +153,22 @@ const columns = ref([
     {
         name: 'idProduccion',
         required: true,
-        label: 'Produccion',
+        label: 'Nombre del Producto',
         align: 'center',
         field: (row) => row.idProduccion.producto,
         sortable: true
     },
     {
-    name: "createdAt",
-    required: true,
-    label: "Fecha ",
-    align: "center",
-    field: "createdAt",
-    sortable: true,
-    format: (val) => {
-      if (!val) return "";
-
-      const fechaIngreso = new Date(val);
-      const fechaColombia = new Date(
-        fechaIngreso.toLocaleString("en-US", { timeZone: "America/Bogota" })
-      );
-
-      return (
-        fechaColombia.toLocaleDateString("es-CO", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        }) +
-        " " +
-        fechaColombia.toLocaleTimeString("es-CO", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      );
-    },
-  },
-   {
         name: 'especie',
         required: true,
-        label: 'especie',
+        label: 'Tipo de Producto',
         align: 'center',
         field: 'especie',
-        sortable: true
+        sortable: true,
+        format: (val) => {
+            // Capitalizar la primera letra del responsable
+            return val.charAt(0).toUpperCase() + val.slice(1);
+        }
     },
     {
         name: 'nombre',
@@ -198,13 +176,17 @@ const columns = ref([
         label: 'Nombre del Comprador',
         align: 'center',
         field: 'nombre',
-        sortable: true
+        sortable: true,
+        format: (val) => {
+            // Capitalizar la primera letra del responsable
+            return val.charAt(0).toUpperCase() + val.slice(1);
+        }
     },
-    
+
     {
         name: 'tipoDocumento',
         required: true,
-        label: 'tipo Documento',
+        label: 'Tipo Documento',
         align: 'center',
         field: 'tipoDocumento',
         sortable: true
@@ -220,16 +202,16 @@ const columns = ref([
     {
         name: 'telefono',
         required: true,
-        label: 'telefono',
+        label: 'Telefono',
         align: 'center',
         field: 'telefono',
         sortable: true
     },
-    
+
     {
         name: 'direccion',
         required: true,
-        label: 'direccion',
+        label: 'Direccion',
         align: 'center',
         field: 'direccion',
         sortable: true
@@ -245,23 +227,50 @@ const columns = ref([
     {
         name: 'nguiaTransporte',
         required: true,
-        label: 'nguiaTransporte',
+        label: 'N Guia de Transporte',
         align: 'center',
         field: 'nguiaTransporte',
         sortable: true
     },
-    
     {
         name: 'valor',
         required: true,
-        label: 'valor',
-        align: 'center',        
+        label: 'Valor',
+        align: 'center',
         field: 'valor',
-        sortable: true,
-            format: (val) => {
-            if (val === null || val === undefined) return '';
-            return Number(val).toLocaleString('es-ES'); 
+        format: (valor) => {
+            // Formatear el precio como pesos colombianos
+            return valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
         }
+    },
+    {
+        name: "createdAt",
+        required: true,
+        label: "Fecha ",
+        align: "center",
+        field: "createdAt",
+        sortable: true,
+        format: (val) => {
+            if (!val) return "";
+
+            const fechaIngreso = new Date(val);
+            const fechaColombia = new Date(
+                fechaIngreso.toLocaleString("en-US", { timeZone: "America/Bogota" })
+            );
+
+            return (
+                fechaColombia.toLocaleDateString("es-CO", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                }) +
+                " " +
+                fechaColombia.toLocaleTimeString("es-CO", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                })
+            );
+        },
     },
     {
         name: 'estado',
@@ -319,7 +328,7 @@ async function listarComprador() {
 const ListarCompradorActivo = async () => {
     try {
         const res = await useComprador.ListarCompradorActivo();
-        rows.value =  res.compradores.reverse();
+        rows.value = res.compradores.reverse();
         Notify.create({
             message: "Listado de Compradores Activos",
             color: "green",
@@ -347,35 +356,35 @@ const listarCompradorInactivo = async () => {
     }
 };
 function validarComprador() {
-    let validacionnumeros = /^[0-9]+$/; 
+    let validacionnumeros = /^[0-9]+$/;
     if (idProduccion.value == "") {
         Notify.create("Se debe agregar el numero de la Produccion");
     } else if (especie.value == "" || especie.value.trim().length === 0) {
         Notify.create("Se debe agregar especie");
     } else if (nombre.value == "" || nombre.value.trim().length === 0) {
-      Notify.create("Se debe agregar un nombre de Comprdor");
+        Notify.create("Se debe agregar un nombre de Comprdor");
     } else if (tipoDocumento.value == "" || tipoDocumento.value.trim().length === 0) {
         Notify.create("Se debe agregar el tipo de Documento ");
-    }else if (documento.value == "" || documento.value.trim().length === 0) {
-      Notify.create("Se debe agregar un documento del Comprador");
+    } else if (documento.value == "" || documento.value.trim().length === 0) {
+        Notify.create("Se debe agregar un documento del Comprador");
     } else if (!validacionnumeros.test(documento.value)) {
-      Notify.create("El documento solo debe llevar numeros");
-    } else if (telefono.value == "" ) {
-      Notify.create("Se debe agregar un telefono del Comprador");
+        Notify.create("El documento solo debe llevar numeros");
+    } else if (telefono.value == "") {
+        Notify.create("Se debe agregar un telefono del Comprador");
     } else if (!validacionnumeros.test(telefono.value)) {
-      Notify.create("El telefono solo debe llevar numeros");
-    }  else if (direccion.value == "" || direccion.value.trim().length === 0) {
-      Notify.create("Se debe agregar una direccion del comprador");
+        Notify.create("El telefono solo debe llevar numeros");
+    } else if (direccion.value == "" || direccion.value.trim().length === 0) {
+        Notify.create("Se debe agregar una direccion del comprador");
     } else if (cantidad.value == "" || cantidad.value.trim().length === 0) {
-      Notify.create("Se debe agregar cantidad");
+        Notify.create("Se debe agregar cantidad");
     } else if (!validacionnumeros.test(cantidad.value)) {
-      Notify.create("El cantidad solo debe llevar numeros");
+        Notify.create("El cantidad solo debe llevar numeros");
     } else if (nguiaTransporte.value == "" || nguiaTransporte.value.trim().length === 0) {
         Notify.create("Se debe agregar un N° guia Transporte");
-    } else if (valor.value == "" ||valor.value.trim().length === 0) {
-      Notify.create("Se debe agregar valor");
+    } else if (valor.value == "" || valor.value.trim().length === 0) {
+        Notify.create("Se debe agregar valor");
     } else if (!validacionnumeros.test(valor.value)) {
-      Notify.create("El cantidad solo debe llevar numeros");
+        Notify.create("El cantidad solo debe llevar numeros");
     } else {
         Notify.create({
             type: "positive",
@@ -407,36 +416,36 @@ function traerComprador(comprador) {
 }
 
 function validarEdicionComprador() {
-    
-    let validacionnumeros = /^[0-9]+$/; 
+
+    let validacionnumeros = /^[0-9]+$/;
     if (idProduccion.value == "") {
         Notify.create("Se debe agregar el numero de la Produccion");
     } else if (especie.value == "" || especie.value.trim().length === 0) {
         Notify.create("Se debe agregar especie");
     } else if (nombre.value == "" || nombre.value.trim().length === 0) {
-      Notify.create("Se debe agregar un nombre de Comprdor");
+        Notify.create("Se debe agregar un nombre de Comprdor");
     } else if (tipoDocumento.value == "" || tipoDocumento.value.trim().length === 0) {
         Notify.create("Se debe agregar el tipo de Documento ");
-    }else if (documento.value == "" ) {
-      Notify.create("Se debe agregar un documento del Comprador");
+    } else if (documento.value == "") {
+        Notify.create("Se debe agregar un documento del Comprador");
     } else if (!validacionnumeros.test(documento.value)) {
-      Notify.create("El documento solo debe llevar numeros");
-    } else if (telefono.value == "" ) {
-      Notify.create("Se debe agregar un telefono del Comprador");
+        Notify.create("El documento solo debe llevar numeros");
+    } else if (telefono.value == "") {
+        Notify.create("Se debe agregar un telefono del Comprador");
     } else if (!validacionnumeros.test(telefono.value)) {
-      Notify.create("El telefono solo debe llevar numeros");
-    }  else if (direccion.value == "" || direccion.value.trim().length === 0) {
-      Notify.create("Se debe agregar una direccion del comprador");
-    } else if (cantidad.value == "" ) {
-      Notify.create("Se debe agregar cantidad");
+        Notify.create("El telefono solo debe llevar numeros");
+    } else if (direccion.value == "" || direccion.value.trim().length === 0) {
+        Notify.create("Se debe agregar una direccion del comprador");
+    } else if (cantidad.value == "") {
+        Notify.create("Se debe agregar cantidad");
     } else if (!validacionnumeros.test(cantidad.value)) {
-      Notify.create("El cantidad solo debe llevar numeros");
+        Notify.create("El cantidad solo debe llevar numeros");
     } else if (nguiaTransporte.value == "" || nguiaTransporte.value.trim().length === 0) {
         Notify.create("Se debe agregar un N° guia Transporte");
-    } else if (valor.value == "" ) {
-      Notify.create("Se debe agregar valor");
+    } else if (valor.value == "") {
+        Notify.create("Se debe agregar valor");
     } else if (!validacionnumeros.test(valor.value)) {
-      Notify.create("El cantidad solo debe llevar numeros");
+        Notify.create("El cantidad solo debe llevar numeros");
     } else {
         Notify.create({
             type: "positive",
@@ -474,15 +483,15 @@ async function editarComprador() {
 async function agregarComprador() {
     const r = await useComprador.postComprador({
         idProduccion: idProduccion.value.value,
-            especie: especie.value,
-            nombre: nombre.value,
-            tipoDocumento: tipoDocumento.value,
-            documento: documento.value,
-            telefono: telefono.value,
-            direccion: direccion.value,
-            cantidad: cantidad.value,
-            nguiaTransporte: nguiaTransporte.value,
-            valor: valor.value
+        especie: especie.value,
+        nombre: nombre.value,
+        tipoDocumento: tipoDocumento.value,
+        documento: documento.value,
+        telefono: telefono.value,
+        direccion: direccion.value,
+        cantidad: cantidad.value,
+        nguiaTransporte: nguiaTransporte.value,
+        valor: valor.value
     })
     cerrar()
     listarComprador()

@@ -39,7 +39,7 @@
                     </q-select>
                     <q-input outlined v-model="nombre" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="nombre del cultivo" type="text" />
-                        <q-select outlined v-model="tipo" :options="['frutas', 'Cereales', 'Leguminosas', 'Hortalizas', 'Frutales', 'Tubérculos y Raíces', 'Oleaginosas']" label="Seleccione el tipo Cultivo"
+                        <q-select outlined v-model="tipo" :options="['Frutas', 'Cereales', 'Leguminosas', 'Hortalizas', 'Frutales', 'Tubérculos y Raíces', 'Oleaginosas']" label="Seleccione el tipo Cultivo"
                         class="q-my-md q-mx-md" />
                     <q-card-actions align="right">
                         <q-btn v-if="accion === 1" @click="validarCultivo()" color="red" class="text-white"
@@ -218,12 +218,12 @@ async function listarCultivo() {
 const listarCultivosActivo = async () => {
     try {
         const res = await useCultivo.ListarCultivoActivo();
-        rows.value = res.cultivo;
+        rows.value = res.cultivo.reverse();
         Notify.create({
             message: "Listado de Parcela Activos",
             color: "green",
         });
-        console.log("hola");
+        console.log(res.cultivo);
 
 
     } catch (error) {
@@ -235,11 +235,13 @@ const listarCultivosActivo = async () => {
 const listarCultivosInactivo = async () => {
     try {
         const res = await useCultivo.ListarCultivoInactivo();
-        rows.value = res.cultivo;
+        rows.value = res.cultivo.reverse();
         Notify.create({
             message: "Listado de Parcela Inactivos",
             color: "green",
         });
+        console.log(res.cultivo);
+        
     } catch (error) {
         console.error("Error al listar Parcela inactivos:", error);
         Notify.create("Error al obtener listado de Parcela inactivos");
@@ -361,9 +363,6 @@ function Limpiar() {
 onMounted(() => {
     listarCultivo()
     listarParcela()
-
-
-
 })
 
 </script>

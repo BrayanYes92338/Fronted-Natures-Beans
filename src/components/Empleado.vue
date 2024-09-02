@@ -1,7 +1,8 @@
 <template>
     <div>
         <div style="display: flex; justify-content: flex-end;margin-left: 5%; margin-right: 5%">
-            <q-btn  style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar Empleado</q-btn>
+            <q-btn style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar
+                Empleado</q-btn>
             <q-btn-dropdown color="blue" icon="visibility" label="Filtrar"
                 style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
                 class="q-my-md q-ml-md">
@@ -38,10 +39,11 @@
                     <q-input outlined v-model="telefono" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Telefono del Trabajador" type="tel" required pattern="[0-9]+"
                         maxlength="10" />
-                    <q-input outlined v-model="estudios" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label="Estudios del Trabajador" type="text" />
-                        <q-select outlined v-model="descripcion" :options="['Agricultor','Meteorólogo','Téc de Mantenimiento', 'Gestor de Inventario', 'Coordinador de Riego','Operador de Maquinaria']" label="Seleccione el Rol del Trabajador"
-                        class="q-my-md q-mx-md" />
+                    <q-select outlined v-model="estudios" :options="['Primaria', 'Bachiller', 'Técnico', 'Otro']"
+                        label="Seleccione el Nivel academico del Trabajador" class="q-my-md q-mx-md" />
+                    <q-select outlined v-model="descripcion"
+                        :options="['Agricultor', 'Meteorólogo', 'Téc de Mantenimiento', 'Gestor de Inventario', 'Coordinador de Riego', 'Operador de Maquinaria']"
+                        label="Seleccione el Rol del Trabajador" class="q-my-md q-mx-md" />
                     <q-card-actions align="right">
                         <q-btn v-if="accion === 1" color="red" class="text-white" :loading="useEmpleado.loading"
                             @click="validarIngresoEmpleados()">Agregar
@@ -49,7 +51,8 @@
                                 <q-spinner color="primary" size="1em" />
                             </template>
                         </q-btn>
-                        <q-btn v-if="accion !== 1" @click="validarEdicionEmpleado()" color="red" class="text-white" :loading="useEmpleado.loading" >
+                        <q-btn v-if="accion !== 1" @click="validarEdicionEmpleado()" color="red" class="text-white"
+                            :loading="useEmpleado.loading">
                             Editar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
@@ -75,14 +78,15 @@
                         <div style="display: flex; gap:15px; justify-content: center; ">
 
                             <!-- boton de editar -->
-                            <q-btn color="primary" @click="traerEmpleados(props.row)" >
+                            <q-btn color="primary" @click="traerEmpleados(props.row)">
                                 <q-tooltip>
                                     Editar
                                 </q-tooltip>
                                 <i class="fas fa-pencil-alt">
                                 </i></q-btn>
                             <!-- botons de activado y desactivado -->
-                            <q-btn v-if="props.row.estado == 1" @click="deshabilitarEmpleado(props.row)" color="negative">
+                            <q-btn v-if="props.row.estado == 1" @click="deshabilitarEmpleado(props.row)"
+                                color="negative">
                                 <q-tooltip>
                                     Desacticar
                                 </q-tooltip>
@@ -220,8 +224,8 @@ const listarEmpleadosActivo = async () => {
             color: "green",
         });
         console.log(res.empleadoActivo);
-        
-        
+
+
     } catch (error) {
         console.error("Error al listar Empleados activos:", error);
         Notify.create("Error al obtener Empleados de Usuarios activos");
@@ -233,8 +237,8 @@ const listarEmpleadosInactivo = async () => {
         const res = await useEmpleado.ListarEmpleadoInactivo();
         rows.value = res.empleadoInactivo.reverse();
 
-            console.log(res.empleadoInactivo);
-            
+        console.log(res.empleadoInactivo);
+
         Notify.create({
             message: "Listado de Empleados Inactivos",
             color: "green",
@@ -294,7 +298,7 @@ async function agregarEmpleados() {
 
 }
 
-function traerEmpleados(empleado){
+function traerEmpleados(empleado) {
     accion.value = 2
     alert.value = true
     id.value = empleado._id
@@ -331,7 +335,7 @@ function validarEdicionEmpleado() {
     } else if (descripcion.value == "" || descripcion.value.trim().length === 0) {
         Notify.create("Se debe agregar una descripcion del Empleado");
     } else {
-     
+
         editarEmpleado()
         cerrar()
         Notify.create({
@@ -342,9 +346,9 @@ function validarEdicionEmpleado() {
 }
 
 
-async function editarEmpleado(){
-    try{
-        await useEmpleado.putEmpleado(id.value,{
+async function editarEmpleado() {
+    try {
+        await useEmpleado.putEmpleado(id.value, {
             nombre: nombre.value,
             correo: correo.value,
             documento: documento.value,
@@ -355,15 +359,15 @@ async function editarEmpleado(){
         })
         listarEmplados()
         limpiar()
-    }catch (error){
+    } catch (error) {
         console.error('Error de Empleado', error);
         Notify.create('Error al editar el Empleado')
     }
 }
 
-async function habilitarEmpleado(empleado){
+async function habilitarEmpleado(empleado) {
     const res = await useEmpleado.putEmpleadoActivar(empleado._id)
-    .then((response) => {
+        .then((response) => {
             console.log(response);
             listarEmplados()
         })
@@ -372,12 +376,12 @@ async function habilitarEmpleado(empleado){
             console.error('Error de Empleado', error);
             Notify.create('Error al habilitar el Empleado')
         })
-   
+
 }
 
-async function deshabilitarEmpleado(empleado){
+async function deshabilitarEmpleado(empleado) {
     const res = await useEmpleado.putEmpleadoDesactivar(empleado._id)
-    .then((response) => {
+        .then((response) => {
             console.log(response);
             listarEmplados()
         })

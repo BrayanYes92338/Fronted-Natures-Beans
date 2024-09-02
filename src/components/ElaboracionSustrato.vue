@@ -404,7 +404,7 @@ function validarIngresoagregarElaboracion() {
 
 async function agregarElaboracion() {
   const r = await useElaboracion.postElaboracionSustrato({
-    idEmpleadoresponsable: idEmpleadooperario.value.value,
+    idEmpleadoresponsable: idEmpleadoresponsable.value.value,
     idEmpleadooperario: idEmpleadooperario.value.value,
     idProceso: idProceso.value.value,
     productocomercial: productocomercial.value,
@@ -475,7 +475,7 @@ function validarEdicionElaboracion() {
 async function editarElaboracion() {
   try {
     await useElaboracion.putElaboracionSustrato(id.value, {
-      idEmpleadoresponsable: idEmpleadooperario.value.value,
+      idEmpleadoresponsable: idEmpleadoresponsable.value.value,
       idEmpleadooperario: idEmpleadooperario.value.value,
       idProceso: idProceso.value.value,
       productocomercial: productocomercial.value,
@@ -483,8 +483,10 @@ async function editarElaboracion() {
       dosisUtilizada: dosisUtilizada.value,
       MetodoAplicacion: MetodoAplicacion.value,
     });
+     
     listarElaboracion();
     cerrar();
+    
   } catch (error) {
     console.error("Error de actualizar Elaboracion de sustrato", error);
     Notify.create(
@@ -494,6 +496,7 @@ async function editarElaboracion() {
 }
 
 function Limpiar() {
+  idProceso.value = null;
   idEmpleadooperario.value = null;
   idEmpleadoresponsable.value = null;
   productocomercial.value = "";

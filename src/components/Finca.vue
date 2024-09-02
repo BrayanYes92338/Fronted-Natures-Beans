@@ -107,7 +107,8 @@
                     <q-input outlined v-model="oeste" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Ingrese el Oeste de la Finca" type="text" />
                     <q-card-actions align="right">
-                        <q-btn color="red" class="text-white" :loading="useFinca.loading" @click="agregarLimitesFinca()" >
+                        <q-btn color="red" class="text-white" :loading="useFinca.loading"
+                            @click="agregarLimitesFinca()">
                             Agregar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
@@ -134,7 +135,7 @@
                     <q-input outlined v-model="oeste" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Ingrese el Oeste de la Finca" type="text" />
                     <q-card-actions align="right">
-                        <q-btn color="red" class="text-white" :loading="useFinca.loading" @click="editarLimitesFinca()" >
+                        <q-btn color="red" class="text-white" :loading="useFinca.loading" @click="editarLimitesFinca()">
                             Editar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
@@ -154,8 +155,8 @@
                             Limites de la finca {{ nombreF }}
                         </div>
                     </q-card-section>
-                    <!----><q-table v-if="limites.length > 0" table-header-class="text-black font-weight-bold" :rows="limites" 
-                        :columns="columnas" row-key="name">
+                    <!----><q-table v-if="limites.length > 0" table-header-class="text-black font-weight-bold"
+                        :rows="limites" :columns="columnas" row-key="name">
                         <template v-slot:body-cell-opciones="props">
                             <q-td :props="props">
                                 <div style="display: flex; gap:15px; justify-content: center; ">
@@ -185,7 +186,8 @@
                             </template>
                         </q-btn> -->
 
-                        <q-btn label="Agregar" v-if="limites.length === 0" color="black" outline @click="abrir2(props?.row)" />
+                        <q-btn label="Agregar" v-if="limites.length === 0" color="black" outline
+                            @click="abrir2(props?.row)" />
                         <q-btn label="Agregar" v-else color="black" outline disable>
                             <q-tooltip>
                                 La finca ya cuenta con limites
@@ -434,7 +436,7 @@ async function editarLimitesFinca() {
                     break
                 }
             }
-alerta2.value = false
+            alerta2.value = false
             await useFinca.putFincas(idDeLimites.value, {
                 limites: limites.value
             })
@@ -463,7 +465,11 @@ const columns = ref([
         label: 'Nombre Finca',
         align: 'center',
         field: 'nombre',
-        sortable: true
+        sortable: true,
+        format: (val) => {
+            // Capitalizar la primera letra del responsable
+            return val.charAt(0).toUpperCase() + val.slice(1);
+        }
     },
     {
         name: 'ruc',

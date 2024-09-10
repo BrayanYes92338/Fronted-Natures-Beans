@@ -127,6 +127,12 @@
           </router-link>
         </div>
         
+        <div class="item">
+          <router-link class="opciones" to="/semilla">
+            <i class="fas fa-spa"></i> Semilla
+          </router-link>
+        </div>
+
       </div>
       <div class="btn-cerrar">
         <button class="cerrar-sesion" @click="cerrarSesion()">

@@ -62,25 +62,25 @@ export const useSemillaStore = defineStore('semilla', () => {
       }
 
     const postSemilla = async (data) => {
-        try {
-            loading.value = true;
-            let res = await axios.post('api/semilla/agregar', data, {
-                headers: {
-                    token: useUsuario.token
-                }
-            })
-            return res;
-        } catch (error) {
-            loading.value = true
-            console.log(error);
-            Notify.create({
-                type: "negative",
-                message: error.response.data.errors[0].msg,
-            });
-        } finally {
-            loading.value = false;
-        }
-    }
+      try {
+        loading.value = true;
+        let res = await axios.post("api/semilla/agregar", data, {
+          headers: {
+            token: useUsuario.token,
+          },
+        });
+        return res;
+      } catch (error) {
+        loading.value = true;
+        console.log(error);
+        Notify.create({
+          type: "negative",
+          message: error.response.data.errors[0].msg,
+        });
+      } finally {
+        loading.value = false;
+      }
+    };
 
 
     const putSemilla= async (id, data) => {

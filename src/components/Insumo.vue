@@ -42,9 +42,9 @@
             label="Seleccione la unidad de medida" class="q-my-md q-mx-md" />
           <q-input outlined v-model="observaciones" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="Observaciones" type="text" />
-          <q-input outlined v-model="total" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Ingrese el total gastado" type="tel" required pattern="[0-9]+" />
-
+            <q-input outlined v-model="precio" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Ingrese el precio de NPK utilizada" type="tel" required pattern="[0-9]+"
+            maxlength="100" />
           <q-card-actions align="right">
             <q-btn v-if="accion === 1" color="red" class="text-white" :loading="useInsumo.loading" @click="validarInsumos()">Agregar
               <template v-slot:loading>
@@ -110,7 +110,7 @@ let relacionNPK = ref("");
 let cantidad = ref("");
 let unidad = ref("");
 let observaciones = ref("");
-let total = ref("");
+let precio = ref("");
 
 
 function abrir() {
@@ -181,12 +181,28 @@ const columns = ref([
     sortable: true,
   },
   {
+    name: "precio",
+    required: true,
+    label: "precio del Insumo",
+    align: "center",
+    field: "precio",
+    sortable: true,
+    format: (valor) => {
+            // Formatear el precio como pesos colombianos
+            return valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+        }
+  },
+  {
     name: "total",
     required: true,
     label: "Total Insumo Gastado",
     align: "center",
     field: "total",
     sortable: true,
+    format: (valor) => {
+            // Formatear el precio como pesos colombianos
+            return valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+        }
   },
   {
     name: "fecha",
@@ -305,11 +321,11 @@ function validarInsumos() {
     Notify.create("Se debe seleccionar la unidad de medida del insumo");
   } else if (observaciones.value === "" || observaciones.value.trim().length === 0) {
     Notify.create("Se debe ingresar las observaciones del insumo");
-  } else if (total.value === "") {
-    Notify.create("Se debe ingresar el total gastado del insumo");
-  } else if (!validacionNumeros.test(total.value)) {
-    Notify.create("El total gastado del insumo debe ser un número entero");
-  } else {
+  }  else if (precio.value === "") {
+    Notify.create("Se debe ingresar el precio de insumo");
+  } else if (!validacionNumeros.test(precio.value)) {
+    Notify.create("La precio de insumo debe ser un número entero");
+  }  else {
     agregarInsumos();
     limpiar();
     cerrar();
@@ -329,7 +345,8 @@ async function agregarInsumos() {
     relacionNPK: relacionNPK.value,
     unidad: unidad.value,
     observaciones: observaciones.value,
-    total: total.value,
+    precio: precio.value
+
 
   })
   cerrar()
@@ -355,7 +372,8 @@ function traerInsumos(insumo){
   cantidad.value = insumo.cantidad;
   unidad.value = insumo.unidad;
   observaciones.value = insumo.observaciones;
-  total.value = insumo.total;
+  precio.value = insumo.precio;
+
 
 }
 
@@ -379,10 +397,10 @@ function validarEdicionInsumo(){
     Notify.create("Se debe seleccionar la unidad de medida del insumo");
   } else if (observaciones.value === "" || observaciones.value.trim().length === 0) {
     Notify.create("Se debe ingresar las observaciones del insumo");
-  } else if (total.value === "") {
-    Notify.create("Se debe ingresar el total gastado del insumo");
-  } else if (!validacionNumeros.test(total.value)) {
-    Notify.create("El total gastado del insumo debe ser un número entero");
+  }  else if (precio.value === "") {
+    Notify.create("Se debe ingresar el precio de insumo");
+  } else if (!validacionNumeros.test(precio.value)) {
+    Notify.create("La precio de insumo debe ser un número entero");
   } else {
     editarInsumo();
     limpiar();
@@ -407,7 +425,8 @@ async function editarInsumo(){
       relacionNPK: relacionNPK.value,
       unidad: unidad.value,
       observaciones: observaciones.value,
-      total: total.value,
+      precio: precio.value
+      
     })
 listarInsumos()
   }catch (error){
@@ -425,7 +444,8 @@ function limpiar() {
   cantidad.value = "";
   unidad.value = "";
   observaciones.value = "";
-  total.value = "";
+  precio.value = "";
+
 }
 
 onMounted(() => {

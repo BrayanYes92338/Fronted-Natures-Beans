@@ -223,11 +223,11 @@ const columns = ref([
         format: (val) => `${val} °C`,
     },
     {
-        name: 'createAt',
+        name: 'fecha',
         required: true,
         label: 'Fecha',
         align: 'center',
-        field: 'createAt',
+        field: 'fecha',
         sortable: true,
         format: (val) => {
             if (!val) return '';

@@ -28,8 +28,9 @@
                 </q-item>
               </template>
             </q-select>
-            <q-input outlined v-model="tipo" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="tipo" type="text" />
+            <q-select outlined v-model="tipo"
+            :options="['Recepción y preparación de materias primas', 'Mezcla y aireación', 'Pasteurización', 'Inoculación', 'Envasado y almacenamiento', 'otro']"
+            label="Seleccione el tipo de proceso" class="q-my-md q-mx-md" />
           <q-input outlined v-model="descripcion" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="descripcion del proceso" type="text" />
           <q-input outlined v-model="fechaFinal" use-input hide-selected fill-input input-debounce="0"

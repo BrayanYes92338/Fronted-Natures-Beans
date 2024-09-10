@@ -87,13 +87,7 @@
     />
 
     <!-- Input for Total (calculated, so possibly readonly) -->
-    <q-input
-      outlined
-      v-model="total"
-      class="q-my-md q-mx-md"
-      label="Total"
-      type="number"
-    />
+   
 
     <q-card-actions align="right">
       <q-btn

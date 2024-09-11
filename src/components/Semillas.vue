@@ -52,7 +52,9 @@
                 class="q-my-md q-mx-md" label="origen de la semilla" type="text" />
         <q-input outlined v-model="poderGerminativo" use-input hide-selected fill-input input-debounce="0"
                 class="q-my-md q-mx-md" label="poder Germinativo (%)" type="text" />
-                  
+        <q-input outlined v-model=" total " use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label=" total" type="tel" required pattern="[0-9]+"
+                maxlength="99" />          
                 <q-card-actions align="right">
               <q-btn v-if="accion === 1" @click="validarIngresoSemilla()" color="red" class="text-white"
                 :loading="useSemilla.loading">Agregar
@@ -129,6 +131,7 @@
   let  NumLote = ref("");
   let  origen = ref("");
   let  poderGerminativo = ref("");
+  let  total = ref("");
   let today = new Date().toISOString().split('T')[0]
   
   function abrir() {
@@ -237,6 +240,14 @@
       sortable: true,
     },
     {
+      name: "total",
+      required: true,
+      label: "total",
+      align: "center",
+      field: "total",
+      sortable: true,
+    },
+    {
         name: 'estado',
         required: true,
         label: 'Estado',
@@ -342,7 +353,11 @@ const listarSemillaInactiva = async () => {
       Notify.create("Se debe agregar origen");
     } else if (poderGerminativo.value == "" || poderGerminativo.value.trim().length === 0) {
       Notify.create("Se debe agregar poder Germinativo (%)");
-    }  else {
+    } else if (total.value == "") {
+        Notify.create("Se debe agregar total");
+    } else if (!validacionnumeros.test(total.value)) {
+        Notify.create("El total solo debe llevar numeros");
+    } else {
       agregarSemilla();
       Limpiar();
       cerrar();
@@ -364,6 +379,7 @@ const listarSemillaInactiva = async () => {
         NumLote: NumLote.value,
         origen: origen.value,
         poderGerminativo: poderGerminativo.value,
+        total: total.value,
         
     });
   
@@ -389,6 +405,7 @@ const listarSemillaInactiva = async () => {
     NumLote.value = semilla.NumLote;
     origen.value = semilla.origen;
     poderGerminativo.value = semilla.poderGerminativo;
+    total.value = semilla.total;
   }
   
   function validarEdicionSemilla() {
@@ -413,6 +430,10 @@ const listarSemillaInactiva = async () => {
       Notify.create("Se debe agregar origen");
     } else if (poderGerminativo.value == "" || poderGerminativo.value.trim().length === 0) {
       Notify.create("Se debe agregar poder Germinativo (%)");
+    } else if (total.value == "") {
+        Notify.create("Se debe agregar total");
+    } else if (!validacionnumeros.test(total.value)) {
+        Notify.create("El total solo debe llevar numeros");
     }  else  {
       editarSemilla();
       Limpiar();
@@ -435,6 +456,7 @@ const listarSemillaInactiva = async () => {
         NumLote: NumLote.value,
         origen: origen.value,
         poderGerminativo: poderGerminativo.value,
+        total: total.value
       });
       listarSemilla();
     } catch (error) {
@@ -479,6 +501,7 @@ async function deshabilitarSemilla(semilla){
     NumLote.value = "";
     origen.value = "";
     poderGerminativo.value = "";
+    total.value ="";
   }
   
   onMounted(() => {

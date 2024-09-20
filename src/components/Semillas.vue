@@ -26,7 +26,7 @@
                 {{ accion == 1 ? "Agregar Semilla" : "Editar Semilla " }}
               </div>
             </q-card-section>
-            <q-select outlined v-model=" idProveedor" use-input hide-selected fill-input input-debounce="0"
+            <q-select outlined v-model="idProveedor" use-input hide-selected fill-input input-debounce="0"
               class="q-my-md q-mx-md" :options="options" @filter="filterFn" label="Seleccionar  el  Proveedor">
               <template v-slot:no-option>
                 <q-item>
@@ -43,7 +43,7 @@
             class="q-my-md q-mx-md" label="especie de la semilla" type="text" />
         <q-input outlined v-model="variedad" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="variedad de la semilla" type="text" />
-        <q-input outlined v-model=" NumLote" use-input hide-selected fill-input input-debounce="0"
+        <q-input outlined v-model="NumLote" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label=" Numero Lote" type="tel" required pattern="[0-9]+"
                 maxlength="99" />    
         <q-input outlined v-model="origen" use-input hide-selected fill-input input-debounce="0"

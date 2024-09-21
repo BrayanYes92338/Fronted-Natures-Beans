@@ -44,18 +44,13 @@
             <i v-else class="fas fa-angle-right dropdown"></i>
           </a>
           <div class="sub-menu" v-show="subMenus.finca">
-            <router-link class="opciones" to="/finca">
-              <i class="fas fa-home"></i>Fincas
-            </router-link>
-          </div>
-          <div class="sub-menu" v-show="subMenus.finca">
-            <router-link class="opciones" to="/parcela">
-              <i class="fas fa-tree"></i>Parcela
-            </router-link>
-          </div>
-          <div class="sub-menu" v-show="subMenus.finca">
             <router-link class="opciones" to="/clima">
               <i class="fas fa-cloud-sun"></i>Clima
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.finca">
+            <router-link class="opciones" to="/cultivo">
+              <i class="fas fa-seedling"></i>Cultivos
             </router-link>
           </div>
           <div class="sub-menu" v-show="subMenus.finca">
@@ -64,8 +59,13 @@
             </router-link>
           </div>
           <div class="sub-menu" v-show="subMenus.finca">
-            <router-link class="opciones" to="/cultivo">
-              <i class="fas fa-seedling"></i>Cultivos
+            <router-link class="opciones" to="/finca">
+              <i class="fas fa-home"></i>Fincas
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.finca">
+            <router-link class="opciones" to="/parcela">
+              <i class="fas fa-tree"></i>Parcela
             </router-link>
           </div>
           <div class="sub-menu" v-show="subMenus.finca">
@@ -105,59 +105,77 @@
             <i v-else class="fas fa-angle-right dropdown"></i>
           </a>
           <div class="sub-menu" v-show="subMenus.produccion">
-          <router-link class="opciones" to="/produccion">
-            <i class="fas fa-boxes"></i> Produccion
-          </router-link>
-        </div>
-        <div class="sub-menu" v-show="subMenus.produccion">
-          <router-link class="opciones" to="/proceso">
-            <i class="fas fa-cogs"></i> Proceso
-          </router-link>
-        </div>
-        <div class="sub-menu" v-show="subMenus.produccion">
-          <router-link class="opciones" to="/elaboracionSustrato">
-            <i class="fas fa-cogs"></i> Elaboracion Sustrato
-          </router-link>
-        </div>
-        <div class="sub-menu" v-show="subMenus.produccion">
-          <router-link class="opciones" to="/maquinaria">
-            <i class="fas fa-cogs"></i> Maquinaria
-          </router-link>
-        </div>
-        <div class="sub-menu" v-show="subMenus.produccion">
-          <router-link class="opciones" to="/controlPlaga">
-            <i class="fas fa-cogs"></i> Control Plaga
-          </router-link>
-        </div>
-        </div>
-
-        
-
-        <div class="item">
-          <router-link class="opciones" to="/comprador">
-            <i class="fas fa-shopping-cart"></i> Comprador
-          </router-link>
-        </div>
-      
-        <div class="item">
-          <router-link class="opciones" to="/elaboracionSustrato">
-            <i class="fas fa-cogs"></i> Elaboracion Sustrato
-          </router-link>
-        </div>
-        
-      
-
-        <div class="item">
-          <router-link class="opciones" to="/nomina">
-            <i class="fas fa-file-invoice"></i> Nómina
-          </router-link>
+            <router-link class="opciones" to="/produccion">
+              <i class="fas fa-boxes"></i> Produccion
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.produccion">
+            <router-link class="opciones" to="/proceso">
+              <i class="fas fa-project-diagram"></i>Proceso
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.produccion">
+            <router-link class="opciones" to="/elaboracionSustrato">
+              <i class="fas fa-seedling"></i> Elaboracion Sustrato
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.produccion">
+            <router-link class="opciones" to="/maquinaria">
+              <i class="fas fa-cogs"></i> Maquinaria
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.produccion">
+            <router-link class="opciones" to="/controlPlaga">
+              <i class="fas fa-bug"></i> Control Plaga
+            </router-link>
+          </div>
         </div>
 
         <div class="item">
-          <router-link class="opciones" to="/mantenimiento">
-            <i class="fas fa-cogs"></i> Mantenimiento
-          </router-link>
+          <a class="opciones sub" href="#" @click.prevent="toggleSubMenu('nomina')">
+            <i class="fas fa-users"></i>
+            Recursos Humanos
+            <i v-if="subMenus.nomina" class="fas fa-angle-down dropdown"></i>
+            <i v-else class="fas fa-angle-right dropdown"></i>
+          </a>
+          <div class="sub-menu" v-show="subMenus.nomina">
+            <router-link class="opciones" to="/nomina">
+              <i class="fas fa-file-invoice"></i> Nómina
+            </router-link>
+          </div>
         </div>
+
+        <div class="item">
+          <a class="opciones sub" href="#" @click.prevent="toggleSubMenu('ventas_distribucion')">
+            <i class="fas fa-tags"></i> Ventas y Distribución
+            <i v-if="subMenus.ventas_distribucion" class="fas fa-angle-down dropdown"></i>
+            <i v-else class="fas fa-angle-right dropdown"></i>
+          </a>
+          <div class="sub-menu" v-show="subMenus.ventas_distribucion">
+            <router-link class="opciones" to="/comprador">
+              <i class="fas fa-shopping-cart"></i> Comprador
+            </router-link>
+          </div>
+        </div>
+        <div class="item">
+          <a class="opciones sub" href="#" @click.prevent="toggleSubMenu('mantenimiento')">
+            <i class="fas fa-wrench"></i> Mantenimiento
+            <i v-if="subMenus.mantenimiento" class="fas fa-angle-down dropdown"></i>
+            <i v-else class="fas fa-angle-right dropdown"></i>
+          </a>
+          <div class="sub-menu" v-show="subMenus.mantenimiento">
+            <router-link class="opciones" to="/mantenimiento">
+              <i class="fas fa-cogs"></i> Mantenimiento
+            </router-link>
+          </div>
+        </div>
+
+
+
+
+
+
+
 
       </div>
       <div class="btn-cerrar">
@@ -203,7 +221,11 @@ const toggleSubMenu = (menu) => {
 const subMenus = ref({
   finca: false,
   insumo_proveedor: false,
-  produccion: false
+  produccion: false,
+  nomina: false,
+  mantenimiento: false,
+  ventas_distribucion: false
+
 })
 
 const cerrarSesion = () => {
@@ -281,7 +303,7 @@ const cerrarSesion = () => {
 }
 
 .item .sub-menu {
-  background: #f1f1f1;
+  background: #f0f0f0;
 }
 
 .sub-menu:hover {

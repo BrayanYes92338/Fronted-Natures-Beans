@@ -121,7 +121,7 @@
           </div>
           <div class="sub-menu" v-show="subMenus.produccion">
             <router-link class="opciones" to="/maquinaria">
-              <i class="fas fa-cogs"></i> Maquinaria
+              <i class="fas fa-cogs"></i> Maquinaria y Herramientas
             </router-link>
           </div>
           <div class="sub-menu" v-show="subMenus.produccion">

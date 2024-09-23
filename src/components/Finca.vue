@@ -72,7 +72,7 @@
                         class="q-my-md q-mx-md" label="Ubicacion donde esta la Finca" type="text" />
                     <q-input outlined v-model="area" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Area de la Finca" type="text" />
-                        <q-input outlined v-model="documentos" use-input hide-selected fill-input input-debounce="0"
+                    <q-input outlined v-model="documentos" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Documentos de la Finca" type="text" />
                     <q-card-actions align="right">
                         <q-btn v-if="accion === 1" @click="validarIngresoFincas()" color="red" class="text-white"
@@ -175,7 +175,7 @@
                     </q-table>
                     <h4 v-else>La Finca {{ nombreF }}, aun no tiene registrado los limites</h4>
                     <q-card-actions align="right">
-                        <!-- <q-btn @click="abrir2(props?.row)" color="green" class="text-white" :loading="useFinca.loading">
+                        <q-btn @click="abrir2(props?.row)" v-if="limites.length === 0" color="green" class="text-white" :loading="useFinca.loading">
                             Agregar Limites de la Finca
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
@@ -186,16 +186,7 @@
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
                             </template>
-                        </q-btn> -->
-
-                        <q-btn label="Agregar" v-if="limites.length === 0" color="black" outline
-                            @click="abrir2(props?.row)" />
-                        <q-btn label="Agregar" v-else color="black" outline disable>
-                            <q-tooltip>
-                                La finca ya cuenta con limites
-                            </q-tooltip>
                         </q-btn>
-                        <q-btn label="Cerrar" color="black" outline @click="cerrar2()" />
                     </q-card-actions>
                 </q-card>
             </q-dialog>
@@ -290,7 +281,7 @@ function abrir() {
     alert.value = true;
 }
 
-function abrir2(data) {
+function abrir2() {
     alerta.value = true;
     modalLimite.value = false;
 }
@@ -685,7 +676,7 @@ function validarIngresoFincas() {
         Notify.create("Se debe agregar una Ubicación de la Finca");
     } else if (area.value == "" || area.value.trim().length === 0) {
         Notify.create("Se debe agregar un Área de la Finca");
-    } else if(documentos.value == "" || documentos.value.trim().length === 0){
+    } else if (documentos.value == "" || documentos.value.trim().length === 0) {
         Notify.create("Se Debe agregar los documentos de la Finca");
     } else {
         agregarFincas();
@@ -791,9 +782,9 @@ function validarEdicionFinca() {
         Notify.create("Se debe agregar una Ubicación de la Finca");
     } else if (area.value == "" || area.value.trim().length === 0) {
         Notify.create("Se debe agregar un Área de la Finca");
-    }  else if(documentos.value == "" || documentos.value.trim().length === 0){
+    } else if (documentos.value == "" || documentos.value.trim().length === 0) {
         Notify.create("Se Debe agregar los documentos de la Finca");
-    }  else {
+    } else {
         editarFinca()
         Limpiar()
         cerrar()

@@ -157,26 +157,6 @@
             </router-link>
           </div>
         </div>
-        <div class="item">
-          <a class="opciones sub" href="#" @click.prevent="toggleSubMenu('mantenimiento')">
-            <i class="fas fa-wrench"></i> Mantenimiento
-            <i v-if="subMenus.mantenimiento" class="fas fa-angle-down dropdown"></i>
-            <i v-else class="fas fa-angle-right dropdown"></i>
-          </a>
-          <div class="sub-menu" v-show="subMenus.mantenimiento">
-            <router-link class="opciones" to="/mantenimiento">
-              <i class="fas fa-cogs"></i> Mantenimiento
-            </router-link>
-          </div>
-        </div>
-
-
-
-
-
-
-
-
       </div>
       <div class="btn-cerrar">
         <button class="cerrar-sesion" @click="cerrarSesion()">
@@ -223,7 +203,6 @@ const subMenus = ref({
   insumo_proveedor: false,
   produccion: false,
   nomina: false,
-  mantenimiento: false,
   ventas_distribucion: false
 
 })

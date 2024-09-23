@@ -157,8 +157,6 @@ const columns = ref([
       });
     },
   },
-
-
   {
     name: "diasTransplante",
     required: true,

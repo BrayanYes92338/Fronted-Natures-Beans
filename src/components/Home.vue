@@ -157,6 +157,11 @@
             </router-link>
           </div>
         </div>
+        <div class="item">
+          <router-link class="opciones" to="/fertilizacion">
+            <i class="fas fa-fill-drip"></i> Fertilizacion
+          </router-link>
+        </div>
       </div>
       <div class="btn-cerrar">
         <button class="cerrar-sesion" @click="cerrarSesion()">

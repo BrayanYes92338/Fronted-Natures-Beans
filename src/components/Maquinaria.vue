@@ -80,7 +80,31 @@
     </div>
 
     <!-- Modelo Para editar el registro de Mantenimiento Maquinas -->
-
+    <div>
+      <q-dialog persistent v-model="alerta2">
+        <q-card class="" style="width: 700px">
+          <q-card-section style="background-color: #009b44; margin-bottom: 20px">
+            <div class="text-h6 text-white">Editar Mantenimiento de {{ nombreF }}</div>
+          </q-card-section>
+          <q-input outlined v-model="responsable" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Agrega el Responsable del Mantenimiento" type="text" />
+          <q-input outlined v-model="observacionesMantenimiento" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Agrega las Observaciones del Mantenimiento" type="text" />
+          <q-input outlined v-model="precioMantenimiento" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Precio del Mantenimiento" type="tel" required pattern="[0-9]+"
+            maxlength="10" />
+          <q-card-actions align="right">
+            <q-btn color="red" class="text-white" :loading="useMaquinaria.loading" @click="editarMantenimientos()">
+              Editar
+              <template v-slot:loading>
+                <q-spinner color="primary" size="1em" />
+              </template>
+            </q-btn>
+            <q-btn label="Cerrar" color="black" outline @click="cerrar4()" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </div>
     <!-- Tabla Mantenimiento -->
     <div>
       <q-dialog v-model="modalMantenimiento" persistent full-width>
@@ -90,39 +114,16 @@
               Historial de Mantenimientos de {{ nombreF }}
             </div>
           </q-card-section>
-          <q-table v-if="mantenimientos.length > 0" table-header-class="text-black font-weight-bold"
-            :rows="mantenimientos" :columns="columnas" row-key="name">
-            <template v-slot:body-cell-observacionesMantenimiento="props">
-              <q-td :props="props">
-                <!-- VDropdown para mostrar las observaciones en un tooltip al hacer clic -->
-                <VDropdown :distance="6" v-model="props.row.showDropdown">
-                  <!-- Botón que activará el dropdown -->
-                  <q-btn flat dense @click="toggleObservacionesMantenimiento(props.row)">
-                    <!-- Mostramos solo una parte de las observaciones -->
-                    <span style="text-transform: none;">
-                      {{ props.row.observaciones.length > 10
-                        ? props.row.observaciones.substring(0, 10) + '...'
-                        : props.row.observaciones }}
-                    </span>
-                  </q-btn>
+          <q-table v-if="mantenimiento.length > 0" table-header-class="text-black font-weight-bold"
+            :rows="mantenimiento" :columns="columnas" row-key="name">
 
-                  <!-- Contenido del dropdown con observaciones completas y estilos personalizados -->
-                  <template #popper>
-                    <div class="custom-tooltip-content"
-                      style="max-height: 200px; max-width: 200px; overflow-y: auto; padding: 10px;">
-                      {{ props.row.observaciones }}
-                    </div>
-                  </template>
-                </VDropdown>
-              </q-td>
-            </template>
             <template v-slot:body-cell-opciones="props">
               <q-td :props="props">
                 <div style="display: flex; gap:15px; justify-content: center; ">
                   <!-- boton de editar -->
-                  <q-btn color="primary" @click="">
+                  <q-btn color="primary" @click="traerDatosMantenimientos(props.row)">
                     <q-tooltip>
-                      Editar Mantenimientos de la Maquina
+                      Editar Mantenimientos
                     </q-tooltip>
                     <i class="fas fa-pencil-alt">
                     </i></q-btn>
@@ -216,11 +217,15 @@ import { Notify } from "quasar";
 import { useMaquinariaStore } from "../stores/maquinaria.js";
 import { useProcesoStore } from "../stores/proceso.js";
 import { useProveedorStore } from "../stores/proveedor.js";
+import { useEmpleadoStore } from "../stores/empleado.js"
+import { UseInsumoStore } from "../stores/insumo.js"
 
 
 
 const useMaquinaria = useMaquinariaStore();
 const useProveedor = useProveedorStore();
+const useEmpleado = useEmpleadoStore()
+const useInsumo = UseInsumoStore()
 
 
 const showTooltip = ref(false);
@@ -234,7 +239,7 @@ let tipo = ref('');
 let observaciones = ref('');
 let cantidad = ref('');
 let precio = ref("");
-let mantenimientos = ref([])
+let mantenimiento = ref([])
 let responsable = ref("")
 let observacionesMantenimiento = ref("")
 let precioMantenimiento = ref("")
@@ -248,6 +253,7 @@ let modalMantenimiento = ref(false)
 let nombreF = ref("")
 let idDeMantenimientos = ref("")
 let idMantenimientos = ref("")
+
 
 
 
@@ -275,12 +281,17 @@ function cerrar3() {
   modalMantenimiento.value = true;
 }
 
+function cerrar4() {
+  alerta2.value = false;
+  modalMantenimiento.value = true;
+}
+
 
 function abrirMantenimientos(manten) {
   modalMantenimiento.value = true;
   idDeMantenimientos.value = manten._id
+  mantenimiento.value = manten.mantenimiento
   nombreF.value = manten.nombre
-  mantenimientos.value = manten.mantenimiento
 
 }
 
@@ -301,7 +312,7 @@ const columnas = ref([
     required: true,
     label: "Observaciones del Mantenimiento",
     align: "center",
-    field: "observaciones",
+    field: "observacionesMantenimiento",
     sortable: true,
   },
   {
@@ -346,28 +357,43 @@ const columnas = ref([
   }
 ])
 
+// Listar Mantenimientos de Cada Maquina
+
+function traerDatosMantenimientos(data) {
+  alerta2.value = true;
+  responsable.value = data.responsable
+  observacionesMantenimiento.value = data.observacionesMantenimiento
+  precioMantenimiento.value = data.precioMantenimiento
+  idMantenimientos.value = data._id
+  console.log(data)
+}
+
 // Agregar Mantenimientos de la Maquina
+
+
+// Listar Insumos
 
 async function agregarMantenimientos() {
   try {
     if (responsable.value == "" || responsable.value.trim().length === 0) {
-      Notify.create("Se debe agregar el responsable del Mantenimiento");
+      Notify.create("Se debe agregar el responsable del mantenimiento");
     } else if (observacionesMantenimiento.value == "" || observacionesMantenimiento.value.trim().length === 0) {
-      Notify.create("Se debe agregar Las observaciones del Mantenimiento");
-    } else if (precioMantenimiento.value == "" || precioMantenimiento.value.trim().length === 0) {
-      Notify.create("Se debe agregar el precio del Mantenimiento");
+      Notify.create("Se debe agregar observaciones del Mantenimiento");
+    } else if (precioMantenimiento.value == "") {
+      Notify.create("Se debe agregar observaciones del Mantenimiento");
     } else {
       let nuevosMantenimientos = {
         responsable: responsable.value,
         observacionesMantenimiento: observacionesMantenimiento.value,
-        precioMantenimiento: precioMantenimiento.value
+        precioMantenimiento: precioMantenimiento.value,
       }
-      mantenimientos.value.push(nuevosMantenimientos)
+      mantenimiento.value.push(nuevosMantenimientos)
       await useMaquinaria.putMaquinaria(idDeMantenimientos.value, {
-        mantenimientos: mantenimientos.value
+        mantenimiento: mantenimiento.value
       })
       listarMaquinariaHerramienta()
       cerrar3()
+
     }
 
   } catch (error) {
@@ -381,14 +407,14 @@ async function agregarMantenimientos() {
 async function editarMantenimientos() {
   try {
     if (responsable.value == "" || responsable.value.trim().length === 0) {
-      Notify.create("Se debe agregar el responsable del Mantenimiento");
+      Notify.create("Se debe agregar el responsable del mantenimiento");
     } else if (observacionesMantenimiento.value == "" || observacionesMantenimiento.value.trim().length === 0) {
-      Notify.create("Se debe agregar Las observaciones del Mantenimiento");
-    } else if (precioMantenimiento.value == "" || precioMantenimiento.value.trim().length === 0) {
-      Notify.create("Se debe agregar el precio del Mantenimiento");
+      Notify.create("Se debe agregar observaciones del Mantenimiento");
+    } else if (precioMantenimiento.value == "") {
+      Notify.create("Se debe agregar observaciones del Mantenimiento");
     } else {
-      for (let i = 0; i < mantenimientos.value.length; i++) {
-        const info = mantenimientos.value[i]
+      for (let i = 0; i < mantenimiento.value.length; i++) {
+        const info = mantenimiento.value[i]
         if (info._id === idMantenimientos.value) {
           info.responsable = responsable.value
           info.observacionesMantenimiento = observacionesMantenimiento.value
@@ -398,26 +424,18 @@ async function editarMantenimientos() {
       }
       alerta2.value = false
       await useMaquinaria.putMaquinaria(idDeMantenimientos.value, {
-        mantenimientos: mantenimientos.value
+        mantenimiento: mantenimiento.value
       })
       listarMaquinariaHerramienta()
     }
+
   } catch (error) {
     console.error('Error de Mantenimiento', error)
     Notify.create('Ocurrio un error al editar los datos del Mantenimientos')
   }
 }
 
-// Listar Mantenimientos de Cada Maquina
 
-function traerDatosMantenimientos(data) {
-  alerta2.value = true;
-  responsable = data.responsable
-  observacionesMantenimiento = data.observacionesMantenimiento
-  precioMantenimiento = data.precioMantenimiento
-  idMantenimientos.value = data._id
-  console.log(data)
-}
 
 
 const columns = ref([
@@ -538,6 +556,41 @@ async function listarProveedores() {
     proveedor.push(datos)
   })
   console.log(proveedor)
+}
+
+// Listar Empleados 
+
+let empleados = []
+let datosEmpleados = {}
+const opcionesEmpleado = ref(empleados)
+
+async function listarEmpleados() {
+  const data = await useEmpleado.ListarEmpleadoActivo();
+  data.empleadoActivo.forEach((item) => {
+    datosEmpleados = {
+      label: `${item.nombre}- ${item.descripcion}`,
+      value: item._id,
+    }
+  })
+  console.log(datosEmpleados)
+}
+
+
+// Listar Insumos
+
+let insumos =[]
+let datosInsumos = {}
+const opcionesInsumos = ref(insumos)
+
+async function listarInsumos(){
+  const data=  await useInsumo.listarInsumos()
+  data.data.insumo.forEach((item)=>{
+    datosInsumos ={
+      label: `${item.nombre}- ${item.relacionNPK}`,
+      value: item._id,
+    }
+  })
+  console.log(datosInsumos)
 }
 
 
@@ -684,6 +737,8 @@ function Limpiar() {
 onMounted(() => {
   listarMaquinariaHerramienta()
   listarProveedores()
+  listarEmpleados()
+  listarInsumos()
 });
 
 </script>

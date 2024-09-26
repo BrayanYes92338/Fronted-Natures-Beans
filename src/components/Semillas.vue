@@ -26,33 +26,29 @@
                 {{ accion == 1 ? "Agregar Semilla" : "Editar Semilla " }}
               </div>
             </q-card-section>
-            <q-select outlined v-model="idProveedor" use-input hide-selected fill-input input-debounce="0"
-              class="q-my-md q-mx-md" :options="options" @filter="filterFn" label="Seleccionar  el  Proveedor">
+            <q-select outlined v-model="idFinca" use-input hide-selected fill-input input-debounce="0"
+              class="q-my-md q-mx-md" :options="options" @filter="filterFn" label="Seleccionar  la Finca">
               <template v-slot:no-option>
                 <q-item>
                   <q-item-section class="text-grey"> Sin resultados </q-item-section>
                 </q-item>
               </template>
             </q-select>
-            <q-input outlined v-model="numFactura" use-input hide-selected fill-input input-debounce="0"
-                class="q-my-md q-mx-md" label="numero Factura" type="tel" required pattern="[0-9]+"
-                    maxlength="99" />
+            <q-input outlined v-model="registro_ICA" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="registro ICA de la semilla" type="text" />
+            <q-input outlined v-model="registro_Invima" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="registro Invima de la semilla" type="text" />
             <q-input outlined v-model="fechaVencimiento" use-input hide-selected fill-input input-debounce="0"
                 class="q-my-md q-mx-md" label="fecha Vencimiento" type="date" />
-          <q-input outlined v-model="especie" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="especie de la semilla" type="text" />
-        <q-input outlined v-model="variedad" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="variedad de la semilla" type="text" />
-        <q-input outlined v-model="NumLote" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label=" Numero Lote" type="tel" required pattern="[0-9]+"
+            <q-input outlined v-model="especie" use-input hide-selected fill-input input-debounce="0"
+                class="q-my-md q-mx-md" label="especie de la semilla" type="text" />
+            <q-input outlined v-model="numLote" use-input hide-selected fill-input input-debounce="0"
+                class="q-my-md q-mx-md" label=" Numero Lote" type="tel" required pattern="[0-9]+"
                 maxlength="99" />    
-        <q-input outlined v-model="origen" use-input hide-selected fill-input input-debounce="0"
+            <q-input outlined v-model="origen" use-input hide-selected fill-input input-debounce="0"
                 class="q-my-md q-mx-md" label="origen de la semilla" type="text" />
-        <q-input outlined v-model="poderGerminativo" use-input hide-selected fill-input input-debounce="0"
-                class="q-my-md q-mx-md" label="poder Germinativo (%)" type="text" />
-        <q-input outlined v-model="total" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label=" total" type="tel" required pattern="[0-9]+"
-                maxlength="99" />          
+            <q-input outlined v-model="poderGerminativo" use-input hide-selected fill-input input-debounce="0"
+                class="q-my-md q-mx-md" label="poder Germinativo (%)" type="text" />        
                 <q-card-actions align="right">
               <q-btn v-if="accion === 1" @click="validarIngresoSemilla()" color="red" class="text-white"
                 :loading="useSemilla.loading">Agregar
@@ -110,26 +106,26 @@
   import { Notify } from "quasar";
   import axios from "axios";
   import { useSemillaStore } from "../stores/semillas.js";
-  import { useProveedorStore } from "../stores/proveedor.js";
+  import { useFincaStore } from "../stores/finca.js"
   
   
   const useSemilla = useSemillaStore();
-  const useProveedor = useProveedorStore();
+  const useFinca = useFincaStore();
   
   
   let rows = ref([]);
   let alert = ref(false);
   let id = ref("");
   let accion = ref(1);
-  let idProveedor = ref("");
-  let numFactura = ref("");
+  let idFinca = ref("");
+  let registro_ICA = ref("");
+  let registro_Invima = ref("");
   let fechaVencimiento = ref("");
   let especie = ref("");
-  let  variedad = ref("");
-  let  NumLote = ref("");
+  let  numLote = ref("");
   let  origen = ref("");
   let  poderGerminativo = ref("");
-  let  total = ref("");
+  
   let today = new Date().toISOString().split('T')[0]
   
   function abrir() {
@@ -144,21 +140,30 @@
   
   const columns = ref([
     {
-      name: "idProveedor",
+      name: "idFinca",
       required: true,
-      label: "Nombre del Proveedor",
+      label: "Nombre de la Finca",
       align: "center",
-      field: (row) => row.idProveedor.nombre,
+      field: (row) => row.idFinca.nombre,
       sortable: true,
     },
     {
-      name: "numFactura",
+      name: "registro_ICA",
       required: true,
-      label: "numero Factura",
+      label: "registro ICA",
       align: "center",
-      field: "numFactura",
+      field: "registro_ICA",
       sortable: true,
-    },{
+    },
+    {
+      name: "registro_Invima",
+      required: true,
+      label: "registro Invima",
+      align: "center",
+      field: "registro_Invima",
+      sortable: true,
+    },
+    {
       name: "fechaCompra",
       required: true,
       label: "fecha Compra",
@@ -206,19 +211,11 @@
       sortable: true,
     },
     {
-      name: "variedad",
-      required: true,
-      label: "variedad",
-      align: "center",
-      field: "variedad",
-      sortable: true,
-    },
-    {
-      name: "NumLote",
+      name: "numLote",
       required: true,
       label: "Numero Lote",
       align: "center",
-      field: "NumLote",
+      field: "numLote",
       sortable: true,
     },
     {
@@ -235,14 +232,6 @@
       label: "poder Germinativo",
       align: "center",
       field: "poderGerminativo",
-      sortable: true,
-    },
-    {
-      name: "total",
-      required: true,
-      label: "total",
-      align: "center",
-      field: "total",
       sortable: true,
     },
     {
@@ -263,31 +252,35 @@
     },
   ]);
   
-  //  listar proveedor
+  //  listar finca
   
-  let proveedor = [];
-  let datos = {};
-  const options = ref(proveedor);
-  
-  function filterFn(val, update, abort) {
+  let fincas = []
+let datos = {}
+const options = ref(fincas)
+
+function filterFn(val, update, abort) {
     update(() => {
-      const needle = val.toLowerCase();
-      options.value = proveedor.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
+        const needle = val.toLowerCase();
+        options.value = fincas.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
     });
-  }
-  
-  async function listarProveedor() {
-    const data = await useProveedor.listarProveedor();
-    data.data.proveedor.forEach((item) => {
-      datos = {
-        label: `${item.nombre} - ${item.correo}`,
-        value: item._id,
-      };
-      proveedor.push(datos);
+};
+
+async function listarFincas() {
+    const data = await useFinca.listarFincas()
+    data.data.fincas.forEach(item => {
+        datos = {
+            label: `${item.nombre} - ${item.ruc}`,
+            value: item._id
+
+
+        };
+        fincas.push(datos);
     });
-    console.log(proveedor);
-  }
-  
+    console.log(fincas);
+
+}
+
+  // listar semilla
   const listarSemillaActiva = async () => {
     try {
         const res = await useSemilla.listarSemillaActiva();
@@ -331,30 +324,24 @@ const listarSemillaInactiva = async () => {
   
   function validarIngresoSemilla() {
     let validacionnumeros = /^[0-9]+$/;
-    if (idProveedor.value == "") {
-      Notify.create("Se debe seleccionar proveedor");
-    } else if (numFactura.value == "") {
-        Notify.create("Se debe agregar un numero de Factura");
-    } else if (!validacionnumeros.test(numFactura.value)) {
-        Notify.create("El numero de Factura solo debe llevar numeros");
+    if (idFinca.value == "") {
+      Notify.create("Se debe seleccionar Finca");
+    } else if (registro_ICA.value == "" ||  registro_ICA.value.trim().length === 0) {
+      Notify.create("Se debe agregar  registro ICA");
+    } else if (registro_Invima.value == "") {
+      Notify.create("Se debe agregar registro Invima");
     }  else if (fechaVencimiento.value == "" ||  fechaVencimiento.value.trim().length === 0) {
       Notify.create("Se debe agregar  fecha Vencimiento");
     } else if (especie.value == "" || especie.value.trim().length === 0) {
       Notify.create("Se debe agregar especie");
-    } else if (variedad.value == "" || variedad.value.trim().length === 0) {
-      Notify.create("Se debe agregar variedad");
-    } else if (NumLote.value == "") {
+    } else if (numLote.value == "") {
         Notify.create("Se debe agregar un Numero Lote");
-    } else if (!validacionnumeros.test(NumLote.value)) {
+    } else if (!validacionnumeros.test(numLote.value)) {
         Notify.create("El Numero Lote solo debe llevar numeros");
     } else if (origen.value == "" || origen.value.trim().length === 0) {
       Notify.create("Se debe agregar origen");
     } else if (poderGerminativo.value == "" || poderGerminativo.value.trim().length === 0) {
       Notify.create("Se debe agregar poder Germinativo (%)");
-    } else if (total.value == "") {
-        Notify.create("Se debe agregar total");
-    } else if (!validacionnumeros.test(total.value)) {
-        Notify.create("El total solo debe llevar numeros");
     } else {
       agregarSemilla();
       Limpiar();
@@ -369,15 +356,15 @@ const listarSemillaInactiva = async () => {
   async function agregarSemilla() {
   
     const r = await useSemilla.postSemilla({
-        idProveedor: idProveedor.value.value,
-        numFactura: numFactura.value,
+        idFinca: idFinca.value.value,
+        registro_ICA: registro_ICA.value,
+        registro_Invima: registro_Invima.value,
         fechaVencimiento: fechaVencimiento.value,
         especie: especie.value,
-        variedad: variedad.value,
-        NumLote: NumLote.value,
+        numLote: numLote.value,
         origen: origen.value,
         poderGerminativo: poderGerminativo.value,
-        total: total.value,
+        
         
     });
   
@@ -392,47 +379,41 @@ const listarSemillaInactiva = async () => {
     alert.value = true;
     accion.value = 2;
     id.value = semilla._id;
-    idProveedor.value = {
-      label: semilla.idProveedor.nombre,
-      value: semilla.idProveedor._id,
+    idFinca.value = {
+      label: semilla.idFinca.nombre,
+      value: semilla.idFinca_id,
     };
-    numFactura.value = semilla.numFactura;
+    registro_ICA.value = semilla.registro_ICA;
+    registro_Invima.value = semilla.registro_Invima;
     fechaVencimiento.value = semilla.fechaVencimiento.split("T")[0];
     especie.value = semilla.especie;
-    variedad.value = semilla.variedad;
-    NumLote.value = semilla.NumLote;
+    numLote.value = semilla.numLote;
     origen.value = semilla.origen;
     poderGerminativo.value = semilla.poderGerminativo;
-    total.value = semilla.total;
+    
   }
   
   function validarEdicionSemilla() {
     let validacionnumeros = /^[0-9]+$/;
-    if (idProveedor.value == "") {
-      Notify.create("Se debe seleccionar proveedor");
-    } else if (numFactura.value == "") {
-        Notify.create("Se debe agregar un numero de Factura");
-    } else if (!validacionnumeros.test(numFactura.value)) {
-        Notify.create("El numero de Factura solo debe llevar numeros");
+    if (idFinca.value == "") {
+      Notify.create("Se debe seleccionar Finca");
+    } else if (registro_ICA.value == "" ||  registro_ICA.value.trim().length === 0) {
+      Notify.create("Se debe agregar  registro ICA");
+    } else if (registro_Invima.value == "" ) {
+      Notify.create("Se debe agregar registro Invima");
     }  else if (fechaVencimiento.value == "" ||  fechaVencimiento.value.trim().length === 0) {
       Notify.create("Se debe agregar  fecha Vencimiento");
     } else if (especie.value == "" || especie.value.trim().length === 0) {
       Notify.create("Se debe agregar especie");
-    } else if (variedad.value == "" || variedad.value.trim().length === 0) {
-      Notify.create("Se debe agregar variedad");
-    } else if (NumLote.value == "") {
+    } else if (numLote.value == "") {
         Notify.create("Se debe agregar un Numero Lote");
-    } else if (!validacionnumeros.test(NumLote.value)) {
+    } else if (!validacionnumeros.test(numLote.value)) {
         Notify.create("El Numero Lote solo debe llevar numeros");
     } else if (origen.value == "" || origen.value.trim().length === 0) {
       Notify.create("Se debe agregar origen");
     } else if (poderGerminativo.value == "" || poderGerminativo.value.trim().length === 0) {
       Notify.create("Se debe agregar poder Germinativo (%)");
-    } else if (total.value == "") {
-        Notify.create("Se debe agregar total");
-    } else if (!validacionnumeros.test(total.value)) {
-        Notify.create("El total solo debe llevar numeros");
-    }  else  {
+    }   else  {
       editarSemilla();
       Limpiar();
       cerrar();
@@ -446,15 +427,14 @@ const listarSemillaInactiva = async () => {
   async function editarSemilla() {
     try {
       await useSemilla.putSemilla(id.value, {
-        idProveedor: idProveedor.value.value,
-        numFactura: numFactura.value,
+        idFinca: idFinca.value.value,
+        registro_ICA: registro_ICA.value,
+        registro_Invima: registro_Invima.value,
         fechaVencimiento: fechaVencimiento.value,
         especie: especie.value,
-        variedad: variedad.value,
-        NumLote: NumLote.value,
+        numLote: numLote.value,
         origen: origen.value,
-        poderGerminativo: poderGerminativo.value,
-        total: total.value
+        poderGerminativo: poderGerminativo.value
       });
       listarSemilla();
     } catch (error) {
@@ -491,20 +471,20 @@ async function deshabilitarSemilla(semilla){
 }
 
   function Limpiar() {
-    idProveedor.value = "";
-    numFactura.value = "";
+    idFinca.value = "";
+    registro_ICA.value = "";
+    registro_Invima.value = "";
     fechaVencimiento.value = "";
     especie.value = "";
-    variedad.value = "";
-    NumLote.value = "";
+    numLote.value = "";
     origen.value = "";
     poderGerminativo.value = "";
-    total.value ="";
+       
   }
   
   onMounted(() => {
     listarSemilla();
-    listarProveedor();
+    listarFincas();
    
   });
   

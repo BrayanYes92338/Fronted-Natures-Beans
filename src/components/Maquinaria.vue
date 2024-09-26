@@ -370,6 +370,9 @@ function traerDatosMantenimientos(data) {
 
 // Agregar Mantenimientos de la Maquina
 
+
+// Listar Insumos
+
 async function agregarMantenimientos() {
   try {
     if (responsable.value == "" || responsable.value.trim().length === 0) {

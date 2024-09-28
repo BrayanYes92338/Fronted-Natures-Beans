@@ -30,9 +30,9 @@
           <q-input outlined v-model="observaciones" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="Agrega las observaciones" type="text" />
           <q-input outlined v-model="cantidad" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Cantidad Comprada" type="tel" required pattern="[0-9]+" maxlength="10" />
+            class="q-my-md q-mx-md" label="Cantidad comprada" type="tel" required pattern="[0-9]+" maxlength="10" />
           <q-input outlined v-model="precio" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Precio" type="tel" required pattern="[0-9]+" maxlength="10" />
+            class="q-my-md q-mx-md" label="Precio de Compra" type="tel" required pattern="[0-9]+" maxlength="10" />
           <q-card-actions align="right">
             <q-btn v-if="accion === 1" @click="validarIngresoMaquinaHerramientas()" color="red" class="text-white"
               :loading="useMaquinaria.loading">Agregar
@@ -57,17 +57,18 @@
       <q-dialog persistent v-model="alerta">
         <q-card class="" style="width: 700px">
           <q-card-section style="background-color: #009b44; margin-bottom: 20px">
-            <div class="text-h6 text-white">Registro de Mantenimiento de {{ nombreF }}</div>
+            <div class="text-h6 text-white">Agregar Mantenimientos de {{ nombreF }}</div>
           </q-card-section>
           <q-input outlined v-model="responsable" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Agrega el Responsable del Mantenimiento" type="text" />
+            class="q-my-md q-mx-md" label="Agrega el responsable del Mantenimiento" type="text" />
           <q-input outlined v-model="observacionesMantenimiento" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Agrega las Observaciones del Mantenimiento" type="text" />
+            class="q-my-md q-mx-md" label="Observaciones del Mantenimiento" type="text" />
           <q-input outlined v-model="precioMantenimiento" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="Precio del Mantenimiento" type="tel" required pattern="[0-9]+"
             maxlength="10" />
           <q-card-actions align="right">
-            <q-btn color="red" class="text-white" :loading="useMaquinaria.loading" @click="agregarMantenimientos()">
+            <q-btn color="red" class="text-white" :loading="useMaquinaria.loading"
+              @click="agregarMantenimientosMaquina()">
               Agregar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -80,16 +81,17 @@
     </div>
 
     <!-- Modelo Para editar el registro de Mantenimiento Maquinas -->
+
     <div>
       <q-dialog persistent v-model="alerta2">
         <q-card class="" style="width: 700px">
           <q-card-section style="background-color: #009b44; margin-bottom: 20px">
-            <div class="text-h6 text-white">Editar Mantenimiento de {{ nombreF }}</div>
+            <div class="text-h6 text-white">Editar Mantenimientos de {{ nombreF }}</div>
           </q-card-section>
           <q-input outlined v-model="responsable" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Agrega el Responsable del Mantenimiento" type="text" />
+            class="q-my-md q-mx-md" label="Agrega el responsable del Mantenimiento" type="text" />
           <q-input outlined v-model="observacionesMantenimiento" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Agrega las Observaciones del Mantenimiento" type="text" />
+            class="q-my-md q-mx-md" label="Observaciones del Mantenimiento" type="text" />
           <q-input outlined v-model="precioMantenimiento" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="Precio del Mantenimiento" type="tel" required pattern="[0-9]+"
             maxlength="10" />
@@ -105,23 +107,23 @@
         </q-card>
       </q-dialog>
     </div>
+
     <!-- Tabla Mantenimiento -->
     <div>
       <q-dialog v-model="modalMantenimiento" persistent full-width>
         <q-card class="">
           <q-card-section style="background-color:#009B44; margin-bottom: 20px">
             <div class="text-h6 text-white">
-              Historial de Mantenimientos de {{ nombreF }}
+              Mantenimientos de {{ nombreF }}
             </div>
           </q-card-section>
           <q-table v-if="mantenimiento.length > 0" table-header-class="text-black font-weight-bold"
             :rows="mantenimiento" :columns="columnas" row-key="name">
-
             <template v-slot:body-cell-opciones="props">
               <q-td :props="props">
                 <div style="display: flex; gap:15px; justify-content: center; ">
                   <!-- boton de editar -->
-                  <q-btn color="primary" @click="traerDatosMantenimientos(props.row)">
+                  <q-btn color="primary" @click="traerMantenimiento(props.row)">
                     <q-tooltip>
                       Editar Mantenimientos
                     </q-tooltip>
@@ -131,10 +133,11 @@
               </q-td>
             </template>
           </q-table>
-          <h4 v-else>La Maquina {{ nombreF }}, aun no tiene registrado los mantenimientos</h4>
+          <h4 v-else>La Maquina {{ nombreF }}, aun no tiene registrado sus Mantenimientos </h4>
           <q-card-actions align="right">
-            <q-btn @click="abrir2(props?.row)" color="green" class="text-white" :loading="useMaquinaria.loading">
-              Agregar Mantenimiento
+            <q-btn @click="abrir2(props?.row)" color="green" class="text-white"
+              :loading="useMaquinaria.loading">
+              Agregar Mantenimientos
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
               </template>
@@ -150,9 +153,55 @@
       </q-dialog>
     </div>
 
-    <!-- Modelo para Desinsfeccion de la Herrameinta -->
+    <!-- Modelo para agregar Desinsfeccion de la Herrameinta -->
+
+    <!-- Modelo para editar Desinsfeccion de la Herrameinta -->
 
     <!-- Tabla de Desinfeccion -->
+
+    <div>
+      <q-dialog v-model="modalMantenimiento" persistent full-width>
+        <q-card class="">
+          <q-card-section style="background-color:#009B44; margin-bottom: 20px">
+            <div class="text-h6 text-white">
+              Desinfeccion de {{ nombreDes }}
+            </div>
+          </q-card-section>
+          <q-table v-if="desinfeccion.length > 0" table-header-class="text-black font-weight-bold"
+            :rows="desinfeccion" :columns="columnas" row-key="name">
+            <template v-slot:body-cell-opciones="props">
+              <q-td :props="props">
+                <div style="display: flex; gap:15px; justify-content: center; ">
+                  <!-- boton de editar -->
+                  <q-btn color="primary" @click="">
+                    <q-tooltip>
+                      Editar Desinfeccion
+                    </q-tooltip>
+                    <i class="fas fa-pencil-alt">
+                    </i></q-btn>
+                </div>
+              </q-td>
+            </template>
+          </q-table>
+          <h4 v-else>La Herramienta {{ nombreDes }}, aun no tiene registrado Desinfecciones </h4>
+          <q-card-actions align="right">
+            <q-btn @click="" color="green" class="text-white"
+              :loading="useMaquinaria.loading">
+              Agregar Desinfeccion
+              <template v-slot:loading>
+                <q-spinner color="primary" size="1em" />
+              </template>
+            </q-btn>
+            <q-btn @click="" color="red" class="text-white" :loading="useMaquinaria.loading">
+              Cerrar
+              <template v-slot:loading>
+                <q-spinner color="primary" size="1em" />
+              </template>
+            </q-btn>
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </div>
 
     <!-- Tabla de Maquinaria y Herramientas -->
 
@@ -187,7 +236,7 @@
           <q-td :props="props">
             <div style="display: flex; gap: 15px; justify-content: center">
               <!-- Botones de Mantenimiento o Desinfección -->
-              <q-btn @click="abrirMantenimientos(props.row)" v-if="props.row.tipo == 'Maquina'" color="orange">
+              <q-btn v-if="props.row.tipo == 'Maquina'" color="orange" @click="abrirMantenimientos(props.row)">
                 <q-tooltip>
                   Ver registro de Mantenimiento de la Maquina
                 </q-tooltip>
@@ -215,7 +264,6 @@
 import { ref, onMounted } from "vue";
 import { Notify } from "quasar";
 import { useMaquinariaStore } from "../stores/maquinaria.js";
-import { useProcesoStore } from "../stores/proceso.js";
 import { useProveedorStore } from "../stores/proveedor.js";
 import { useEmpleadoStore } from "../stores/empleado.js"
 import { UseInsumoStore } from "../stores/insumo.js"
@@ -239,21 +287,32 @@ let tipo = ref('');
 let observaciones = ref('');
 let cantidad = ref('');
 let precio = ref("");
+
+
+// Variables para la tabla de Mantenimientos 
+
 let mantenimiento = ref([])
-let responsable = ref("")
-let observacionesMantenimiento = ref("")
-let precioMantenimiento = ref("")
-let desinfeccion = ref("")
-let fechaDesinfeccion = ref("")
-let idEmpleado = ref("")
-let idInsumo = ref("")
 let alerta = ref(false)
 let alerta2 = ref(false)
 let modalMantenimiento = ref(false)
+let responsable = ref("")
+let precioMantenimiento = ref("")
+let observacionesMantenimiento = ref("")
 let nombreF = ref("")
 let idDeMantenimientos = ref("")
 let idMantenimientos = ref("")
 
+// Variables para la Tabla Desinfeccion
+
+let desinfeccion = ref([])
+let alertaDesinfeccion = ref(false)
+let alertaDesinfeccion2 = ref(false)
+let modalDesinfeccion = ref(false)
+let nombreDes = ref("")
+let idEmpleado = ref("")
+let idInsumo = ref("")
+let idDeDesinfeccion = ref("")
+let idDesinfeccion = ref("")
 
 
 
@@ -262,65 +321,92 @@ function abrir() {
   alert.value = true;
 }
 
-function abrir2() {
-  modalMantenimiento.value = true;
-  alerta.value = true;
-
-}
-
 function cerrar() {
   alert.value = false;
 }
 
+// Abrir el modal de Mantenimientos de Cada Maquina
+function abrirMantenimientos(manten) {
+  modalMantenimiento.value = true;
+  idDeMantenimientos.value = manten._id;
+  mantenimiento.value = manten.mantenimiento;
+  nombreF.value = manten.nombre;
+}
+
+
+// El modelo de formulario de Registro de Mantenimiento
+
+function abrir2() {
+  alerta.value = true;
+  modalMantenimiento.value = false;
+}
+
+// Cerrar el model de la tabla
+
 function cerrar2() {
   modalMantenimiento.value = false;
 }
+
+// Cerrar el modelo de formulario
 
 function cerrar3() {
   alerta.value = false;
   modalMantenimiento.value = true;
 }
 
-function cerrar4() {
-  alerta2.value = false;
-  modalMantenimiento.value = true;
+
+function cerrar4(){
+  alerta2.value = false
+  modalMantenimiento.value = true
+}
+
+// Traer los mNantenimientos de la tabla
+
+function traerMantenimiento(data) {
+  alerta2.value = true
+  idMantenimientos.value = data._id
+  responsable.value = data.responsable
+  observacionesMantenimiento.value = data.observacionesMantenimiento
+  precioMantenimiento.value = data.precioMantenimiento
+  console.log(data)
 }
 
 
-function abrirMantenimientos(manten) {
-  modalMantenimiento.value = true;
-  idDeMantenimientos.value = manten._id
-  mantenimiento.value = manten.mantenimiento
-  nombreF.value = manten.nombre
-
-}
-
-
-// Columns de Mantenimientos
-
-const columnas = ref([
+// Listar Columnas de la Tabla
+let columnas = ref([
   {
-    name: "responsable",
+    name: 'responsable',
     required: true,
-    label: "Responsable del Mantenimiento",
-    align: "center",
-    field: "responsable",
-    sortable: true,
+    label: 'Responsable del Mantenimiento',
+    align: 'center',
+    field: 'responsable',
+    sortable: true
   },
   {
-    name: "observacionesMantenimiento",
+    name: 'observacionesMantenimiento',
     required: true,
-    label: "Observaciones del Mantenimiento",
-    align: "center",
-    field: "observacionesMantenimiento",
-    sortable: true,
+    label: 'Observaciones del Mantenimiento',
+    align: 'center',
+    field: 'observacionesMantenimiento',
+    sortable: true
   },
   {
-    name: "fechaMantenimiento",
+    name: 'precioMantenimiento',
     required: true,
-    label: "Fecha de Mantenimiento de la Maquina",
-    align: "center",
-    field: "fechaMantenimiento",
+    label: 'Precio del Mantenimiento',
+    align: 'center',
+    field: 'precioMantenimiento',
+    sortable: true,
+    format: (valor) => {
+      return valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+    }
+  },
+  {
+    name: 'fechaMantenimiento',
+    required: true,
+    label: 'Fecha del Mantenimiento',
+    align: 'center',
+    field: 'fechaMantenimiento',
     sortable: true,
     format: (val) => {
       if (!val) return '';
@@ -335,93 +421,71 @@ const columnas = ref([
         minute: '2-digit'
       });
     },
+
   },
   {
-    name: "precioMantenimiento",
+    name: 'opciones',
     required: true,
-    label: "Precio del Mantenimiento ",
-    align: "center",
-    field: "precioMantenimiento",
-    sortable: true,
-    format: (valor) => {
-      return valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
-    }
+    label: 'Opciones',
+    align: 'center',
+    field: 'opciones',
+    sortable: true
   },
-  {
-    name: "opciones",
-    required: true,
-    label: "Opciones",
-    align: "center",
-    field: "opciones",
-    sortable: true,
-  }
 ])
-
-// Listar Mantenimientos de Cada Maquina
-
-function traerDatosMantenimientos(data) {
-  alerta2.value = true;
-  responsable.value = data.responsable
-  observacionesMantenimiento.value = data.observacionesMantenimiento
-  precioMantenimiento.value = data.precioMantenimiento
-  idMantenimientos.value = data._id
-  console.log(data)
-}
 
 // Agregar Mantenimientos de la Maquina
 
-
-// Listar Insumos
-
-async function agregarMantenimientos() {
+async function agregarMantenimientosMaquina() {
   try {
-    if (responsable.value == "" || responsable.value.trim().length === 0) {
-      Notify.create("Se debe agregar el responsable del mantenimiento");
-    } else if (observacionesMantenimiento.value == "" || observacionesMantenimiento.value.trim().length === 0) {
-      Notify.create("Se debe agregar observaciones del Mantenimiento");
-    } else if (precioMantenimiento.value == "") {
-      Notify.create("Se debe agregar observaciones del Mantenimiento");
-    } else {
-      let nuevosMantenimientos = {
-        responsable: responsable.value,
-        observacionesMantenimiento: observacionesMantenimiento.value,
-        precioMantenimiento: precioMantenimiento.value,
-      }
-      mantenimiento.value.push(nuevosMantenimientos)
-      await useMaquinaria.putMaquinaria(idDeMantenimientos.value, {
-        mantenimiento: mantenimiento.value
-      })
-      listarMaquinariaHerramienta()
-      cerrar3()
-
+  console.log(responsable.value)   
+  if(!responsable.value || responsable.value.trim().length === 0){
+    Notify.create("Se debe agregar el responsable del Mantenimiento")
+  } else if(!observacionesMantenimiento.value || observacionesMantenimiento.value.trim().length === 0){
+    Notify.create("Se debe agregar las observaciones del Mantenimiento")
+  } else if(!precioMantenimiento.value || precioMantenimiento.value.trim().length === 0){
+    Notify.create("Se debe agregar el precio del Mantenimiento")
+  } else{
+    let nuevoMantenimiento = {
+      responsable: responsable.value,
+      observacionesMantenimiento: observacionesMantenimiento.value,
+      precioMantenimiento: precioMantenimiento.value,
+      fechaMantenimiento: Date.now(),
     }
-
+    mantenimiento.value.push(nuevoMantenimiento)
+    alerta2.value = false
+    await useMaquinaria.putMaquinaria(idDeMantenimientos.value, {
+      mantenimiento: mantenimiento.value
+    })
+    listarMaquinariaHerramienta()
+  }
   } catch (error) {
-    console.error('Error de Mantenimiento', error)
-    Notify.create('Ocurrio un error al ingresar datos del Mantenimiento de la Maquina')
+    console.error("Error al agregar Mantenimientos de la Maquina", error)
+    Notify.create("Ocurrio un error al agregar Mantenimientos de la Maquina")
   }
 }
 
-// Editar Mantenimientos de Maquinas
 
+// Editar Mantenimientos de Maquinas
 async function editarMantenimientos() {
   try {
-    if (responsable.value == "" || responsable.value.trim().length === 0) {
-      Notify.create("Se debe agregar el responsable del mantenimiento");
-    } else if (observacionesMantenimiento.value == "" || observacionesMantenimiento.value.trim().length === 0) {
-      Notify.create("Se debe agregar observaciones del Mantenimiento");
-    } else if (precioMantenimiento.value == "") {
-      Notify.create("Se debe agregar observaciones del Mantenimiento");
-    } else {
+    if(!responsable.value || responsable.value.trim().length === 0){
+    Notify.create("Se debe agregar el responsable del Mantenimiento")
+  } else if(!observacionesMantenimiento.value || observacionesMantenimiento.value.trim().length === 0){
+    Notify.create("Se debe agregar las observaciones del Mantenimiento")
+  } else if(precioMantenimiento.value == "" ){
+    Notify.create("Se debe agregar el precio del Mantenimiento")
+  }else {
       for (let i = 0; i < mantenimiento.value.length; i++) {
-        const info = mantenimiento.value[i]
-        if (info._id === idMantenimientos.value) {
+        const info = mantenimiento.value[i];
+        if(info._id === idMantenimientos.value){
           info.responsable = responsable.value
           info.observacionesMantenimiento = observacionesMantenimiento.value
           info.precioMantenimiento = precioMantenimiento.value
+          console.log(info)
           break
         }
       }
+      console.log(mantenimiento.value)
       alerta2.value = false
       await useMaquinaria.putMaquinaria(idDeMantenimientos.value, {
         mantenimiento: mantenimiento.value
@@ -431,10 +495,104 @@ async function editarMantenimientos() {
 
   } catch (error) {
     console.error('Error de Mantenimiento', error)
-    Notify.create('Ocurrio un error al editar los datos del Mantenimientos')
+    Notify.create('Ocurrio un error al editar el Mantenimiento Maquina')
   }
 }
 
+// Funcion para Limpiar los Mantenimientos de las Maquinas
+
+function limpiarMantenimientos(){
+  responsable.value = ""
+  observacionesMantenimiento.value = ""
+  precioMantenimiento.value = ""
+}
+
+
+// Funciones de Desinfeccion
+
+// Abrir el modal de Desinfeccion de cada Herramienta
+
+function abrirDesinfeccion (desinfe){
+  modalDesinfeccion.value = true
+  idDeDesinfeccion.value = desinfe._id
+  desinfeccion.value = desinfe.desinfeccion
+  nombreDes.value = desinfe.nombre
+}
+
+
+
+
+// Listar Empleados 
+
+let empleados = []
+let datosEmpleados = {}
+const opcionesEmpleado = ref(empleados)
+
+async function listarEmpleados() {
+  const data = await useEmpleado.ListarEmpleadoActivo();
+  data.empleadoActivo.forEach((item) => {
+    datosEmpleados = {
+      label: `${item.nombre}- ${item.descripcion}`,
+      value: item._id,
+    }
+  })
+  console.log(datosEmpleados)
+}
+
+
+// Listar Insumos
+
+let insumos = []
+let datosInsumos = {}
+const opcionesInsumos = ref(insumos)
+
+async function listarInsumos() {
+  const data = await useInsumo.listarInsumos()
+  data.data.insumo.forEach((item) => {
+    datosInsumos = {
+      label: `${item.nombre}- ${item.relacionNPK}`,
+      value: item._id,
+    }
+  })
+  console.log(datosInsumos)
+}
+
+// Listar columnas de Desinfeccion
+
+let columnasDesinfeccion = ref([
+{
+    name: 'idEmpleado',
+    required: true,
+    label: 'Responsable de la Desinfeccion',
+    align: 'center',
+    field: (row)=>row.idEmpleado.nombre,
+    sortable: true
+  },
+  {
+    name: 'idInsumo',
+    required: true,
+    label: 'Nombre del Insumo Utilizado',
+    align: 'center',
+    field: (row)=>row.idInsumo.nombre,
+    sortable: true
+  },
+  {
+    name: 'fechaDesifeccion',
+    required: true,
+    label: 'Fecha de Desinfeccion',
+    align: 'center',
+    field: 'fechaDesifeccion',
+    sortable: true
+  },
+{
+    name: 'opciones',
+    required: true,
+    label: 'Opciones',
+    align: 'center',
+    field: 'opciones',
+    sortable: true
+  }
+])
 
 
 
@@ -558,40 +716,7 @@ async function listarProveedores() {
   console.log(proveedor)
 }
 
-// Listar Empleados 
 
-let empleados = []
-let datosEmpleados = {}
-const opcionesEmpleado = ref(empleados)
-
-async function listarEmpleados() {
-  const data = await useEmpleado.ListarEmpleadoActivo();
-  data.empleadoActivo.forEach((item) => {
-    datosEmpleados = {
-      label: `${item.nombre}- ${item.descripcion}`,
-      value: item._id,
-    }
-  })
-  console.log(datosEmpleados)
-}
-
-
-// Listar Insumos
-
-let insumos =[]
-let datosInsumos = {}
-const opcionesInsumos = ref(insumos)
-
-async function listarInsumos(){
-  const data=  await useInsumo.listarInsumos()
-  data.data.insumo.forEach((item)=>{
-    datosInsumos ={
-      label: `${item.nombre}- ${item.relacionNPK}`,
-      value: item._id,
-    }
-  })
-  console.log(datosInsumos)
-}
 
 
 // Listar Maquinarias y Herrameintas
@@ -737,8 +862,8 @@ function Limpiar() {
 onMounted(() => {
   listarMaquinariaHerramienta()
   listarProveedores()
-  listarEmpleados()
   listarInsumos()
+  listarEmpleados()
 });
 
 </script>

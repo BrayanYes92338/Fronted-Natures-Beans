@@ -175,7 +175,8 @@
                     </q-table>
                     <h4 v-else>La Finca {{ nombreF }}, aun no tiene registrado los limites</h4>
                     <q-card-actions align="right">
-                        <q-btn @click="abrir2(props?.row)" v-if="limites.length === 0" color="green" class="text-white" :loading="useFinca.loading">
+                        <q-btn @click="abrir2(props?.row)" v-if="limites.length === 0" color="green" class="text-white"
+                            :loading="useFinca.loading">
                             Agregar Limites de la Finca
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />

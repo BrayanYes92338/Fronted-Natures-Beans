@@ -10,7 +10,7 @@
                     <q-item clickable v-ripple @click="listarEmplados()">
                         <q-item-section>Listar Todos</q-item-section>
                     </q-item>
-                    <q-item clickable v-ripple @click="listarEmpleadosActivo()">
+                    <q-item clickable v-ripple @click="listarEmpleadosActivos()">
                         <q-item-section>Listar Activos</q-item-section>
                     </q-item>
                     <q-item clickable v-ripple @click="listarEmpleadosInactivo()">
@@ -215,22 +215,12 @@ async function listarEmplados() {
     rows.value = r.data.empleado.reverse()
     console.log(r.data.empleado);
 }
-const listarEmpleadosActivo = async () => {
-    try {
-        const res = await useEmpleado.ListarEmpleadoActivo();
-        rows.value = res.empleadoActivo.reverse();
-        Notify.create({
-            message: "Listado de Empleados Activos",
-            color: "green",
-        });
-        console.log(res.empleadoActivo);
 
-
-    } catch (error) {
-        console.error("Error al listar Empleados activos:", error);
-        Notify.create("Error al obtener Empleados de Usuarios activos");
-    }
-};
+async function listarEmpleadosActivos(){
+const r = await useEmpleado.ListarEmpleadoActivo()
+rows.value = r.data.empleadoActivo .reverse()
+    console.log(r.data.empleadoActivo );
+}
 
 const listarEmpleadosInactivo = async () => {
     try {
@@ -405,6 +395,7 @@ function limpiar() {
 
 onMounted(() => {
     listarEmplados()
+
 })
 
 

@@ -154,13 +154,54 @@
     </div>
 
     <!-- Modelo para agregar Desinsfeccion de la Herrameinta -->
+    <div>
+      <q-dialog persistent v-model="alertaDesinfeccion">
+        <q-card class="" style="width: 700px">
+          <q-card-section style="background-color: #009b44; margin-bottom: 20px">
+            <div class="text-h6 text-white">Agregar Desinfeccion de {{ nombreDes }}</div>
+          </q-card-section>
+
+          <q-select outlined v-model="idEmpleado" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opcionesEmpleado" @filter="filterFnEmpleado" label="Selecciona el nombre del Empleado">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-select outlined v-model="idInsumo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opcionesInsumos" @filter="filtrarInsumos" label="Selecciona el nombre del Insumo">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+      
+          <q-card-actions align="right">
+            <q-btn color="red" class="text-white" :loading="useMaquinaria.loading"
+              @click="">
+              Agregar
+              <template v-slot:loading>
+                <q-spinner color="primary" size="1em" />
+              </template>
+            </q-btn>
+            <q-btn label="Cerrar" color="black" outline @click="cerrarFormularioDes()" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </div>
 
     <!-- Modelo para editar Desinsfeccion de la Herrameinta -->
 
     <!-- Tabla de Desinfeccion -->
 
     <div>
-      <q-dialog v-model="modalMantenimiento" persistent full-width>
+      <q-dialog v-model="modalDesinfeccion" persistent full-width>
         <q-card class="">
           <q-card-section style="background-color:#009B44; margin-bottom: 20px">
             <div class="text-h6 text-white">
@@ -185,14 +226,14 @@
           </q-table>
           <h4 v-else>La Herramienta {{ nombreDes }}, aun no tiene registrado Desinfecciones </h4>
           <q-card-actions align="right">
-            <q-btn @click="" color="green" class="text-white"
+            <q-btn @click="abrirModalDesinfeccion(props?.row)" color="green" class="text-white"
               :loading="useMaquinaria.loading">
               Agregar Desinfeccion
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
               </template>
             </q-btn>
-            <q-btn @click="" color="red" class="text-white" :loading="useMaquinaria.loading">
+            <q-btn @click="cerrarModeloDes()" color="red" class="text-white" :loading="useMaquinaria.loading">
               Cerrar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -242,7 +283,7 @@
                 </q-tooltip>
                 <i class="fas fa-tools"></i>
               </q-btn>
-              <q-btn v-else color="purple">
+              <q-btn v-else color="purple" @click="abrirDesinfeccion(props.row)">
                 <q-tooltip>
                   Ver Registro de desinfección de la Herramienta
                 </q-tooltip>
@@ -519,25 +560,48 @@ function abrirDesinfeccion (desinfe){
   nombreDes.value = desinfe.nombre
 }
 
+// Abrir formulario Desinfeccion
+
+function abrirModalDesinfeccion(){
+  alertaDesinfeccion.value = true;
+  modalDesinfeccion.value = false;
+}
+
+function cerrarModeloDes(){
+  modalDesinfeccion.value = false
+}
+
+function cerrarFormularioDes(){
+  alertaDesinfeccion.value = false;
+  modalDesinfeccion.value = true;
+}
+
 
 
 
 // Listar Empleados 
+let empleados = [];
+let datosEmpleado = {}
+const opcinesEmpleado = ref(empleados)
 
-let empleados = []
-let datosEmpleados = {}
-const opcionesEmpleado = ref(empleados)
+function filterFnEmpleado(val, update, abort) {
+  update(() => {
+    const needle = val.toLowerCase();
+    opcinesEmpleados.value = empleados.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
+  });
+}
 
-async function listarEmpleados() {
+async function listarEmpleados(){
   const data = await useEmpleado.ListarEmpleadoActivo();
-  data.empleadoActivo.forEach((item) => {
-    datosEmpleados = {
-      label: `${item.nombre}- ${item.descripcion}`,
+  data.data.empleadoActivo.forEach((item) => {
+    datos = {
+      label: `${item.nombre}- ${item.telefono}`,
       value: item._id,
     }
+    empleados.push(datosEmpleado)
   })
-  console.log(datosEmpleados)
 }
+
 
 
 // Listar Insumos
@@ -545,6 +609,13 @@ async function listarEmpleados() {
 let insumos = []
 let datosInsumos = {}
 const opcionesInsumos = ref(insumos)
+
+function filtrarInsumos(val, update, abort) {
+  update(() => {
+    const needle = val.toLowerCase();
+    opcionesInsumos.value = insumos.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
+  });
+}
 
 async function listarInsumos() {
   const data = await useInsumo.listarInsumos()
@@ -867,3 +938,4 @@ onMounted(() => {
 });
 
 </script>
+

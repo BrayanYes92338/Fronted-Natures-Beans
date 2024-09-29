@@ -27,22 +27,22 @@ export const useEmpleadoStore = defineStore('empleado', () => {
             loading.value = false;
         }
     }
-    let ListarEmpleadoActivo = async () => {
-  
+    const ListarEmpleadoActivo = async () => {
         try {
-          let res = await axios.get("api/empleado/activos",{
+            loading.value = true;
+          const response = await axios.get("api/empleado/activos",{
             headers: {
               token: useUsuario.token
             },
           });
-          console.log(res);
-          return res.data;
+          empleados.value = response.data
+          return response;
         } catch (error) {
           console.log(error);
           return error;
         }
       };
-      let ListarEmpleadoInactivo = async () => {
+      const  ListarEmpleadoInactivo = async () => {
 
         try {
           let res = await axios.get("api/empleado/inactivos",{

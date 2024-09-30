@@ -1,7 +1,8 @@
 <template>
     <div>
         <div style="display: flex; justify-content: flex-end;margin-left: 5%;  margin-right: 5%">
-            <q-btn  style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar Nomina</q-btn>
+            <q-btn style="background-color: #00C04F; color: white;" class="q-my-md q-ml-md" @click="abrir()">Registrar
+                Nomina</q-btn>
             <q-btn-dropdown color="blue" icon="visibility" label="Filtrar"
                 style="display: flex; justify-content: center; align-items: center; margin-left: 16px;height: 20px;"
                 class="q-my-md q-ml-md">
@@ -27,26 +28,27 @@
                         </div>
                     </q-card-section>
                     <q-select outlined v-model="idEmpleado" use-input hide-selected fill-input input-debounce="0"
-                    class="q-my-md q-mx-md" :options="opciones" @filter="filtrarFn" label="Selecciona el Empleado">
-                    <template v-slot:no-option>
-                      <q-item>
-                        <q-item-section class="text-grey"> Sin resultados </q-item-section>
-                      </q-item>
-                    </template>
-                  </q-select>
-                    <q-input outlined v-model="tipo" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" label="tipo" type="text" />
+                        class="q-my-md q-mx-md" :options="opciones" @filter="filtrarFn" label="Selecciona el Empleado">
+                        <template v-slot:no-option>
+                            <q-item>
+                                <q-item-section class="text-grey"> Sin resultados </q-item-section>
+                            </q-item>
+                        </template>
+                    </q-select>
+                    <q-select outlined v-model="tipo" :options="['Nómina Ordinaria', 'Nómina por Horas', 'Nómina por Comisión', 'Nómina Complementaria', 'Nómina de Prestaciones', 'Nómina para Contratistas']" label="Seleccione el Tipo de Nomina"
+                        class="q-my-md q-mx-md" />
                     <q-input outlined v-model="valor" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="valor de la nomina" type="tel" required pattern="[0-9]+"
                         maxlength="10" />
-                    
                     <q-card-actions align="right">
-                        <q-btn v-if="accion === 1" @click="validarNomina()" color="red" class="text-white" :loading="useNomina.loading">Agregar
+                        <q-btn v-if="accion === 1" @click="validarNomina()" color="red" class="text-white"
+                            :loading="useNomina.loading">Agregar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
                             </template>
                         </q-btn>
-                        <q-btn v-if="accion !== 1" @click="validarEdicionNomina()"  color="red" class="text-white" :loading="useNomina.loading">
+                        <q-btn v-if="accion !== 1" @click="validarEdicionNomina()" color="red" class="text-white"
+                            :loading="useNomina.loading">
                             Editar
                             <template v-slot:loading>
                                 <q-spinner color="primary" size="1em" />
@@ -72,20 +74,20 @@
                         <div style="display: flex; gap:15px; justify-content: center; ">
 
                             <!-- boton de editar -->
-                            <q-btn color="primary" @click="traerNominas(props.row)" >
+                            <q-btn color="primary" @click="traerNominas(props.row)">
                                 <q-tooltip>
                                     Editar
                                 </q-tooltip>
                                 <i class="fas fa-pencil-alt">
                                 </i></q-btn>
                             <!-- botons de activado y desactivado -->
-                            <q-btn v-if="props.row.estado == 1" @click="deshabilitarNomina(props.row)"  color="negative">
+                            <q-btn v-if="props.row.estado == 1" @click="deshabilitarNomina(props.row)" color="negative">
                                 <q-tooltip>
                                     Desacticar
                                 </q-tooltip>
                                 <i class="fas fa-times">
                                 </i></q-btn>
-                            <q-btn v-else color="positive" @click="habilitarNomina(props.row)" >
+                            <q-btn v-else color="positive" @click="habilitarNomina(props.row)">
                                 <q-tooltip>
                                     Activar
                                 </q-tooltip><i class="fas fa-check">
@@ -140,47 +142,47 @@ const columns = ref([
     },
     {
         name: 'fecha',
-       required: true,
-       label: 'Fecha',
-       align: 'center',
-       field: 'fecha',
-       sortable: true,
-       format: (val) => {
-      if (!val) return '';
+        required: true,
+        label: 'Fecha',
+        align: 'center',
+        field: 'fecha',
+        sortable: true,
+        format: (val) => {
+            if (!val) return '';
 
-      const fechaIngreso = new Date(val);
-      const fechaColombia = new Date(fechaIngreso.toLocaleString("en-US", { timeZone: "America/Bogota" }));
+            const fechaIngreso = new Date(val);
+            const fechaColombia = new Date(fechaIngreso.toLocaleString("en-US", { timeZone: "America/Bogota" }));
 
-      return fechaColombia.toLocaleDateString("es-CO", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      }) + ' ' + fechaColombia.toLocaleTimeString("es-CO", {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
+            return fechaColombia.toLocaleDateString("es-CO", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+            }) + ' ' + fechaColombia.toLocaleTimeString("es-CO", {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
     },
     {
         name: 'tipo',
         required: true,
-        label: 'tipo',
+        label: 'Tipo de Nomina',
         align: 'center',
         field: 'tipo',
         sortable: true
     },
     {
-  name: 'valor',
-  required: true,
-  label: 'Valor Nómina',
-  align: 'center',
-  field: 'valor',
-  sortable: true,
-  format: (valor) => {
+        name: 'valor',
+        required: true,
+        label: 'Valor Nómina',
+        align: 'center',
+        field: 'valor',
+        sortable: true,
+        format: (valor) => {
             // Formatear el precio como pesos colombianos
             return valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
         }
-},
+    },
     {
         name: 'estado',
         required: true,
@@ -234,8 +236,8 @@ const listarNominaActiva = async () => {
             color: "green",
         });
         console.log(res.nominas);
-        
-        
+
+
     } catch (error) {
         console.error("Error al listar Nomina activa:", error);
         Notify.create("Error al obtener Nomina de Empleado activa");
@@ -244,19 +246,19 @@ const listarNominaActiva = async () => {
 
 const listarNominaInactiva = async () => {
     try {
-        const res = await useNomina.listarNominaInactiva(); 
-        rows.value = res.nominas.reverse();  
+        const res = await useNomina.listarNominaInactiva();
+        rows.value = res.nominas.reverse();
         Notify.create({
             message: "Listado de Nomina Inactiva",
             color: "green",
         });
 
         console.log(res.nominas);
-        
+
     } catch (error) {
         console.error("Error al listar Nomina inactiva", error);
         Notify.create("Error al obtener listado de Nomina inactiva");
-    }
+    }
 };
 
 
@@ -271,23 +273,23 @@ const listarNominaInactiva = async () => {
 
 // Filtrar Datos de las Nominas
 
-async function listarNominas(){
+async function listarNominas() {
     const r = await useNomina.listarNominas()
     rows.value = r.data.nominas.reverse()
     console.log(r.data.nominas)
 }
 
-function validarNomina(){
-    let validacionnumeros = /^[0-9]+$/; 
-    if(idEmpleado.value ==""){
-        Notify.create("Se debe agregar el nombre de la Empleado"); 
-    }else if(tipo.value ==""|| tipo.value.trim().length === 0){
+function validarNomina() {
+    let validacionnumeros = /^[0-9]+$/;
+    if (idEmpleado.value == "") {
+        Notify.create("Se debe agregar el nombre de la Empleado");
+    } else if (tipo.value == "" || tipo.value.trim().length === 0) {
         Notify.create("Se debe agregar tipo de la Nomina");
-    }else if(valor.value == ""){
+    } else if (valor.value == "") {
         Notify.create("Se debe agregar el valor de la Nomina");
-    }else if(!validacionnumeros.test(valor.value)){
+    } else if (!validacionnumeros.test(valor.value)) {
         Notify.create("El valor de la Nomina debe ser numerico");
-    }else {
+    } else {
         Notify.create({
             type: "positive",
             message: "Nomina agregada exitosamente",
@@ -298,7 +300,7 @@ function validarNomina(){
     }
 }
 
-function traerNominas(nominas){
+function traerNominas(nominas) {
     accion.value = 2
     alert.value = true
     id.value = nominas._id
@@ -310,17 +312,17 @@ function traerNominas(nominas){
     valor.value = nominas.valor
 }
 
-function validarEdicionNomina(){
-    let validacionnumeros = /^[0-9]+$/; 
-    if(idEmpleado.value ==""){
-        Notify.create("Se debe agregar el nombre de la Empleado"); 
-    }else if(tipo.value ==""|| tipo.value.trim().length === 0){
+function validarEdicionNomina() {
+    let validacionnumeros = /^[0-9]+$/;
+    if (idEmpleado.value == "") {
+        Notify.create("Se debe agregar el nombre de la Empleado");
+    } else if (tipo.value == "" || tipo.value.trim().length === 0) {
         Notify.create("Se debe agregar tipo de la Nomina");
-    }else if(valor.value == ""){
+    } else if (valor.value == "") {
         Notify.create("Se debe agregar el valor de la Nomina");
-    }else if(!validacionnumeros.test(valor.value)){
+    } else if (!validacionnumeros.test(valor.value)) {
         Notify.create("El valor de la Nomina debe ser numerico");
-    }else{
+    } else {
         Notify.create({
             type: "positive",
             message: "Nomina editada exitosamente",
@@ -332,27 +334,27 @@ function validarEdicionNomina(){
 }
 
 
-async function editarNomina(){
-    try{
-        await useNomina.putNomina(id.value,{
-            idEmpleado:idEmpleado.value.value,
+async function editarNomina() {
+    try {
+        await useNomina.putNomina(id.value, {
+            idEmpleado: idEmpleado.value.value,
             tipo: tipo.value,
             valor: valor.value,
-        }) 
+        })
 
         listarNominas()
 
-    }catch (error){
+    } catch (error) {
         console.error('Error de actualizar Nomina', error)
         Notify.create('Ocurrio un error al editar datos de la Nomina')
     }
 }
 
-async function agregarNominas(){
+async function agregarNominas() {
     const r = await useNomina.postNomina({
-        idEmpleado:idEmpleado.value.value,
-            tipo: tipo.value,
-            valor: valor.value,
+        idEmpleado: idEmpleado.value.value,
+        tipo: tipo.value,
+        valor: valor.value,
     })
     cerrar()
     listarNominas()
@@ -361,9 +363,9 @@ async function agregarNominas(){
 
 
 
-async function habilitarNomina(nominas){
+async function habilitarNomina(nominas) {
     const res = await useNomina.putNominaActiva(nominas._id)
-    .then((response) => {
+        .then((response) => {
             console.log(response);
             listarNominas()
         })
@@ -374,9 +376,9 @@ async function habilitarNomina(nominas){
         })
 }
 
-async function deshabilitarNomina(nominas){
+async function deshabilitarNomina(nominas) {
     const res = await useNomina.putNominaInactiva(nominas._id)
-    .then((response) => {
+        .then((response) => {
             console.log(response);
             listarNominas()
         })
@@ -386,7 +388,7 @@ async function deshabilitarNomina(nominas){
         })
 }
 
-function Limpiar(){
+function Limpiar() {
     idEmpleado.value = ''
     tipo.value = ''
     valor.value = ''

@@ -162,6 +162,16 @@
             <i class="fas fa-fill-drip"></i> Fertilizacion
           </router-link>
         </div>
+        <div class="item">
+          <router-link class="opciones" to="/gasto">
+            <i class="fas fa-credit-card"></i> Gastos
+          </router-link>
+        </div>
+        <div class="item">
+          <router-link class="opciones" to="/siembra">
+            <i class="fas fa-seedling"></i>Siembra
+          </router-link>
+        </div>
       </div>
       <div class="btn-cerrar">
         <button class="cerrar-sesion" @click="cerrarSesion()">

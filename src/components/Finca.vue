@@ -197,6 +197,30 @@
             <q-table title="Fincas" title-class="text-green text-weight-bolder text-h4"
                 table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
                 style="width: 90%;">
+                <template v-slot:body-cell-documentos="props">
+  <q-td :props="props">
+    <!-- VDropdown para mostrar el tooltip al hacer clic -->
+    <VDropdown :distance="6" v-model="props.row.showDropdown">
+      <!-- Botón que activará el dropdown -->
+      <q-btn flat dense @click="toggleDropdown(props.row)">
+        <!-- Controlamos que no se muestre en mayúsculas -->
+        <span style="text-transform: none;">
+          {{ props.row.documentos.length > 10 ? props.row.documentos.substring(0, 10) + '...' : props.row.documentos }}
+        </span>
+      </q-btn>
+
+      <!-- Contenido del popper (dropdown) con estilos personalizados -->
+      <template #popper>
+        <div class="custom-tooltip-content" style="max-height: 200px; max-width: 200px; overflow-y: auto; padding: 10px;">
+          <!-- Eliminamos 'https://' y aplicamos el color azul automáticamente como los enlaces -->
+          <a :href="props.row.documentos" target="_blank">
+            {{ props.row.documentos }}
+          </a>
+        </div>
+      </template>
+    </VDropdown>
+  </q-td>
+</template>
                 <template v-slot:body-cell-estado="props">
                     <q-td :props="props">
                         <p style="color: green;" v-if="props.row.estado == 1">Activo</p>
@@ -251,6 +275,8 @@ const useUsuario = useUsuarioStore();
 const useFinca = useFincaStore();
 const useDepartamento = useDepartamentoStore()
 
+
+const showTooltip = ref(false);
 let rows = ref([]);
 let alert = ref(false);
 let id = ref('');
@@ -624,19 +650,9 @@ async function listarFincas() {
 };
 
 async function listarFincasActivas() {
-    try {
-        const r = await useFinca.ListarFincasActivo()
-        rows.value = r.FincaActiva.reverse()
-        Notify.create({
-            message: "Listado de Fincas Activas",
-            color: "green",
-        });
-        console.log(r.FincaActiva)
-    } catch (error) {
-        console.error("Error al listar Fincas activas:", error);
-        Notify.create("Error al obtener Fincas de Usuarios activas");
-    }
-
+  const r = await useFinca.ListarFincasActivo()
+  rows.value = r.data.FincaActiva.reverse()
+  console.log(r.data.FincaActiva);
 }
 
 async function listarFincasInactivas() {
@@ -833,6 +849,18 @@ function Limpiar() {
     documentos.value = ""
 }
 
+
+// Función para alternar la visibilidad del dropdown
+const toggleDropdown = (row) => {
+    row.showDropdown = !row.showDropdown;
+};
+
+
+// Inicialización de los datos de la tabla
+rows.value = rows.value.map(row => ({
+    ...row,
+    showDropdown: false,
+}));
 
 onMounted(() => {
     listarUsuarios()

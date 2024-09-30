@@ -83,6 +83,29 @@
             <q-table title="Parcelas" title-class="text-green text-weight-bolder text-h4"
                 table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
                 style="width: 90%; margin-bottom: 5%;">
+                <template v-slot:body-cell-detalle="props">
+          <q-td :props="props">
+            <!-- VDropdown para mostrar el tooltip al hacer clic -->
+            <VDropdown :distance="6" v-model="props.row.showDropdown">
+              <!-- Botón que activará el dropdown -->
+              <q-btn flat dense @click="toggleDropdown(props.row)">
+                <!-- Controlamos que no se muestre en mayúsculas -->
+                <span style="text-transform: none;">
+                  {{ props.row.detalle.length > 10 ? props.row.detalle.substring(0, 10) + '...' :
+                    props.row.detalle }}
+                </span>
+              </q-btn>
+
+              <!-- Contenido del popper (dropdown) con estilos personalizados -->
+              <template #popper>
+                <div class="custom-tooltip-content"
+                  style="max-height: 200px; max-width: 200px; overflow-y: auto; padding: 10px;">
+                  {{ props.row.detalle }}
+                </div>
+              </template>
+            </VDropdown>
+          </q-td>
+        </template>
                 <template v-slot:body-cell-estado="props">
                     <q-td :props="props">
                         <p style="color: green;" v-if="props.row.estado == 1">Activo</p>
@@ -180,7 +203,8 @@ const columns = ref([
         label: 'Ubicacion Parcela',
         align: 'center',
         field: 'ubicacion',
-        sortable: true
+        sortable: true,
+        format: val => val.charAt(0).toUpperCase() + val.slice(1),
     },
     {
         name: 'numero',
@@ -212,7 +236,9 @@ const columns = ref([
         label: 'Detalle de la Parcela',
         align: 'center',
         field: 'detalle',
-        sortable: true
+        sortable: true,
+        format: val => val.charAt(0).toUpperCase() + val.slice(1),
+        
     },
     {
         name: 'area',
@@ -496,6 +522,18 @@ function Limpiar(){
     detalle.value = ''
     area.value = ''
 }
+
+// Función para alternar la visibilidad del dropdown
+const toggleDropdown = (row) => {
+  row.showDropdown = !row.showDropdown;
+};
+
+
+// Inicialización de los datos de la tabla
+rows.value = rows.value.map(row => ({
+  ...row,
+  showDropdown: false,
+}));
 
 onMounted(() => {
     listarParcelas()

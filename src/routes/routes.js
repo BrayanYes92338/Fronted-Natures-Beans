@@ -22,6 +22,8 @@ import ControlPlaga from "../components/ControlPlaga.vue";
 import Nomina from "../components/Nomina.vue";
 import Semilla from "../components/Semillas.vue";
 import Fertilizacion from "../components/Fertilizacion.vue";
+import Gasto from "../components/Gasto.vue"
+import Siembra from "../components/Siembra.vue";
 
 const auth = (to, from, next) => {
     if (checkAuth()) {
@@ -69,7 +71,9 @@ const routes = [
             {path: "/insumo", component: Insumo, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             {path: "/nomina", component: Nomina, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             {path: "/semilla", component: Semilla, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
-            {path: "/fertilizacion", component: Fertilizacion, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } }
+            {path: "/fertilizacion", component: Fertilizacion, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
+            {path: "/gasto", component: Gasto, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
+            {path: "/siembra", component: Siembra, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } }
         ]   
 
     },

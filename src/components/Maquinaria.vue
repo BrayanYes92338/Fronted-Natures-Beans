@@ -135,8 +135,7 @@
           </q-table>
           <h4 v-else>La Maquina {{ nombreF }}, aun no tiene registrado sus Mantenimientos </h4>
           <q-card-actions align="right">
-            <q-btn @click="abrir2(props?.row)" color="green" class="text-white"
-              :loading="useMaquinaria.loading">
+            <q-btn @click="abrir2(props?.row)" color="green" class="text-white" :loading="useMaquinaria.loading">
               Agregar Mantenimientos
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -160,9 +159,9 @@
           <q-card-section style="background-color: #009b44; margin-bottom: 20px">
             <div class="text-h6 text-white">Agregar Desinfeccion de {{ nombreDes }}</div>
           </q-card-section>
-
           <q-select outlined v-model="idEmpleado" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" :options="opcionesEmpleado" @filter="filterFnEmpleado" label="Selecciona el nombre del Empleado">
+            class="q-my-md q-mx-md" :options="opcionesEmpleado" @filter="filterFnEmpleado"
+            label="Selecciona el nombre del Empleado">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey">
@@ -172,7 +171,7 @@
             </template>
           </q-select>
           <q-select outlined v-model="idInsumo" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" :options="opcionesInsumos" @filter="filtrarInsumos" label="Selecciona el nombre del Insumo">
+            class="q-my-md q-mx-md" :options="opcionesInsumos" @filter="filterFnInsumos" label="Selecciona el insumo">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey">
@@ -181,10 +180,10 @@
               </q-item>
             </template>
           </q-select>
-      
+
           <q-card-actions align="right">
             <q-btn color="red" class="text-white" :loading="useMaquinaria.loading"
-              @click="">
+              @click="agregarDesinfeccionHerramienta()">
               Agregar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -197,9 +196,47 @@
     </div>
 
     <!-- Modelo para editar Desinsfeccion de la Herrameinta -->
-
+    <div>
+      <q-dialog persistent v-model="alertaDesinfeccion2">
+        <q-card class="" style="width: 700px">
+          <q-card-section style="background-color: #009b44; margin-bottom: 20px">
+            <div class="text-h6 text-white">Editar Desinfeccion de {{ nombreDes }}</div>
+          </q-card-section>
+          <q-select outlined v-model="idEmpleado" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opcionesEmpleado" @filter="filterFnEmpleado"
+            label="Selecciona el nombre del Empleado">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-select outlined v-model="idInsumo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opcionesInsumos" @filter="filterFnInsumos" label="Selecciona el insumo">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-card-actions align="right">
+            <q-btn color="red" class="text-white" :loading="useMaquinaria.loading"
+              @click="editarDesinfeccionHerramientas()">
+             Editar
+              <template v-slot:loading>
+                <q-spinner color="primary" size="1em" />
+              </template>
+            </q-btn>
+            <q-btn label="Cerrar" color="black" outline @click="cerrarModalEditarDesinfeccion()" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </div>
     <!-- Tabla de Desinfeccion -->
-
     <div>
       <q-dialog v-model="modalDesinfeccion" persistent full-width>
         <q-card class="">
@@ -208,13 +245,13 @@
               Desinfeccion de {{ nombreDes }}
             </div>
           </q-card-section>
-          <q-table v-if="desinfeccion.length > 0" table-header-class="text-black font-weight-bold"
-            :rows="desinfeccion" :columns="columnas" row-key="name">
+          <q-table v-if="desinfeccion.length > 0" table-header-class="text-black font-weight-bold" :rows="desinfeccion"
+            :columns="columnasDesinfeccion" row-key="name">
             <template v-slot:body-cell-opciones="props">
               <q-td :props="props">
                 <div style="display: flex; gap:15px; justify-content: center; ">
                   <!-- boton de editar -->
-                  <q-btn color="primary" @click="">
+                  <q-btn color="primary" @click="traerDesinfeccion(props.row)">
                     <q-tooltip>
                       Editar Desinfeccion
                     </q-tooltip>
@@ -396,12 +433,12 @@ function cerrar3() {
 }
 
 
-function cerrar4(){
+function cerrar4() {
   alerta2.value = false
   modalMantenimiento.value = true
 }
 
-// Traer los mNantenimientos de la tabla
+// Traer los Mantenimientos de la tabla
 
 function traerMantenimiento(data) {
   alerta2.value = true
@@ -413,7 +450,7 @@ function traerMantenimiento(data) {
 }
 
 
-// Listar Columnas de la Tabla
+// Listar Columnas de la Tabla de Mantenimientos
 let columnas = ref([
   {
     name: 'responsable',
@@ -478,27 +515,29 @@ let columnas = ref([
 
 async function agregarMantenimientosMaquina() {
   try {
-  console.log(responsable.value)   
-  if(!responsable.value || responsable.value.trim().length === 0){
-    Notify.create("Se debe agregar el responsable del Mantenimiento")
-  } else if(!observacionesMantenimiento.value || observacionesMantenimiento.value.trim().length === 0){
-    Notify.create("Se debe agregar las observaciones del Mantenimiento")
-  } else if(!precioMantenimiento.value || precioMantenimiento.value.trim().length === 0){
-    Notify.create("Se debe agregar el precio del Mantenimiento")
-  } else{
-    let nuevoMantenimiento = {
-      responsable: responsable.value,
-      observacionesMantenimiento: observacionesMantenimiento.value,
-      precioMantenimiento: precioMantenimiento.value,
-      fechaMantenimiento: Date.now(),
+    console.log(responsable.value)
+    if (!responsable.value || responsable.value.trim().length === 0) {
+      Notify.create("Se debe agregar el responsable del Mantenimiento")
+    } else if (!observacionesMantenimiento.value || observacionesMantenimiento.value.trim().length === 0) {
+      Notify.create("Se debe agregar las observaciones del Mantenimiento")
+    } else if (!precioMantenimiento.value || precioMantenimiento.value.trim().length === 0) {
+      Notify.create("Se debe agregar el precio del Mantenimiento")
+    } else {
+      let nuevoMantenimiento = {
+        responsable: responsable.value,
+        observacionesMantenimiento: observacionesMantenimiento.value,
+        precioMantenimiento: precioMantenimiento.value,
+        fechaMantenimiento: Date.now(),
+      }
+      mantenimiento.value.push(nuevoMantenimiento)
+      alerta.value = false
+      modalMantenimiento.value = true
+      await useMaquinaria.putMaquinaria(idDeMantenimientos.value, {
+        mantenimiento: mantenimiento.value
+      })
+      listarMaquinariaHerramienta()
+
     }
-    mantenimiento.value.push(nuevoMantenimiento)
-    alerta2.value = false
-    await useMaquinaria.putMaquinaria(idDeMantenimientos.value, {
-      mantenimiento: mantenimiento.value
-    })
-    listarMaquinariaHerramienta()
-  }
   } catch (error) {
     console.error("Error al agregar Mantenimientos de la Maquina", error)
     Notify.create("Ocurrio un error al agregar Mantenimientos de la Maquina")
@@ -509,16 +548,16 @@ async function agregarMantenimientosMaquina() {
 // Editar Mantenimientos de Maquinas
 async function editarMantenimientos() {
   try {
-    if(!responsable.value || responsable.value.trim().length === 0){
-    Notify.create("Se debe agregar el responsable del Mantenimiento")
-  } else if(!observacionesMantenimiento.value || observacionesMantenimiento.value.trim().length === 0){
-    Notify.create("Se debe agregar las observaciones del Mantenimiento")
-  } else if(precioMantenimiento.value == "" ){
-    Notify.create("Se debe agregar el precio del Mantenimiento")
-  }else {
+    if (!responsable.value || responsable.value.trim().length === 0) {
+      Notify.create("Se debe agregar el responsable del Mantenimiento")
+    } else if (!observacionesMantenimiento.value || observacionesMantenimiento.value.trim().length === 0) {
+      Notify.create("Se debe agregar las observaciones del Mantenimiento")
+    } else if (precioMantenimiento.value == "") {
+      Notify.create("Se debe agregar el precio del Mantenimiento")
+    } else {
       for (let i = 0; i < mantenimiento.value.length; i++) {
         const info = mantenimiento.value[i];
-        if(info._id === idMantenimientos.value){
+        if (info._id === idMantenimientos.value) {
           info.responsable = responsable.value
           info.observacionesMantenimiento = observacionesMantenimiento.value
           info.precioMantenimiento = precioMantenimiento.value
@@ -542,7 +581,7 @@ async function editarMantenimientos() {
 
 // Funcion para Limpiar los Mantenimientos de las Maquinas
 
-function limpiarMantenimientos(){
+function limpiarMantenimientos() {
   responsable.value = ""
   observacionesMantenimiento.value = ""
   precioMantenimiento.value = ""
@@ -553,7 +592,7 @@ function limpiarMantenimientos(){
 
 // Abrir el modal de Desinfeccion de cada Herramienta
 
-function abrirDesinfeccion (desinfe){
+function abrirDesinfeccion(desinfe) {
   modalDesinfeccion.value = true
   idDeDesinfeccion.value = desinfe._id
   desinfeccion.value = desinfe.desinfeccion
@@ -562,16 +601,16 @@ function abrirDesinfeccion (desinfe){
 
 // Abrir formulario Desinfeccion
 
-function abrirModalDesinfeccion(){
+function abrirModalDesinfeccion() {
   alertaDesinfeccion.value = true;
   modalDesinfeccion.value = false;
 }
 
-function cerrarModeloDes(){
+function cerrarModeloDes() {
   modalDesinfeccion.value = false
 }
 
-function cerrarFormularioDes(){
+function cerrarFormularioDes() {
   alertaDesinfeccion.value = false;
   modalDesinfeccion.value = true;
 }
@@ -580,28 +619,29 @@ function cerrarFormularioDes(){
 
 
 // Listar Empleados 
-let empleados = [];
+
+let empleados = []
 let datosEmpleado = {}
-const opcinesEmpleado = ref(empleados)
+const opcionesEmpleado = ref(empleados)
 
 function filterFnEmpleado(val, update, abort) {
   update(() => {
     const needle = val.toLowerCase();
-    opcinesEmpleados.value = empleados.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
+    opcionesEmpleado.value = empleados.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
   });
 }
 
-async function listarEmpleados(){
-  const data = await useEmpleado.ListarEmpleadoActivo();
+async function listarEmpleados() {
+  const data = await useEmpleado.ListarEmpleadoActivo()
   data.data.empleadoActivo.forEach((item) => {
-    datos = {
-      label: `${item.nombre}- ${item.telefono}`,
-      value: item._id,
+    datosEmpleado = {
+      label: `${item.nombre} - ${item.descripcion}`,
+      value: item._id
     }
     empleados.push(datosEmpleado)
   })
+  console.log(empleados)
 }
-
 
 
 // Listar Insumos
@@ -610,42 +650,43 @@ let insumos = []
 let datosInsumos = {}
 const opcionesInsumos = ref(insumos)
 
-function filtrarInsumos(val, update, abort) {
+function filterFnInsumos(val, update, abort) {
   update(() => {
     const needle = val.toLowerCase();
     opcionesInsumos.value = insumos.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
   });
 }
 
+
 async function listarInsumos() {
   const data = await useInsumo.listarInsumos()
   data.data.insumo.forEach((item) => {
     datosInsumos = {
-      label: `${item.nombre}- ${item.relacionNPK}`,
-      value: item._id,
+      label: `${item.nombre} - ${item.relacionNPK}`,
+      value: item._id
     }
+    insumos.push(datosInsumos)
   })
-  console.log(datosInsumos)
+  console.log(insumos)
 }
 
 // Listar columnas de Desinfeccion
 
 let columnasDesinfeccion = ref([
-{
-    name: 'idEmpleado',
-    required: true,
-    label: 'Responsable de la Desinfeccion',
-    align: 'center',
-    field: (row)=>row.idEmpleado.nombre,
-    sortable: true
-  },
   {
-    name: 'idInsumo',
+    name: "idEmpleado",
     required: true,
-    label: 'Nombre del Insumo Utilizado',
-    align: 'center',
-    field: (row)=>row.idInsumo.nombre,
-    sortable: true
+    label: "Nombre del Empleado",
+    align: "center",
+    field: (row) => row.idEmpleado.nombre,
+    sortable: true,
+  }, {
+    name: "idInsumo",
+    required: true,
+    label: "Nombre del Producto",
+    align: "center",
+    field: (row) => row.idInsumo.nombre,
+    sortable: true,
   },
   {
     name: 'fechaDesifeccion',
@@ -653,9 +694,22 @@ let columnasDesinfeccion = ref([
     label: 'Fecha de Desinfeccion',
     align: 'center',
     field: 'fechaDesifeccion',
-    sortable: true
+    sortable: true,
+    format: (val) => {
+      if (!val) return '';
+      const fechaIngreso = new Date(val);
+      const fechaColombia = new Date(fechaIngreso.toLocaleString("en-US", { timeZone: "America/Bogota" }));
+      return fechaColombia.toLocaleDateString("es-CO", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }) + ' ' + fechaColombia.toLocaleTimeString("es-CO", {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    },
   },
-{
+  {
     name: 'opciones',
     required: true,
     label: 'Opciones',
@@ -664,6 +718,88 @@ let columnasDesinfeccion = ref([
     sortable: true
   }
 ])
+
+// Agregar Desinfeccion de las Herrameintas
+
+async function agregarDesinfeccionHerramienta() {
+  try {
+    console.log(idEmpleado.value)
+    if (idEmpleado.value == "") {
+      Notify.create("Se debe agregar el responsable de la Desinfeccion")
+    } else if (idInsumo.value == "") {
+      Notify.create("Se debe agregar el insumo que utilizo para la Desinfeccion")
+    } else {
+      let nuevaDesinfeccion = {
+        idEmpleado: idEmpleado.value.value,
+        idInsumo: idInsumo.value.value,
+        fechaDesifeccion: Date.now()
+      }
+      desinfeccion.value.push(nuevaDesinfeccion)
+      alertaDesinfeccion.value = false
+      await useMaquinaria.putMaquinaria(idDeDesinfeccion.value, {
+        desinfeccion: desinfeccion.value
+      })
+      listarMaquinariaHerramienta()
+    }
+
+  } catch (error) {
+    console.error("Error al agregar Desinfeccion de la herramienta", error)
+    Notify.create("Ocurrio un error al agregar Desinfeccion de la herramienta")
+  }
+}
+
+// Editar Desinfeccion de Herramientas
+
+async function editarDesinfeccionHerramientas() {
+  try {
+    if (idEmpleado.value == "") {
+      Notify.create("Se debe agregar el responsable de la Desinfeccion")
+    } else if (idInsumo.value == "") {
+      Notify.create("Se debe agregar el insumo que utilizo para la Desinfeccion")
+    } else {
+      for (let i = 0; i < desinfeccion.value.length; i++) {
+        const infoDes = desinfeccion.value[i];
+        if (infoDes._id === idDesinfeccion.value) {
+          infoDes.idEmpleado = idEmpleado.value.value
+          infoDes.idInsumo = idInsumo.value.value
+          console.log(infoDes)
+          break
+        }
+      }
+      console.log(desinfeccion.value)
+      alertaDesinfeccion2.value = false
+      modalDesinfeccion.value = false
+      await useMaquinaria.putMaquinaria(idDeDesinfeccion.value, {
+        desinfeccion: desinfeccion.value
+      })
+      listarMaquinariaHerramienta()
+    }
+  } catch (error) {
+    console.error("Error al editar la Desinfeccion de la Herramienta", error)
+    Notify.create("Ocurrio un error al editar la Desinfeccion de la Herramienta")
+  }
+}
+
+function cerrarModalEditarDesinfeccion(){
+  alertaDesinfeccion2.value = false;
+  modalDesinfeccion.value = true;
+}
+
+// Traer elementos de Desinfeccion
+
+function traerDesinfeccion(data){
+  alertaDesinfeccion2.value = true
+  idDesinfeccion.value = data._id
+  idEmpleado.value = {
+    label: data.idEmpleado.nombre,
+    value: data.idEmpleado._id
+  }
+  idInsumo.value = {
+    label: data.idInsumo.nombre,
+    value: data.idInsumo._id
+  }
+  console.log(data)
+}
 
 
 
@@ -788,8 +924,6 @@ async function listarProveedores() {
 }
 
 
-
-
 // Listar Maquinarias y Herrameintas
 
 async function listarMaquinariaHerramienta() {
@@ -910,10 +1044,6 @@ const toggleDropdown = (row) => {
   row.showDropdown = !row.showDropdown;
 };
 
-const toggleObservacionesMantenimiento = (row) => {
-  row.showDropdown = !row.showDropdown;
-};
-
 
 // Inicialización de los datos de la tabla
 rows.value = rows.value.map(row => ({
@@ -938,4 +1068,3 @@ onMounted(() => {
 });
 
 </script>
-

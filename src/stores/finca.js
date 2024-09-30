@@ -30,13 +30,14 @@ export const useFincaStore = defineStore('finca', () => {
     let ListarFincasActivo = async () => {
 
         try {
-            let res = await axios.get("api/fincas/listarFincaActivas", {
+            loading.value = true;
+            const response = await axios.get("api/fincas/listarFincaActivas", {
                 headers: {
                     token: useUsuario.token
                 },
             });
-            console.log(res);
-            return res.data;
+           fincas.value = response.data
+           return response;
         } catch (error) {
             console.log(error);
             return error;

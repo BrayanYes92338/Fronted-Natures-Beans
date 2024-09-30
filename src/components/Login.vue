@@ -424,6 +424,10 @@ a {
 }
 
 @media(max-width: 905px) {
+
+  .carousel-container{
+    width: 600px;
+  }
   .wrapper {
 
     width: 40%;
@@ -435,7 +439,11 @@ a {
   }
 }
 
-@media(max-width: 725px) {
+@media(max-width: 730px) {
+
+  .carousel-container{
+    width: 400px;
+  }
 
   .logo1 {
     width: 220px;
@@ -454,6 +462,10 @@ a {
 }
 
 @media(max-width: 535px) {
+
+  .carousel-container{
+    width: 400px;
+  }
 
   h2 {
     font-size: medium;
@@ -490,7 +502,9 @@ a {
     width: 40%;
     font-size: small;
   }
-
+h2{
+    font-size: small;
+  }
   .logo1 {
     width: 150px;
     height: 100px;
@@ -498,14 +512,77 @@ a {
 }
 
 @media(max-width: 500px) {
+  .carousel-container{
+    width: 65% !important
+  }
+
+  .carousel-image{
+    width: 300px;
+  }
+
+  h2{
+    font-size: 90px;
+  }
+
   .wrapper {
-    width: 35%;
+    width: 40%;
     font-size: x-small;
   }
 
   .logo1 {
-    width: 110px;
-    height: 100px;
+    width: 100px;
+    height: 90px;
+  }
+}
+
+@media(max-width: 410px) {
+  .carousel-container{
+    width: 30%;
+  }
+      
+    
+
+.from-box h2 {
+  font-size: 1.7em;
+  color: #52585b;
+  text-align: center;
+}
+
+.wrapper .from-box {
+  width: 250%;
+  
+  
+}
+  .carousel-image{
+    width: 100%;
+  }
+  .wrapper {
+    width: 70%;
+    font-size: small;
+
+  }
+
+
+
+  .logo1 {
+    width: 90px;
+    height: 70px;
+  }
+}
+
+@media(max-width: 300px) {
+  .carousel-container{
+    width: 250px;
+  }
+
+  .wrapper {
+    width: 20%;
+    font-size: xx-small;
+  }
+
+  .logo1 {
+    width: 80px;
+    height: 60px;
   }
 }
 </style>

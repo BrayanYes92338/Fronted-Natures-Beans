@@ -15,11 +15,11 @@ import './style.css'
 
 //  <----Sitio para poner link generado de Glith ---->
 
-axios.defaults.baseURL = "https://verdant-outgoing-evening.glitch.me"
+// axios.defaults.baseURL = "https://verdant-outgoing-evening.glitch.me"
 
 // <----Sitio para poner link local---->
 
-// axios.defaults.baseURL = "http://localhost:4500/"
+axios.defaults.baseURL = "http://localhost:4500/"
 
 let requestsPending = 0;
 

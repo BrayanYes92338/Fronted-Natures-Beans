@@ -135,11 +135,11 @@ const columns = ref([
     sortable: true,
   },
   {
-    name: "fechaRiego",
+    name: "fecha",
     required: true,
     label: "Fecha de Riego",
     align: "center",
-    field: "fechaRiego",
+    field: "fecha",
     sortable: true,
     format: (val) => {
       if (!val) return '';
@@ -157,8 +157,6 @@ const columns = ref([
       });
     },
   },
-
-
   {
     name: "diasTransplante",
     required: true,

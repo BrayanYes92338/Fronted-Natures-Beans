@@ -53,8 +53,18 @@
 
           <q-input outlined v-model="fechaVencimiento" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="fecha Vencimiento" type="date" />
-            <q-select outlined v-model="especie" :options="['Maíz','Arroz', 'Fríjol', 'Café', 'Caña de azúcar', 'Sorgo','Papa', 'Yuca', 'Soya', 'Trigo', 'Plátano', 'Cebada', 'Avena', 'Cacao', 'Tomate', 'Pimentón', 'Ají', 'Algodón', 'Alfalfa', 'Girasol']" label="Seleccione la Especie de la semilla"
-            class="q-my-md q-mx-md" />
+
+    <q-select
+      outlined
+      v-model="especie"
+      :options="opcionesSelect"
+      label="Seleccione la Especie de la semilla"
+      class="q-my-md q-mx-md"
+      use-input
+      input-debounce="0"
+      @filter="filterFnSelect"
+    />
+
           <q-input outlined v-model="NumLote" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label=" Numero Lote" type="tel" required pattern="[0-9]+" maxlength="99" />
           <q-input outlined v-model="origen" use-input hide-selected fill-input input-debounce="0"
@@ -508,6 +518,21 @@ function Limpiar() {
   origen.value = "";
   poderGerminativo.value = "";
   total.value = "";
+}
+
+const opcionesSelect = ref([
+  'Maíz', 'Arroz', 'Fríjol', 'Café', 'Caña de azúcar', 'Sorgo',
+  'Papa', 'Yuca', 'Soya', 'Trigo', 'Plátano', 'Cebada',
+  'Avena', 'Cacao', 'Tomate', 'Pimentón', 'Ají', 'Algodón',
+  'Alfalfa', 'Girasol'
+])
+
+const filterFnSelect = (val, update) => {
+  update(() => {
+    if (val && !opcionesSelect.value.includes(val)) {
+      opcionesSelect.value = [...opcionesSelect.value, val] // Agregar nueva opción si no existe
+    }
+  })
 }
 
 onMounted(() => {

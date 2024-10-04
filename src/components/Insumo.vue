@@ -1,8 +1,7 @@
 <template>
   <div>
     <div style=" display: flex;justify-content: flex-end; margin-left: 5%; margin-right: 5%;">
-      <q-btn style="background-color: #00c04f; color: white" class="q-my-md q-ml-md" @click="abrir()">Registrar
-        Insumos</q-btn>
+      <q-btn style="background-color: #00c04f; color: white" class="q-my-md q-ml-md" @click="abrir()">Registrar Insumos</q-btn>
     </div>
 
     <div>
@@ -13,38 +12,38 @@
               {{ accion == 1 ? "Agregar Insumo" : "Editar Insumo " }}
             </div>
           </q-card-section>
-          <q-select outlined v-model="IdProveedor" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" :options="opciones" @filter="filterFn" label="Selecciona el Proveedor del Insumo">
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> Sin resultados </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-          <q-select outlined v-model="idReponsable" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" :options="options" @filter="filtrarEmpleado"
-            label="Selecciona el Empleado que ha uso el insumo">
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> Sin resultados </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
+          <q-select outlined v-model="idFinca" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" :options="options" @filter="filterFn" label="Seleccionar  la Finca">
+                        <template v-slot:no-option>
+                            <q-item>
+                                <q-item-section class="text-grey">
+                                    Sin resultados
+                                </q-item-section>
+                            </q-item>
+                        </template>
+                    </q-select>
           <q-input outlined v-model="nombre" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="Nombre del Insumo" type="text" />
             <q-input outlined v-model="relacionNPK" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="Ingrese la relacion NPK" type="tel" required pattern="[0-9]+" />
+          <q-input outlined v-model="registro_ICA" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="registro ICA del Insumo" type="text" />
+          <q-input outlined v-model="registro_Invima" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="registro Invima del Insumo" type="text" />
           <q-input outlined v-model="cantidad" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Ingrese la cantidad de NPK utilizada" type="tel" required pattern="[0-9]+"
+            class="q-my-md q-mx-md" label="Ingrese la cantidad  del Insumo" type="tel" required pattern="[0-9]+"
             maxlength="10" />
-          <q-select outlined v-model="unidad"
-            :options="['Gramos (g)', 'Kilogramos (kg)', 'Litros (L)', 'Mililitros (ml)', 'Onzas (oz)']"
-            label="Seleccione la unidad de medida" class="q-my-md q-mx-md" />
+          <q-input outlined v-model="precio" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Ingrese el precio del Insumo" type="tel" required pattern="[0-9]+"
+            maxlength="100" /> 
           <q-input outlined v-model="observaciones" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Observaciones" type="text" />
-            <q-input outlined v-model="precio" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Ingrese el precio de NPK utilizada" type="tel" required pattern="[0-9]+"
-            maxlength="100" />
+            class="q-my-md q-mx-md" label="Observaciones" type="text" /> 
+          <q-input outlined v-model="unidad" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="ingrese peso y Unidad de Medida" type="text" /> 
+          <!-- <q-select outlined v-model="unidad"
+            :options="['Gramos (g)', 'Kilogramos (kg)', 'Litros (L)', 'Mililitros (ml)', 'Onzas (oz)']"
+            label="Seleccione la unidad de medida" class="q-my-md q-mx-md" /> -->
+          
           <q-card-actions align="right">
             <q-btn v-if="accion === 1" color="red" class="text-white" :loading="useInsumo.loading" @click="validarInsumos()">Agregar
               <template v-slot:loading>
@@ -67,6 +66,29 @@
       <q-table title="Insumos" title-class="text-green text-weight-bolder text-h4"
         table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
         style="width: 90%; margin-bottom: 5%">
+        <template v-slot:body-cell-observaciones="props">
+          <q-td :props="props">
+            <!-- VDropdown para mostrar el tooltip al hacer clic -->
+            <VDropdown :distance="6" v-model="props.row.showDropdown">
+              <!-- Botón que activará el dropdown -->
+              <q-btn flat dense @click="toggleDropdown(props.row)">
+                <!-- Controlamos que no se muestre en mayúsculas -->
+                <span style="text-transform: none;">
+                  {{ props.row.observaciones.length > 10 ? props.row.observaciones.substring(0, 10) + '...' :
+                    props.row.observaciones }}
+                </span>
+              </q-btn>
+
+              <!-- Contenido del popper (dropdown) con estilos personalizados -->
+              <template #popper>
+                <div class="custom-tooltip-content"
+                  style="max-height: 200px; max-width: 200px; overflow-y: auto; padding: 10px;">
+                  {{ props.row.observaciones }}
+                </div>
+              </template>
+            </VDropdown>
+          </q-td>
+        </template>
         <template v-slot:body-cell-estado="props">
           <q-td :props="props">
             <p style="color: green" v-if="props.row.estado == 1">Activo</p>
@@ -92,25 +114,26 @@
 import { ref, onMounted, computed } from "vue";
 import { Notify } from "quasar";
 import { UseInsumoStore } from "../stores/insumo.js";
-import { useProveedorStore } from "../stores/proveedor.js";
-import { useEmpleadoStore } from "../stores/empleado.js";
+import { useFincaStore } from "../stores/finca.js";
+
 
 const useInsumo = UseInsumoStore();
-const useProveedor = useProveedorStore();
-const useEmpleado = useEmpleadoStore();
+const useFinca = useFincaStore();
+
 
 let rows = ref([]);
 let alert = ref(false);
 let id = ref("");
 let accion = ref(1);
-let IdProveedor = ref("");
-let idReponsable = ref("");
+let idFinca = ref("");
 let nombre = ref("");
 let relacionNPK = ref("");
+let registro_ICA = ref("");
+let registro_Invima = ref("");
 let cantidad = ref("");
-let unidad = ref("");
-let observaciones = ref("");
 let precio = ref("");
+let observaciones = ref("");
+let unidad = ref("");
 
 
 function abrir() {
@@ -125,21 +148,13 @@ function cerrar() {
 
 const columns = ref([
   {
-    name: "IdProveedor",
-    required: true,
-    label: "Nombre Proveedor",
-    align: "center",
-    field: (row) => row.IdProveedor.nombre,
-    sortable: true,
-  },
-  {
-    name: "idReponsable",
-    required: true,
-    label: "Nombre Responsable",
-    align: "center",
-    field: (row) => row.idReponsable.nombre,
-    sortable: true,
-  },
+        name: 'idFinca',
+        required: true,
+        label: 'Nombre de la Finca',
+        align: 'center',
+        field: (row) => row.idFinca.nombre,
+        sortable: true
+    },
   {
     name: "nombre",
     required: true,
@@ -157,27 +172,27 @@ const columns = ref([
     sortable: true,
   },
   {
+    name: "registro_ICA",
+    required: true,
+    label: "registro ICA",
+    align: "center",
+    field: "registro_ICA",
+    sortable: true,
+  },
+  {
+    name: "registro_Invima",
+    required: true,
+    label: "registro Invima",
+    align: "center",
+    field: "registro_Invima",
+    sortable: true,
+  },  
+  {
     name: "cantidad",
     required: true,
     label: "Cantidad de Insumo",
     align: "center",
     field: "cantidad",
-    sortable: true,
-  },
-  {
-    name: "unidad",
-    required: true,
-    label: "Unidad de Medida",
-    align: "center",
-    field: "unidad",
-    sortable: true,
-  },
-  {
-    name: "observaciones",
-    required: true,
-    label: "Observaciones del Insumo",
-    align: "center",
-    field: "observaciones",
     sortable: true,
   },
   {
@@ -192,10 +207,27 @@ const columns = ref([
             return valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
         }
   },
+  
+  {
+    name: "observaciones",
+    required: true,
+    label: "Observaciones del Insumo",
+    align: "center",
+    field: "observaciones",
+    sortable: true,
+  },
+  {
+    name: "unidad",
+    required: true,
+    label: "peso y Unidad de Medida",
+    align: "center",
+    field: "unidad",
+    sortable: true,
+  },
   {
     name: "total",
     required: true,
-    label: "Total Insumo Gastado",
+    label: "Total ",
     align: "center",
     field: "total",
     sortable: true,
@@ -239,92 +271,94 @@ const columns = ref([
 
 
 
-// Listar Proveedores Activos
+// Listar Fincas Activos
 
-let proveedores = [];
-let datos = {};
-const opciones = ref(proveedores);
+// let fincas = [];
+// let datos = {};
+// const opciones = ref(fincas);
+
+// function filterFn(val, update, abort) {
+//   update(() => {
+//     const needle = val.toLowerCase();
+//     opciones.value = fincas.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
+//   });
+// }
+
+
+// async function listarFincas() {
+//   const data = await useFinca.ListarFincasActivo();
+//   data.data.FincaActiva.forEach((item) => {
+//     datos = {
+//       label: `${item?.nombre} - ${item.ruc} `,
+//       value: item._id,
+//     };
+//     fincas.push(datos);
+//   });
+//   console.log(fincas);
+// }
+
+let fincas = []
+let datos = {}
+const options = ref(fincas)
 
 function filterFn(val, update, abort) {
-  update(() => {
-    const needle = val.toLowerCase();
-    opciones.value = proveedores.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
-  });
+    update(() => {
+        const needle = val.toLowerCase();
+        options.value = fincas.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
+    });
+};
+
+async function listarFincas() {
+    const data = await useFinca.listarFincas()
+    data.data.fincas.forEach(item => {
+        datos = {
+            label: `${item.nombre} - ${item.ruc}`,
+            value: item._id
+
+
+        };
+        fincas.push(datos);
+    });
+    console.log(fincas);
+
 }
 
-
-async function listarProveedores() {
-  const data = await useProveedor.listarProveedorActivos();
-  data.data.proveedorActivo.forEach((item) => {
-    datos = {
-      label: `${item?.nombre} - ${item.telefono} `,
-      value: item._id,
-    };
-    proveedores.push(datos);
-  });
-  console.log(proveedores);
-}
-
-// Listar Empleados Activos
-
-let empleados = [];
-let dates = {};
-const options = ref(empleados);
-
-async function listarEmpleados() {
-  const data = await useEmpleado.ListarEmpleadoActivo();
-  data.empleadoActivo.forEach((item) => {
-    dates = {
-      label: `${item?.nombre} - ${item.descripcion} `,
-      value: item._id,
-    };
-    empleados.push(dates);
-  });
-  console.log(empleados);
-}
-
-
-function filtrarEmpleado(val, update, abort) {
-  update(() => {
-    const needle = val.toLowerCase();
-    options.value = empleados.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
-  });
-}
 
 // Listar Insumos
 
 async function listarInsumos() {
-  const r = await useInsumo.listarInsumos();
-  rows.value = r.data.insumo.reverse();
-  console.log(r.data.insumo);
-}
-
+    const r = await useInsumo.listarInsumos()
+    rows.value = r.data.insumo.reverse()
+    console.log(r.data.insumo);
+};
 
 function validarInsumos() {
   
   let validacionNumeros = /^[0-9]+$/;
   let validacionNPK = /^\d+\s\d+\s\d+$/;
 
-  if (IdProveedor.value === "") {
-    Notify.create("Se debe seleccionar el proveedor del insumo");
-  } else if (idReponsable.value === "") {
-    Notify.create("Se debe seleccionar el empleado que usó el insumo");
-  } else if (nombre.value === "" || nombre.value.trim().length === 0) {
+  if (idFinca.value === "") {
+    Notify.create("Se debe seleccionar la Finca");
+  }  else if (nombre.value === "" || nombre.value.trim().length === 0) {
     Notify.create("Se debe ingresar el nombre del insumo");
   } else if (relacionNPK.value === "") {
     Notify.create("Se debe ingresar la relación NPK del insumo");
+  } else if (registro_ICA.value === "" || registro_ICA.value.trim().length === 0) {
+    Notify.create("Se debe ingresar el registro ICA del insumo");
+  } else if (registro_Invima.value === "" || registro_Invima.value.trim().length === 0) {
+    Notify.create("Se debe ingresar el registro Invima del insumo");
   } else if (cantidad.value === "") {
     Notify.create("Se debe ingresar la cantidad de insumo");
   } else if (!validacionNumeros.test(cantidad.value)) {
     Notify.create("La cantidad de insumo debe ser un número entero");
-  } else if (unidad.value === "" || unidad.value.trim().length === 0) {
-    Notify.create("Se debe seleccionar la unidad de medida del insumo");
-  } else if (observaciones.value === "" || observaciones.value.trim().length === 0) {
-    Notify.create("Se debe ingresar las observaciones del insumo");
-  }  else if (precio.value === "") {
+  }else if (precio.value === "") {
     Notify.create("Se debe ingresar el precio de insumo");
   } else if (!validacionNumeros.test(precio.value)) {
     Notify.create("La precio de insumo debe ser un número entero");
+  } else if (observaciones.value === "" || observaciones.value.trim().length === 0) {
+    Notify.create("Se debe ingresar las observaciones del insumo");
+  } else if (unidad.value === "" || unidad.value.trim().length === 0) {
+    Notify.create("Se debe ingresar el peso del insumo");
   }  else {
     agregarInsumos();
     limpiar();
@@ -338,16 +372,16 @@ function validarInsumos() {
 
 async function agregarInsumos() {
   const r = await useInsumo.postInsumos({
-    IdProveedor: IdProveedor.value.value,
-    idReponsable: idReponsable.value.value,
-    nombre: nombre.value,
-    cantidad: cantidad.value,
-    relacionNPK: relacionNPK.value,
-    unidad: unidad.value,
-    observaciones: observaciones.value,
-    precio: precio.value
-
-
+    idFinca: idFinca.value.value,
+      nombre: nombre.value,
+      relacionNPK: relacionNPK.value,
+      registro_ICA: registro_ICA.value,
+      registro_Invima: registro_Invima.value,
+      cantidad: cantidad.value,
+      precio: precio.value,
+      observaciones: observaciones.value,
+      unidad: unidad.value
+    
   })
   cerrar()
   listarInsumos()
@@ -358,50 +392,47 @@ function traerInsumos(insumo){
   alert.value = true;
   accion.value = 2;
   id.value = insumo._id;
-  IdProveedor.value = {
-    label: insumo.IdProveedor.nombre,
-    value: insumo.IdProveedor._id
-  }
-  idReponsable.value = {
-    label: insumo.idReponsable.nombre,
-    value: insumo.idReponsable._id
-
+  idFinca.value = {
+    label: insumo.idFinca.nombre,
+    value: insumo.idFinca._id
   }
   nombre.value = insumo.nombre;
   relacionNPK.value = insumo.relacionNPK;
+   registro_ICA.value = insumo. registro_ICA;
+  registro_Invima.value = insumo.registro_Invima;
   cantidad.value = insumo.cantidad;
-  unidad.value = insumo.unidad;
-  observaciones.value = insumo.observaciones;
   precio.value = insumo.precio;
-
-
+  observaciones.value = insumo.observaciones;
+  unidad.value = insumo.unidad;
 }
 
 function validarEdicionInsumo(){
   let validacionNumeros = /^[0-9]+$/;
   let validacionNPK = /^\d+\s\d+\s\d+$/;
 
-  if (IdProveedor.value === "") {
-    Notify.create("Se debe seleccionar el proveedor del insumo");
-  } else if (idReponsable.value === "") {
-    Notify.create("Se debe seleccionar el empleado que usó el insumo");
-  } else if (nombre.value === "" || nombre.value.trim().length === 0) {
+ if (idFinca.value === "") {
+    Notify.create("Se debe seleccionar la Finca");
+  }  else if (nombre.value === "" || nombre.value.trim().length === 0) {
     Notify.create("Se debe ingresar el nombre del insumo");
   } else if (relacionNPK.value === "") {
     Notify.create("Se debe ingresar la relación NPK del insumo");
-  }  else if (cantidad.value === "") {
+  } else if (registro_ICA.value === "" || registro_ICA.value.trim().length === 0) {
+    Notify.create("Se debe ingresar el registro ICA del insumo");
+  } else if (registro_Invima.value === "" || registro_Invima.value.trim().length === 0) {
+    Notify.create("Se debe ingresar el registro Invima del insumo");
+  } else if (cantidad.value === "") {
     Notify.create("Se debe ingresar la cantidad de insumo");
   } else if (!validacionNumeros.test(cantidad.value)) {
     Notify.create("La cantidad de insumo debe ser un número entero");
-  } else if (unidad.value === "" || unidad.value.trim().length === 0) {
-    Notify.create("Se debe seleccionar la unidad de medida del insumo");
-  } else if (observaciones.value === "" || observaciones.value.trim().length === 0) {
-    Notify.create("Se debe ingresar las observaciones del insumo");
-  }  else if (precio.value === "") {
+  }else if (precio.value === "") {
     Notify.create("Se debe ingresar el precio de insumo");
   } else if (!validacionNumeros.test(precio.value)) {
     Notify.create("La precio de insumo debe ser un número entero");
-  } else {
+  } else if (observaciones.value === "" || observaciones.value.trim().length === 0) {
+    Notify.create("Se debe ingresar las observaciones del insumo");
+  } else if (unidad.value === "" || unidad.value.trim().length === 0) {
+    Notify.create("Se ingrear el peso  del insumo");
+  }  else {
     editarInsumo();
     limpiar();
     cerrar();
@@ -418,15 +449,15 @@ async function editarInsumo(){
   try{
 
     await useInsumo.putInsumos(id.value,{
-      IdProveedor: IdProveedor.value.value,
-      idReponsable: idReponsable.value.value,
+     idFinca: idFinca.value.value,
       nombre: nombre.value,
-      cantidad: cantidad.value,
       relacionNPK: relacionNPK.value,
-      unidad: unidad.value,
+      registro_ICA: registro_ICA.value,
+      registro_Invima: registro_Invima.value,
+      cantidad: cantidad.value,
+      precio: precio.value,
       observaciones: observaciones.value,
-      precio: precio.value
-      
+      unidad: unidad.value,
     })
 listarInsumos()
   }catch (error){
@@ -437,20 +468,35 @@ listarInsumos()
 
 
 function limpiar() {
-  IdProveedor.value = "";
-  idReponsable.value = "";
+  idFinca.value = "";
   nombre.value = "";
   relacionNPK.value = "";
+  registro_ICA.value = "";
+  registro_Invima.value = "";
   cantidad.value = "";
-  unidad.value = "";
-  observaciones.value = "";
   precio.value = "";
+  observaciones.value = "";
+  unidad.value = "";
+  
 
 }
 
+
+// Función para alternar la visibilidad del dropdown
+const toggleDropdown = (row) => {
+  row.showDropdown = !row.showDropdown;
+};
+
+
+// Inicialización de los datos de la tabla
+rows.value = rows.value.map(row => ({
+  ...row,
+  showDropdown: false,
+}));
+
 onMounted(() => {
-  listarInsumos();
-  listarProveedores();
-  listarEmpleados();
+ listarInsumos();
+  listarFincas();
+  
 });
 </script>

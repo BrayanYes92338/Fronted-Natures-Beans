@@ -1,32 +1,20 @@
 <template>
   <div>
-    <div
-      style="
+    <div style="
         display: flex;
         justify-content: flex-end;
         margin-left: 5%;
         margin-right: 5%;
-      "
-    >
-      <q-btn
-        style="background-color: #00c04f; color: white"
-        class="q-my-md q-ml-md"
-        @click="abrir()"
-        >Registrar Semilla</q-btn
-      >
-      <q-btn-dropdown
-        color="blue"
-        icon="visibility"
-        label="Filtrar"
-        style="
+      ">
+      <q-btn style="background-color: #00c04f; color: white" class="q-my-md q-ml-md" @click="abrir()">Registrar
+        Semilla</q-btn>
+      <q-btn-dropdown color="blue" icon="visibility" label="Filtrar" style="
           display: flex;
           justify-content: center;
           align-items: center;
           margin-left: 16px;
           height: 20px;
-        "
-        class="q-my-md q-ml-md"
-      >
+        " class="q-my-md q-ml-md">
         <q-list>
           <q-item clickable v-ripple @click="listarSemilla()">
             <q-item-section>Listar Todos</q-item-section>
@@ -43,25 +31,13 @@
     <div>
       <q-dialog v-model="alert" persistent>
         <q-card class="" style="width: 700px">
-          <q-card-section
-            style="background-color: #009b44; margin-bottom: 20px"
-          >
+          <q-card-section style="background-color: #009b44; margin-bottom: 20px">
             <div class="text-h6 text-white">
               {{ accion == 1 ? "Agregar Semilla" : "Editar Semilla " }}
             </div>
           </q-card-section>
-          <q-select
-            outlined
-            v-model="idProveedor"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            :options="options"
-            @filter="filterFn"
-            label="Seleccionar  Finca"
-          >
+          <q-select outlined v-model="idProveedor" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="options" @filter="filterFn" label="Seleccionar  Finca">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey">
@@ -70,108 +46,31 @@
               </q-item>
             </template>
           </q-select>
-          <q-input
-            outlined
-            v-model="registroIca"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="registro ICA"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="registroInvima"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="registro INVIMA"
-            type="text"
-          />
+          <q-input outlined v-model="registroIca" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="registro ICA" type="text" />
+          <q-input outlined v-model="registroInvima" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="registro INVIMA" type="text" />
 
-          <q-input
-            outlined
-            v-model="fechaVencimiento"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="fecha Vencimiento"
-            type="date"
-          />
-          <q-input
-            outlined
-            v-model="especie"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="especie de la semilla"
-            type="text"
-          />
-
-          <q-input
-            outlined
-            v-model="NumLote"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label=" Numero Lote"
-            type="tel"
-            required
-            pattern="[0-9]+"
-            maxlength="99"
-          />
-          <q-input
-            outlined
-            v-model="origen"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="origen de la semilla"
-            type="text"
-          />
-          <q-input
-            outlined
-            v-model="poderGerminativo"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="poder Germinativo (%)"
-            type="text"
-          />
+          <q-input outlined v-model="fechaVencimiento" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="fecha Vencimiento" type="date" />
+            <q-select outlined v-model="especie" :options="['Maíz','Arroz', 'Fríjol', 'Café', 'Caña de azúcar', 'Sorgo','Papa', 'Yuca', 'Soya', 'Trigo', 'Plátano', 'Cebada', 'Avena', 'Cacao', 'Tomate', 'Pimentón', 'Ají', 'Algodón', 'Alfalfa', 'Girasol']" label="Seleccione la Especie de la semilla"
+            class="q-my-md q-mx-md" />
+          <q-input outlined v-model="NumLote" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label=" Numero Lote" type="tel" required pattern="[0-9]+" maxlength="99" />
+          <q-input outlined v-model="origen" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="origen de la semilla" type="text" />
+          <q-input outlined v-model="poderGerminativo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="poder Germinativo (%)" type="text" />
 
           <q-card-actions align="right">
-            <q-btn
-              v-if="accion === 1"
-              @click="validarIngresoSemilla()"
-              color="red"
-              class="text-white"
-              :loading="useSemilla.loading"
-              >Agregar
+            <q-btn v-if="accion === 1" @click="validarIngresoSemilla()" color="red" class="text-white"
+              :loading="useSemilla.loading">Agregar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
               </template>
             </q-btn>
-            <q-btn
-              v-if="accion !== 1"
-              @click="validarEdicionSemilla()"
-              color="red"
-              class="text-white"
-              :loading="useSemilla.loading"
-            >
+            <q-btn v-if="accion !== 1" @click="validarEdicionSemilla()" color="red" class="text-white"
+              :loading="useSemilla.loading">
               Editar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -184,15 +83,9 @@
     </div>
 
     <div style="display: flex; justify-content: center">
-      <q-table
-        title="Semillas"
-        title-class="text-green text-weight-bolder text-h4"
-        table-header-class="text-black font-weight-bold"
-        :rows="rows"
-        :columns="columns"
-        row-key="name"
-        style="width: 90%; margin-bottom: 5%"
-      >
+      <q-table title="Semillas" title-class="text-green text-weight-bolder text-h4"
+        table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
+        style="width: 90%; margin-bottom: 5%">
         <template v-slot:body-cell-estado="props">
           <q-td :props="props">
             <p style="color: green" v-if="props.row.estado == 1">Activo</p>
@@ -205,24 +98,13 @@
               <!-- boton de editar -->
               <q-btn color="primary" @click="traerSemilla(props.row)">
                 <q-tooltip> Editar </q-tooltip>
-                <i class="fas fa-pencil-alt"> </i
-              ></q-btn>
+                <i class="fas fa-pencil-alt"> </i></q-btn>
               <!-- botons de activado y desactivado -->
-              <q-btn
-                v-if="props.row.estado == 1"
-                @click="deshabilitarSemilla(props.row)"
-                color="negative"
-              >
+              <q-btn v-if="props.row.estado == 1" @click="deshabilitarSemilla(props.row)" color="negative">
                 <q-tooltip> Desactivar </q-tooltip>
-                <i class="fas fa-times"> </i
-              ></q-btn>
-              <q-btn
-                v-else
-                color="positive"
-                @click="habilitarSemilla(props.row)"
-              >
-                <q-tooltip> Activar </q-tooltip><i class="fas fa-check"> </i
-              ></q-btn>
+                <i class="fas fa-times"> </i></q-btn>
+              <q-btn v-else color="positive" @click="habilitarSemilla(props.row)">
+                <q-tooltip> Activar </q-tooltip><i class="fas fa-check"> </i></q-btn>
             </div>
           </q-td>
         </template>

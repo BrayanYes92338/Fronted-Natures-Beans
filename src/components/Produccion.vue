@@ -1,12 +1,8 @@
 <template>
   <div>
     <div style="margin-left: 5%; text-align: end; margin-right: 5%">
-      <q-btn
-        style="background-color: #00c04f; color: white"
-        class="q-my-md q-ml-md"
-        @click="abrir()"
-        >Registrar Produccion</q-btn
-      >
+      <q-btn style="background-color: #00c04f; color: white" class="q-my-md q-ml-md" @click="abrir()">Registrar
+        Produccion</q-btn>
     </div>
     <div>
       <q-dialog v-model="alert" persistent>
@@ -16,101 +12,33 @@
               {{ accion == 1 ? "Agregar Produccion" : "Editar Produccion " }}
             </div>
           </q-card-section>
-          <q-select
-            outlined
-            v-model="idCultivo"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            :options="options"
-            @filter="filterFn"
-            label="Seleccionar  el cultivo"
-          >
+          <q-select outlined v-model="idCultivo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="options" @filter="filterFn" label="Seleccionar  el cultivo">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> Sin resultados </q-item-section>
               </q-item>
             </template>
           </q-select>
-          <q-input
-            outlined
-            v-model="numLote"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="numero de Lote"
-            type="string"
-          />
-          <q-input
-            outlined
-            v-model="producto"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="producto"
-            type="string"
-          />
-          <q-input
-            outlined
-            v-model="cantidad"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="cantidad"
-            type="tel"
-            required
-            pattern="[0-9]+"
-            maxlength="999"
-          />
-          <q-input
-            outlined
-            v-model="cantidadTrabajadores"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="cantidadTrabajadores"
-            type="tel"
-          />
-          <q-input
-            outlined
-            v-model="observaciones"
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            class="q-my-md q-mx-md"
-            label="observaciones"
-            type="text"
-          />
+          <q-input outlined v-model="numLote" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="numero de Lote" type="string" />
+          <q-input outlined v-model="producto" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="producto" type="string" />
+          <q-input outlined v-model="cantidad" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="cantidad" type="tel" required pattern="[0-9]+" maxlength="999" />
+          <q-input outlined v-model="cantidadTrabajadores" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="cantidadTrabajadores" type="tel" />
+          <q-input outlined v-model="observaciones" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="observaciones" type="text" />
           <q-card-actions align="right">
-            <q-btn
-              v-if="accion === 1"
-              @click="validarIngresoProduccion()"
-              color="red"
-              class="text-white"
-              :loading="useProduccion.loading"
-              >Agregar
+            <q-btn v-if="accion === 1" @click="validarIngresoProduccion()" color="red" class="text-white"
+              :loading="useProduccion.loading">Agregar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
               </template>
             </q-btn>
-            <q-btn
-              v-if="accion !== 1"
-              @click="validarEdicionProduccion()"
-              color="red"
-              class="text-white"
-              :loading="useProduccion.loading"
-            >
+            <q-btn v-if="accion !== 1" @click="validarEdicionProduccion()" color="red" class="text-white"
+              :loading="useProduccion.loading">
               Editar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -122,24 +50,39 @@
       </q-dialog>
     </div>
     <div style="display: flex; justify-content: center">
-      <q-table
-        title="Producciones"
-        title-class="text-green text-weight-bolder text-h4"
-        table-header-class="text-black font-weight-bold"
-        :rows="rows"
-        :columns="columns"
-        row-key="name"
-
+      <q-table title="Producciones" title-class="text-green text-weight-bolder text-h4"
+        table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
         style="width: 90%; margin-bottom: 5%;">
-        style="width: 90%"
+        <template v-slot:body-cell-observaciones="props">
+          <q-td :props="props">
+            <!-- VDropdown para mostrar el tooltip al hacer clic -->
+            <VDropdown :distance="6" v-model="props.row.showDropdown">
+              <!-- Botón que activará el dropdown -->
+              <q-btn flat dense @click="toggleDropdown(props.row)">
+                <!-- Controlamos que no se muestre en mayúsculas -->
+                <span style="text-transform: none;">
+                  {{ props.row.observaciones.length > 10 ? props.row.observaciones.substring(0, 10) + '...' :
+                    props.row.observaciones }}
+                </span>
+              </q-btn>
+
+              <!-- Contenido del popper (dropdown) con estilos personalizados -->
+              <template #popper>
+                <div class="custom-tooltip-content"
+                  style="max-height: 200px; max-width: 200px; overflow-y: auto; padding: 10px;">
+                  {{ props.row.observaciones }}
+                </div>
+              </template>
+            </VDropdown>
+          </q-td>
+        </template>
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props">
             <div style="display: flex; gap: 15px; justify-content: center">
               <!-- boton de editar -->
               <q-btn color="primary" @click="traerProduccion(props.row)">
                 <q-tooltip> Editar </q-tooltip>
-                <i class="fas fa-pencil-alt"> </i
-              ></q-btn>
+                <i class="fas fa-pencil-alt"> </i></q-btn>
             </div>
           </q-td>
         </template>

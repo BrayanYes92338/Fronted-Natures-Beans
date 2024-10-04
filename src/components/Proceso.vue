@@ -59,6 +59,29 @@
         <q-table title="Procesos" title-class="text-green text-weight-bolder text-h4"
           table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
           style="width: 90%; margin-bottom: 5%;">
+          <template v-slot:body-cell-descripcion="props">
+          <q-td :props="props">
+            <!-- VDropdown para mostrar el tooltip al hacer clic -->
+            <VDropdown :distance="6" v-model="props.row.showDropdown">
+              <!-- Botón que activará el dropdown -->
+              <q-btn flat dense @click="toggleDropdown(props.row)">
+                <!-- Controlamos que no se muestre en mayúsculas -->
+                <span style="text-transform: none;">
+                  {{ props.row.descripcion.length > 10 ? props.row.descripcion.substring(0, 10) + '...' :
+                    props.row.descripcion }}
+                </span>
+              </q-btn>
+
+              <!-- Contenido del popper (dropdown) con estilos personalizados -->
+              <template #popper>
+                <div class="custom-tooltip-content"
+                  style="max-height: 200px; max-width: 200px; overflow-y: auto; padding: 10px;">
+                  {{ props.row.descripcion }}
+                </div>
+              </template>
+            </VDropdown>
+          </q-td>
+        </template>
           <template v-slot:body-cell-opciones="props">
             <q-td :props="props">
               <div style="display: flex; gap: 15px; justify-content: center">
@@ -129,7 +152,7 @@
     {
       name: "tipo",
       required: true,
-      label: "tipo",
+      label: "Tipo de Proceso",
       align: "center",
       field: "tipo",
       sortable: true,
@@ -137,7 +160,7 @@
     {
       name: "descripcion",
       required: true,
-      label: "descripcion",
+      label: "Descripcion del Proceso",
       align: "center",
       field: "descripcion",
       sortable: true,
@@ -145,7 +168,7 @@
     {
       name: "fechaInicio",
       required: true,
-      label: "fecha Inicio",
+      label: "Fecha Inicio",
       align: "center",
       field: "fechaInicio",
       sortable: true,
@@ -168,18 +191,24 @@
       {
         name: 'fechaFinal',
         required: true,
-        label: 'fecha Final',
+        label: 'Fecha Final',
         align: 'center',
         field: (row) => row.fechaFinal.split("T")[0],
         sortable: true,
         format: (val) => {
-          const fechaFinal = new Date(val);
-          return fechaFinal.toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
-          });
-        }
+        if (!val) return '';
+        const fechaIngreso = new Date(val);
+        const fechaColombia = new Date(fechaIngreso.toLocaleString("en-US", { timeZone: "America/Bogota" }));
+  
+        return fechaColombia.toLocaleDateString("es-CO", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        }) + ' ' + fechaColombia.toLocaleTimeString("es-CO", {
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      },
     },
     {
       name: "opciones",

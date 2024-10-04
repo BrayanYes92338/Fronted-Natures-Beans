@@ -78,11 +78,6 @@
               <i class="fas fa-spa"></i> Semilla
             </router-link>
           </div>
-          <div class="sub-menu" v-show="subMenus.finca">
-            <router-link class="opciones" to="/siembra">
-              <i class="fas fa-spa"></i> Siembra
-            </router-link>
-          </div>
         </div>
         <div class="item">
           <a class="opciones sub" href="#" @click.prevent="toggleSubMenu('insumo_proveedor')">
@@ -161,6 +156,21 @@
               <i class="fas fa-shopping-cart"></i> Comprador
             </router-link>
           </div>
+        </div>
+        <div class="item">
+          <router-link class="opciones" to="/fertilizacion">
+            <i class="fas fa-fill-drip"></i> Fertilizacion
+          </router-link>
+        </div>
+        <div class="item">
+          <router-link class="opciones" to="/gasto">
+            <i class="fas fa-credit-card"></i> Gastos
+          </router-link>
+        </div>
+        <div class="item">
+          <router-link class="opciones" to="/siembra">
+            <i class="fas fa-seedling"></i>Siembra
+          </router-link>
         </div>
       </div>
       <div class="btn-cerrar">

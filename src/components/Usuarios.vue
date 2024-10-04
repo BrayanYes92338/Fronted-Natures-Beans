@@ -134,9 +134,16 @@
     </div>
     <!-- Tabla Usuarios -->
     <div style="display: flex; justify-content: center">
-      <q-table title="Usuarios" title-class="text-green text-weight-bolder text-h4"
+      <q-table :filter="buscar" title="Usuarios" title-class="text-green text-weight-bolder text-h4"
         table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
         style="width: 90%; margin-bottom: 5%;">
+        <template v-slot:top-right>
+                 <q-input color="black" v-model="buscar" placeholder="Buscar">
+                    <template v-slot:append>
+                        <q-icon name="search" />
+                    </template>
+                 </q-input>
+                </template>
         <template v-slot:body-cell-estado="props">
           <q-td :props="props">
             <p style="color: green" v-if="props.row.estado == 1">Activo</p>
@@ -173,6 +180,7 @@ import { useDepartamentoStore } from "../stores/departamento.js"
 
 const useUsuario = useUsuarioStore();
 const useDepartamento = useDepartamentoStore()
+const buscar = ref("")
 
 let rows = ref([]);
 let nombre = ref("");
@@ -189,6 +197,7 @@ let accion = ref(1);
 let alert = ref(false);
 let isPwd = ref(true);
 let alerta = ref(false);
+
 
 
 

@@ -25,14 +25,15 @@
               </q-item>
             </template>
           </q-select>
-          <q-input outlined v-model="nombre" use-input hide-selected fill-input input-debounce="0"
-            class="q-my-md q-mx-md" label="Nombre del Gasto" type="text" />
+          <q-select outlined v-model="nombre" :options="['Semilla', 'Insumo']" label="Seleccione el Tipo de Gasto"
+            class="q-my-md q-mx-md" />
           <q-input outlined v-model="numerofactura" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="Numero de Factura" type="tel" required pattern="[0-9]+" maxlength="10" />
           <q-input outlined v-model="descripcion" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" label="Ingrese Descripcion del Gasto" type="text" />
           <q-card-actions align="right">
-            <q-btn v-if="accion === 1" @click="validarGastos()" color="red" class="text-white" :loading="useGasto.loading">Agregar
+            <q-btn v-if="accion === 1" @click="validarGastos()" color="red" class="text-white"
+              :loading="useGasto.loading">Agregar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
               </template>
@@ -57,6 +58,19 @@
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props">
             <div style="display: flex; gap: 15px; justify-content: center">
+              <!-- Botones de Semillas e Insumos  -->
+              <q-btn v-if="props.row.nombre == 'Semillas'" color="green" @click="">
+                <q-tooltip>
+                  Ver registro de Gastos de Semillas
+                </q-tooltip>
+                <i class="fas fa-seedling"></i>
+              </q-btn>
+              <q-btn v-else color="blue" @click="">
+                <q-tooltip>
+                  Ver Registro de Gastos de Insumos
+                </q-tooltip>
+                <i class="fas fa-flask"></i>
+              </q-btn>
               <!-- boton de editar -->
               <q-btn color="primary" @click="">
                 <q-tooltip> Editar </q-tooltip>
@@ -127,11 +141,11 @@ async function listarGastos() {
 function validarGastos() {
   if (idFinca.value == "") {
     Notify.create("Se Debe agregar el nombre de la Finca");
-  }else if(nombre.value == "" || nombre.value.trim().length === 0){
+  } else if (nombre.value == "" || nombre.value.trim().length === 0) {
     Notify.create("Se debe ingresar el tipo de Gasto realizado");
-  }else if(numerofactura.value == "" ||numerofactura.value.trim().length === 0 ){
+  } else if (numerofactura.value == "" || numerofactura.value.trim().length === 0) {
     Notify.create("Se debe ingresar el numero de factura");
-  }else if(descripcion.value == "" || descripcion.value.trim().length === 0){
+  } else if (descripcion.value == "" || descripcion.value.trim().length === 0) {
     Notify.create("Se debe ingresar el numero de factura");
   } else {
     cerrar()
@@ -170,7 +184,7 @@ const columns = ref([
   {
     name: "nombre",
     required: true,
-    label: "Gasto",
+    label: "Tipo de Gasto",
     align: "center",
     field: "nombre",
     sortable: true,

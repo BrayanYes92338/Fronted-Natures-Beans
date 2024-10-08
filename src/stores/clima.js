@@ -26,6 +26,45 @@ export const useClimaStore = defineStore('clima', () => {
             loading.value = false;
         }
     }
+    const tipoClima = async (tipoClima) => {
+        try {
+            loading.value = true;
+            const response = await axios.get(`/api/clima/tipo/${tipoClima}`, {
+                headers: {
+                    token: useUsuario.token
+                },
+            });
+            climas.value = response.data;
+            return response;
+
+        } catch (error) {
+            console.error('Error al obtener lista de Tipo de Climas:', error);
+            throw error;
+        } finally {
+            loading.value = false;
+        }
+    };
+    const listarfechasClima = async (fechaI, fechaF) => {
+        try {
+            loading.value = true;
+            const response = await axios.get(`/api/clima/listar/fechas`, {
+                fechaInicio: fechaI,
+                fechaFin: fechaF
+            }, {
+                headers: {
+                    token: useUsuario.token
+                },
+            });
+            climas.value = response.data;
+            return response;
+
+        } catch (error) {
+            console.error('Error al obtener lista de Fechas de Climas:', error);
+            throw error;
+        } finally {
+            loading.value = false;
+        }
+    }
     const postClimas = async (data) => {
         try {
             loading.value = true;
@@ -57,18 +96,18 @@ export const useClimaStore = defineStore('clima', () => {
                 }
             });
             return r;
-        } catch (error){
+        } catch (error) {
             loading.value = true
             console.log(error);
             Notify.create({
                 type: "negative",
                 message: error.res.data.errors[0].msg,
             });
-        }finally{
+        } finally {
             loading.value = false;
         }
     };
-    return { listarClimas, postClimas, putClimas, loading, climas }
+    return { listarClimas, tipoClima, postClimas, putClimas, loading, climas }
 
 }, {
     persist: true

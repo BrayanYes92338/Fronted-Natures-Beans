@@ -35,9 +35,9 @@ export const useSemillaStore = defineStore('semilla', () => {
               token: useUsuario.token
             },
           });
+        semilla.value = res.data
+        return res   
           
-          console.log(res);
-          return res.data;
         } catch (error) {
           console.log(error);
           return error;
@@ -53,8 +53,8 @@ export const useSemillaStore = defineStore('semilla', () => {
 
             },
           });
-          console.log(res);
-          return res.data;
+          semilla.value = res.data
+          return res   
         } catch (error) {
           console.log(error);
           return error;

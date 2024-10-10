@@ -79,9 +79,16 @@
               </q-item>
             </template>
           </q-select>
-          <q-select outlined v-model="unidadSemilla" :options="['Gramo (g)','Kilogramo (kg)', 'Arroba','Libra (lb)', 'Onza (oz)']" label="Seleccione La unidad Gastada" class="q-my-md q-mx-md" />
+          <q-select outlined v-model="unidadSemilla"
+            :options="['Gramo (g)', 'Kilogramo (kg)', 'Arroba', 'Libra (lb)', 'Onza (oz)']"
+            label="Seleccione La unidad Gastada" class="q-my-md q-mx-md" />
+          <q-input outlined v-model="precioSemilla" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Precio de la Semilla" type="tel" required pattern="[0-9]+" maxlength="10" />
+          <q-input outlined v-model="cantidadSemilla" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Cantidad de Semilla Gastada" type="tel" required pattern="[0-9]+"
+            maxlength="10" />
           <q-card-actions align="right">
-            <q-btn color="red" class="text-white" :loading="useGasto.loading" @click="">
+            <q-btn color="red" class="text-white" :loading="useGasto.loading" @click="agregarGastosSemillas()">
               Agregar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -94,6 +101,54 @@
     </div>
 
     <!-- Modelo Editar Gastos Semillas -->
+    <div>
+      <q-dialog persistent v-model="alerta2">
+        <q-card class="" style="width: 700px">
+          <q-card-section style="background-color: #009b44; margin-bottom: 20px">
+            <div class="text-h6 text-white">Editar Gasto de Semillas de la factura {{ nombreF }}</div>
+          </q-card-section>
+          <q-select outlined v-model="idSemilla" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opcionesSemillas" @filter="filtarFnSemillas"
+            label="Selecciona el Tipo de Semilla">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-select outlined v-model="idProveedor" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opcionesProveedor" @filter="filterFnProveedor"
+            label="Selecciona el nombre del Proveedor">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-select outlined v-model="unidadSemilla"
+            :options="['Gramo (g)', 'Kilogramo (kg)', 'Arroba', 'Libra (lb)', 'Onza (oz)']"
+            label="Seleccione La unidad Gastada" class="q-my-md q-mx-md" />
+          <q-input outlined v-model="precioSemilla" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Precio de la Semilla" type="tel" required pattern="[0-9]+" maxlength="10" />
+          <q-input outlined v-model="cantidadSemilla" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Cantidad de Semilla Gastada" type="tel" required pattern="[0-9]+"
+            maxlength="10" />
+          <q-card-actions align="right">
+            <q-btn color="red" class="text-white" :loading="useGasto.loading" @click="editarGastosSemillas()">
+              Editar
+              <template v-slot:loading>
+                <q-spinner color="primary" size="1em" />
+              </template>
+            </q-btn>
+            <q-btn label="Cerrar" color="black" outline @click="cerrar4()" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </div>
 
     <!-- Tabla Gasto Semillas -->
     <div>
@@ -110,7 +165,7 @@
               <q-td :props="props">
                 <div style="display: flex; gap:15px; justify-content: center; ">
                   <!-- boton de editar -->
-                  <q-btn color="primary" @click="">
+                  <q-btn color="primary" @click="traerGastosSemillas(props.row)">
                     <q-tooltip>
                       Editar Gasto Semillas
                     </q-tooltip>
@@ -139,6 +194,53 @@
       </q-dialog>
     </div>
 
+    <!-- Modelo Agregar Gastos Insumos -->
+
+    <!-- Modelo Editar Gastos Insumos -->
+
+    <!-- Tabla Gastos Insumos -->
+<div>
+      <q-dialog v-model="modalInsumo" persistent full-width>
+        <q-card class="">
+          <q-card-section style="background-color:#009B44; margin-bottom: 20px">
+            <div class="text-h6 text-white">
+              Gasto de Insumo de la Factura {{ nombreI }}
+            </div>
+          </q-card-section>
+          <q-table v-if="insumo.length > 0" table-header-class="text-black font-weight-bold" :rows="insumo"
+            :columns="columnasInsumos" row-key="name">
+            <template v-slot:body-cell-opciones="props">
+              <q-td :props="props">
+                <div style="display: flex; gap:15px; justify-content: center; ">
+                  <!-- boton de editar -->
+                  <q-btn color="primary" @click="">
+                    <q-tooltip>
+                      Editar Gasto Insumo
+                    </q-tooltip>
+                    <i class="fas fa-pencil-alt">
+                    </i></q-btn>
+                </div>
+              </q-td>
+            </template>
+          </q-table>
+          <h4 v-else>Aún no hay registro de Gastos de Insumos en la factura {{ nombreI }} </h4>
+          <q-card-actions align="right">
+            <q-btn @click="" color="green" class="text-white" :loading="useGasto.loading">
+              Agregar Gasto
+              <template v-slot:loading>
+                <q-spinner color="primary" size="1em" />
+              </template>
+            </q-btn>
+            <q-btn @click="" color="red" class="text-white" :loading="useGasto.loading">
+              Cerrar
+              <template v-slot:loading>
+                <q-spinner color="primary" size="1em" />
+              </template>
+            </q-btn>
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </div>
 
     <!-- Tabla de Gastos -->
     <div style="display: flex; justify-content: center">
@@ -204,11 +306,13 @@ import { useGastoStore } from '../stores/gastos.js'
 import { useFincaStore } from '../stores/finca.js'
 import { useSemillaStore } from '../stores/semillas.js'
 import { useProveedorStore } from "../stores/proveedor.js";
+import {UseInsumoStore} from '../stores/insumo.js'
 
 const useGasto = useGastoStore()
 const useFinca = useFincaStore()
 const useSemilla = useSemillaStore()
 const useProveedor = useProveedorStore();
+const useInsumo = UseInsumoStore()
 
 const showTooltip = ref(false);
 let rows = ref([]);
@@ -237,12 +341,18 @@ let idSemillaM = ref("")
 
 // Variables para insumos
 
-let insumos = ref([])
+let insumo = ref([])
+let alertaInsumo = ref(false)
+let alertaInsumo2 = ref(false)
+let modalInsumo = ref(false)
 let idInsumo = ref("")
 let idProveedorInsumo = ref("")
 let unidadInsumo = ref("")
 let totalInsumos = ref("")
 let cantidad = ref("")
+let idDeInsumos = ref("")
+let idInsumosM = ref("")
+let nombreI = ref("")
 
 function abrir() {
   accion.value = 1,
@@ -264,6 +374,11 @@ function cerrar2() {
 
 function cerrar3() {
   alerta.value = false;
+  modalGastoSemillas.value = true
+}
+
+function cerrar4() {
+  alerta2.value = false
   modalGastoSemillas.value = true
 }
 
@@ -532,20 +647,16 @@ let columnas = ref([
     sortable: true
   },
   {
-    name: 'unidadSemilla',
-    required: true,
-    label: 'Cantidad Gastado',
-    align: 'center',
-    field: 'unidadSemilla',
-    sortable: true
-  },
-  {
     name: 'precioSemilla',
     required: true,
     label: 'Precio de la Semilla',
     align: 'center',
     field: 'precioSemilla',
-    sortable: true
+    sortable: true,
+    format: (valor) => {
+      // Formatear el precio como pesos colombianos
+      return valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+    }
   },
   {
     name: 'cantidadSemilla',
@@ -556,12 +667,24 @@ let columnas = ref([
     sortable: true
   },
   {
+    name: 'unidadSemilla',
+    required: true,
+    label: 'Cantidad Gastado',
+    align: 'center',
+    field: 'unidadSemilla',
+    sortable: true
+  },
+  {
     name: 'totalSemilla',
     required: true,
-    label: 'Total Semilla GGastado',
+    label: 'Total Semilla Gastado',
     align: 'center',
     field: 'totalSemilla',
-    sortable: true
+    sortable: true,
+    format: (valor) => {
+      // Formatear el precio como pesos colombianos
+      return valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+    }
   },
   {
     name: 'opciones',
@@ -573,6 +696,173 @@ let columnas = ref([
   }
 ])
 
+// Agregar Gastos de Semillas
+
+async function agregarGastosSemillas() {
+  try {
+    console.log(unidadSemilla.value)
+    if (idSemilla.value == "") {
+      Notify.create("Se debe agregar la semilla")
+    } else if (idProveedor.value == "") {
+      Notify.create("Se debe agregar el proveedor")
+    } else if (!unidadSemilla.value || unidadSemilla.value.trim().length === 0) {
+      Notify.create("Se debe agregar unidad de medida")
+    } else if (precioSemilla.value == "") {
+      Notify.create("Se agregar el precio de la semilla")
+    } else if (cantidadSemilla == "") {
+      Notify.create("Se debe agregar cantidad de Semilla")
+    } else {
+      let nuevosGatos = {
+        idSemilla: idSemilla.value.value,
+        idProveedor: idProveedor.value.value,
+        unidadSemilla: unidadSemilla.value,
+        precioSemilla: precioSemilla.value,
+        cantidadSemilla: cantidadSemilla.value
+      }
+      semillas.value.push(nuevosGatos)
+      alerta.value = false
+      await useGasto.putGastos(idDeSemillas.value, {
+        semillas: semillas.value
+      })
+      listarGastos()
+    }
+
+  } catch (error) {
+    console.error("Error al agregar Gastos de Semillas", error)
+    Notify.create("Ocurrio un error al agregar Gastos de Semillas")
+  }
+}
+
+// Traer datos de gastos Semilla
+
+function traerGastosSemillas(data) {
+  alerta2.value = true
+  idSemillaM.value = data._id
+  idSemilla.value = {
+    label: data.idSemilla.especie,
+    value: data.idSemilla._id
+  }
+  idProveedor.value = {
+    label: data.idProveedor.nombre,
+    value: data.idProveedor._id
+  }
+  unidadSemilla.value = data.unidadSemilla
+  precioSemilla.value = data.precioSemilla
+  cantidadSemilla.value = data.cantidadSemilla
+  console.log(data)
+}
+
+// Editar gastos de Semillas
+
+async function editarGastosSemillas() {
+  try {
+    if (idSemilla.value == "") {
+      Notify.create("Se debe agregar la semilla")
+    } else if (idProveedor.value == "") {
+      Notify.create("Se debe agregar el proveedor")
+    } else if (!unidadSemilla.value || unidadSemilla.value.trim().length === 0) {
+      Notify.create("Se debe agregar unidad de medida")
+    } else if (precioSemilla.value == "") {
+      Notify.create("Se agregar el precio de la semilla")
+    } else if (cantidadSemilla == "") {
+      Notify.create("Se debe agregar cantidad de Semilla")
+    } else {
+      for (let i = 0; i < semillas.value.length; i++) {
+        const info = semillas.value[i];
+        if (info._id === idSemillaM.value) {
+          info.idSemilla = idSemilla.value.value
+          info.idProveedor = idProveedor.value.value
+          info.unidadSemilla = unidadSemilla.value
+          info.precioSemilla = precioSemilla.value
+          info.cantidadSemilla = cantidadSemilla.value
+          console.log(info)
+          break
+        }
+      }
+      console.log(semillas.value)
+      alerta2.value = false;
+      modalGastoSemillas.value = false
+      await useGasto.putGastos(idDeSemillas.value, {
+        semillas: semillas.value
+      })
+      listarGastos()
+    }
+  } catch (error) {
+    console.error('Error de Gastos', error)
+    Notify.create('Ocurrio un error al editar Mantenimiento Gastos')
+  }
+}
+
+// Funciones Para Insumos
+
+let ListaInsumo = [];
+let datosInsumo = {}
+const opcionesInsumo = ref(ListaInsumo)
+
+async function listarInsumos(){
+  const data = await useInsumo.listarInsumos();
+  data.data.insumo.forEach((item)=>{
+    datosInsumo ={
+      label: `${item.nombre}- ${item.relacionNPK}`,
+      value: item._id,
+    }
+    ListaInsumo.push(datosInsumo)
+  })
+  console.log(ListaInsumo)
+}
+
+// Listar Columna de Gastos Insumo
+
+let columnasInsumos = ref([
+{
+    name: 'responsable',
+    required: true,
+    label: 'Responsable del Mantenimiento',
+    align: 'center',
+    field: 'responsable',
+    sortable: true
+  },
+  {
+    name: 'responsable',
+    required: true,
+    label: 'Responsable del Mantenimiento',
+    align: 'center',
+    field: 'responsable',
+    sortable: true
+  },
+  {
+    name: 'responsable',
+    required: true,
+    label: 'Responsable del Mantenimiento',
+    align: 'center',
+    field: 'responsable',
+    sortable: true
+  },
+  {
+    name: 'responsable',
+    required: true,
+    label: 'Responsable del Mantenimiento',
+    align: 'center',
+    field: 'responsable',
+    sortable: true
+  },
+  {
+    name: 'responsable',
+    required: true,
+    label: 'Responsable del Mantenimiento',
+    align: 'center',
+    field: 'responsable',
+    sortable: true
+  },
+  {
+    name: 'opciones',
+    required: true,
+    label: 'Opciones',
+    align: 'center',
+    field: 'opciones',
+    sortable: true
+  },
+])
 
 
 // Función para alternar la visibilidad del dropdown
@@ -590,6 +880,7 @@ rows.value = rows.value.map(row => ({
 
 onMounted(() => {
   listarGastos()
+  listarInsumos()
   listarFincas()
   listarSemillas()
   listarProveedores()

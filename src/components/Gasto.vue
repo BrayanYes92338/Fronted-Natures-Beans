@@ -16,7 +16,7 @@
           </q-card-section>
           <q-select outlined v-model="idFinca" use-input hide-selected fill-input input-debounce="0"
             class="q-my-md q-mx-md" :options="opciones" @filter="filterFnFinca"
-            label="Selecciona el nombre del Proveedor">
+            label="Selecciona el nombre de la Finca">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey">
@@ -195,11 +195,103 @@
     </div>
 
     <!-- Modelo Agregar Gastos Insumos -->
+    <div>
+      <q-dialog persistent v-model="alertaInsumo">
+        <q-card class="" style="width: 700px">
+          <q-card-section style="background-color: #009b44; margin-bottom: 20px">
+            <div class="text-h6 text-white">Agregar Gasto de Insumo de la factura {{ nombreI }}</div>
+          </q-card-section>
+          <q-select outlined v-model="idInsumo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opcionesInsumo" @filter="filterFnInsumo"
+            label="Selecciona el Tipo de Insumo">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-select outlined v-model="idProveedorInsumo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opcionesProveedorInsumos" @filter="filterFnProveedorInsumos"
+            label="Selecciona el nombre del Proveedor">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-select outlined v-model="unidadInsumo"
+            :options="['Gramo (g)', 'Kilogramo (kg)', 'Arroba', 'Libra (lb)', 'Onza (oz)', 'Metro cúbico (m³)', 'Mililitro (ml)', 'Litro (l)', 'Galón']"
+            label="Seleccione La unidad Gastada" class="q-my-md q-mx-md" />
+          <q-input outlined v-model="cantidadInsumo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Cantidad de Insumo Gastada" type="tel" required pattern="[0-9]+"
+            maxlength="10" />
+          <q-card-actions align="right">
+            <q-btn color="red" class="text-white" :loading="useGasto.loading" @click="agregarGastosInsumos()">
+              Agregar
+              <template v-slot:loading>
+                <q-spinner color="primary" size="1em" />
+              </template>
+            </q-btn>
+            <q-btn label="Cerrar" color="black" outline @click="cerrarModeloInsumos()" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </div>
+
 
     <!-- Modelo Editar Gastos Insumos -->
-
+    <div>
+      <q-dialog persistent v-model="alertaInsumo2">
+        <q-card class="" style="width: 700px">
+          <q-card-section style="background-color: #009b44; margin-bottom: 20px">
+            <div class="text-h6 text-white">Editar Gasto de Insumo de la factura {{ nombreI }}</div>
+          </q-card-section>
+          <q-select outlined v-model="idInsumo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opcionesInsumo" @filter="filterFnInsumo"
+            label="Selecciona el Tipo de Insumo">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-select outlined v-model="idProveedorInsumo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" :options="opcionesProveedorInsumos" @filter="filterFnProveedorInsumos"
+            label="Selecciona el nombre del Proveedor">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  Sin resultados
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-select outlined v-model="unidadInsumo"
+            :options="['Gramo (g)', 'Kilogramo (kg)', 'Arroba', 'Libra (lb)', 'Onza (oz)', 'Metro cúbico (m³)', 'Mililitro (ml)', 'Litro (l)', 'Galón']"
+            label="Seleccione La unidad Gastada" class="q-my-md q-mx-md" />
+          <q-input outlined v-model="cantidadInsumo" use-input hide-selected fill-input input-debounce="0"
+            class="q-my-md q-mx-md" label="Cantidad de Insumo Gastada" type="tel" required pattern="[0-9]+"
+            maxlength="10" />
+          <q-card-actions align="right">
+            <q-btn color="red" class="text-white" :loading="useGasto.loading" @click="editarGastosInsumos()">
+              Editar
+              <template v-slot:loading>
+                <q-spinner color="primary" size="1em" />
+              </template>
+            </q-btn>
+            <q-btn label="Cerrar" color="black" outline @click="cerrarModeloEditarInsumo()" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </div>
     <!-- Tabla Gastos Insumos -->
-<div>
+    <div>
       <q-dialog v-model="modalInsumo" persistent full-width>
         <q-card class="">
           <q-card-section style="background-color:#009B44; margin-bottom: 20px">
@@ -213,7 +305,7 @@
               <q-td :props="props">
                 <div style="display: flex; gap:15px; justify-content: center; ">
                   <!-- boton de editar -->
-                  <q-btn color="primary" @click="">
+                  <q-btn color="primary" @click="traerGastosInsumos(props.row)">
                     <q-tooltip>
                       Editar Gasto Insumo
                     </q-tooltip>
@@ -225,13 +317,13 @@
           </q-table>
           <h4 v-else>Aún no hay registro de Gastos de Insumos en la factura {{ nombreI }} </h4>
           <q-card-actions align="right">
-            <q-btn @click="" color="green" class="text-white" :loading="useGasto.loading">
+            <q-btn @click="abrirModeloInsumos(props?.row)" color="green" class="text-white" :loading="useGasto.loading">
               Agregar Gasto
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
               </template>
             </q-btn>
-            <q-btn @click="" color="red" class="text-white" :loading="useGasto.loading">
+            <q-btn @click="cerrarModalInsumos()" color="red" class="text-white" :loading="useGasto.loading">
               Cerrar
               <template v-slot:loading>
                 <q-spinner color="primary" size="1em" />
@@ -280,7 +372,7 @@
                 </q-tooltip>
                 <i class="fas fa-seedling"></i>
               </q-btn>
-              <q-btn v-else color="blue" @click="">
+              <q-btn v-else color="blue" @click="abrirGastosInsumos(props.row)">
                 <q-tooltip>
                   Ver Registro de Gastos de Insumos
                 </q-tooltip>
@@ -306,7 +398,7 @@ import { useGastoStore } from '../stores/gastos.js'
 import { useFincaStore } from '../stores/finca.js'
 import { useSemillaStore } from '../stores/semillas.js'
 import { useProveedorStore } from "../stores/proveedor.js";
-import {UseInsumoStore} from '../stores/insumo.js'
+import { UseInsumoStore } from '../stores/insumo.js'
 
 const useGasto = useGastoStore()
 const useFinca = useFincaStore()
@@ -334,7 +426,6 @@ let idProveedor = ref("")
 let unidadSemilla = ref("")
 let cantidadSemilla = ref("")
 let precioSemilla = ref("")
-let totalSemilla = ref("")
 let nombreF = ref("")
 let idDeSemillas = ref("")
 let idSemillaM = ref("")
@@ -348,8 +439,7 @@ let modalInsumo = ref(false)
 let idInsumo = ref("")
 let idProveedorInsumo = ref("")
 let unidadInsumo = ref("")
-let totalInsumos = ref("")
-let cantidad = ref("")
+let cantidadInsumo = ref("")
 let idDeInsumos = ref("")
 let idInsumosM = ref("")
 let nombreI = ref("")
@@ -625,6 +715,32 @@ async function listarProveedores() {
 }
 
 
+// Listar para proveedor Insumos
+
+let proveedorInsumos = []
+let datosProveedorInsumos = {}
+const opcionesProveedorInsumos = ref(proveedorInsumos)
+
+function filterFnProveedorInsumos(val, update, abort) {
+  update(() => {
+    const needle = val.toLowerCase();
+    opcionesProveedorInsumos.value = proveedorInsumos.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
+  });
+}
+
+async function listarProveedoresInsumos() {
+  const data = await useProveedor.listarProveedorActivos();
+  data.data.proveedorActivo.forEach((item) => {
+    datosProveedorInsumos = {
+      label: `${item.nombre}- ${item.telefono}`,
+      value: item._id,
+    }
+    proveedorInsumos.push(datosProveedorInsumos)
+  })
+  console.log(proveedorInsumos)
+}
+
+
 // Listar tabla de Gastos de Semillas
 
 
@@ -788,8 +904,8 @@ async function editarGastosSemillas() {
       listarGastos()
     }
   } catch (error) {
-    console.error('Error de Gastos', error)
-    Notify.create('Ocurrio un error al editar Mantenimiento Gastos')
+    console.error('Error de Gastos Semillas', error)
+    Notify.create('Ocurrio un error al editar  Gastos de Semillas')
   }
 }
 
@@ -799,10 +915,17 @@ let ListaInsumo = [];
 let datosInsumo = {}
 const opcionesInsumo = ref(ListaInsumo)
 
-async function listarInsumos(){
+function filterFnInsumo(val, update, abort) {
+  update(() => {
+    const needle = val.toLowerCase();
+    opcionesInsumo.value = ListaInsumo.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
+  });
+}
+
+async function listarInsumos() {
   const data = await useInsumo.listarInsumos();
-  data.data.insumo.forEach((item)=>{
-    datosInsumo ={
+  data.data.insumo.forEach((item) => {
+    datosInsumo = {
       label: `${item.nombre}- ${item.relacionNPK}`,
       value: item._id,
     }
@@ -814,44 +937,44 @@ async function listarInsumos(){
 // Listar Columna de Gastos Insumo
 
 let columnasInsumos = ref([
-{
-    name: 'responsable',
+  {
+    name: 'idInsumo',
     required: true,
-    label: 'Responsable del Mantenimiento',
+    label: 'Nombre Insumo',
     align: 'center',
-    field: 'responsable',
+    field: (row) => row.idInsumo.nombre,
     sortable: true
   },
   {
-    name: 'responsable',
+    name: 'idProveedorInsumo',
     required: true,
-    label: 'Responsable del Mantenimiento',
+    label: 'Nombre de Proveedor',
     align: 'center',
-    field: 'responsable',
+    field: (row) => row.idProveedorInsumo.nombre,
     sortable: true
   },
   {
-    name: 'responsable',
+    name: 'unidadInsumo',
     required: true,
-    label: 'Responsable del Mantenimiento',
+    label: 'Unidad Gastado',
     align: 'center',
-    field: 'responsable',
+    field: 'unidadInsumo',
     sortable: true
   },
   {
-    name: 'responsable',
+    name: 'cantidadInsumo',
     required: true,
-    label: 'Responsable del Mantenimiento',
+    label: 'Cantidad Insumo Gastado',
     align: 'center',
-    field: 'responsable',
+    field: 'cantidadInsumo',
     sortable: true
   },
   {
-    name: 'responsable',
+    name: 'totalInsumo',
     required: true,
-    label: 'Responsable del Mantenimiento',
+    label: 'Total Insumo',
     align: 'center',
-    field: 'responsable',
+    field: 'totalInsumo',
     sortable: true
   },
   {
@@ -864,6 +987,133 @@ let columnasInsumos = ref([
   },
 ])
 
+// Abrir Modelo de Gastos Insumos
+
+function abrirModeloInsumos() {
+  alertaInsumo.value = true
+  modalInsumo.value = false
+}
+
+// Funcion para cerrar Modelo Insumos
+
+function cerrarModeloInsumos() {
+  alertaInsumo.value = false
+  modalInsumo.value = true
+}
+
+
+// Listar Tabla de Gastos de Insumos
+
+function abrirGastosInsumos(gastoInsumo) {
+  modalInsumo.value = true;
+  idDeInsumos.value = gastoInsumo._id;
+  insumo.value = gastoInsumo.insumo
+  nombreI = gastoInsumo.numerofactura
+}
+
+function cerrarModalInsumos() {
+  modalInsumo.value = false;
+}
+
+
+// Agregar Gastos Insumos
+
+async function agregarGastosInsumos() {
+  try {
+    console.log(unidadInsumo.value)
+    if (idInsumo.value == "") {
+      Notify.create("Se debe agregar el insumo")
+    }else if(idProveedorInsumo.value == ""){
+      Notify.create("Se debe agregar el proveedor")
+    } else if (!unidadInsumo.value || unidadInsumo.value.trim().length === 0) {
+      Notify.create("Se debe agregar unidad de medida")
+    } else if (cantidadInsumo.value == "") {
+      Notify.create("Se debe agregar cantidad de Insumo")
+    } else {
+      let nuevosGastosInsumos = {
+        idInsumo: idInsumo.value.value,
+        idProveedorInsumo: idProveedorInsumo.value.value,
+        unidadInsumo: unidadInsumo.value,
+        cantidadInsumo: cantidadInsumo.value
+      }
+      insumo.value.push(nuevosGastosInsumos)
+      alertaInsumo.value = false
+      await useGasto.putGastos(idDeInsumos.value, {
+        insumo: insumo.value
+      })
+      listarGastos()
+    }
+
+  } catch (error) {
+    console.error("Error al agregar Gastos de Insumos", error)
+    Notify.create("Ocurrio un error al agregar Gastos de Insumos")
+  }
+}
+
+
+// Traer datos de gastos Insumos
+
+function traerGastosInsumos(data){
+  alertaInsumo2.value = true
+  idInsumosM.value = data._id
+  idInsumo.value = {
+    label: data.idInsumo.nombre,
+    value: data.idInsumo._id
+  }
+  idProveedorInsumo.value = {
+    label: data.idProveedorInsumo.nombre,
+    value: data.idProveedorInsumo._id
+  }
+  unidadInsumo.value = data.unidadInsumo
+  cantidadInsumo.value = data.cantidadInsumo
+  console.log(data)
+}
+
+
+// Editar Gastos de Insumos
+
+async function editarGastosInsumos(){
+  try{
+    if (idInsumo.value == "") {
+      Notify.create("Se debe agregar el insumo")
+    }else if(idProveedorInsumo.value == ""){
+      Notify.create("Se debe agregar el proveedor")
+    } else if (!unidadInsumo.value || unidadInsumo.value.trim().length === 0) {
+      Notify.create("Se debe agregar unidad de medida")
+    } else if (cantidadInsumo.value == "") {
+      Notify.create("Se debe agregar cantidad de Insumo")
+    } else {
+      for (let i = 0; i < insumo.value.length; i++) {
+        const info = insumo.value[i];
+        if (info._id === idInsumosM.value) {
+          info.idInsumo = idInsumo.value.value
+          info.idProveedorInsumo = idProveedorInsumo.value.value
+          info.unidadInsumo = unidadInsumo.value
+          info.cantidadInsumo = cantidadInsumo.value
+          console.log(info)
+          break
+        }
+      }
+      console.log(insumo.value)
+      alertaInsumo2.value = false;
+      modalInsumo.value = false
+      await useGasto.putGastos(idDeInsumos.value, {
+        insumo: insumo.value
+      })
+      listarGastos()
+    }
+  }catch (error){
+    console.error('Error de Gastos Insumos', error)
+    Notify.create('Ocurrio un error al editar Gastos de Insumos')
+  }
+}
+
+// Funcion para editar Modelo Gasto Insumo
+
+function cerrarModeloEditarInsumo(){
+  alertaInsumo2.value = false
+  modalInsumo.value = true
+}
 
 // Función para alternar la visibilidad del dropdown
 const toggleDropdown = (row) => {
@@ -878,12 +1128,36 @@ rows.value = rows.value.map(row => ({
 }));
 
 
+function limpiar(){
+  idFinca.value = ""
+  nombre.value = ""
+  numerofactura.value = ""
+  descripcion.value = ""
+}
+
+function limpiarSemilla(){
+  idSemilla.value = ""
+  idProveedor.value = ""
+  unidadSemilla.value = ""
+  cantidadSemilla.value = ""
+  precioSemilla.value = ""
+}
+
+function limpiarInsumo(){
+  idInsumo.value = ""
+  idProveedorInsumo.value = ""
+  unidadInsumo.value = ""
+  cantidadInsumo.value = ""
+}
+
+
 onMounted(() => {
   listarGastos()
   listarInsumos()
   listarFincas()
   listarSemillas()
   listarProveedores()
+  listarProveedoresInsumos()
 });
 
 </script>

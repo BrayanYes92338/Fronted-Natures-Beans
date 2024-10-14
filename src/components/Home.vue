@@ -172,6 +172,16 @@
             <i class="fas fa-seedling"></i>Siembra
           </router-link>
         </div>
+        <div class="item">
+          <router-link class="opciones" to="/analisis">
+            <i class="fas fa-seedling"></i>Analisis de Suelos
+          </router-link>
+        </div>
+        <div class="item">
+          <router-link class="opciones" to="/preparacion">
+            <i class="fas fa-seedling"></i>Preparacion de Suelos
+          </router-link>
+        </div>
       </div>
       <div class="btn-cerrar">
         <button class="cerrar-sesion" @click="cerrarSesion()">

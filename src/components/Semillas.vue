@@ -312,12 +312,12 @@ async function listarProveedor() {
 const listarSemillaActiva = async () => {
   try {
     const res = await useSemilla.listarSemillaActiva();
-    rows.value = res.semilla.reverse();
+    rows.value = res.semillaActiva.reverse();
     Notify.create({
       message: "Listado de Semilla Activa",
       color: "green",
     });
-    console.log(res.semilla);
+    console.log(res.semillaActiva);
   } catch (error) {
     console.error("Error al listar Semilla activa:", error);
     Notify.create("Error al obtener Semilla de Empleado activa");
@@ -327,13 +327,13 @@ const listarSemillaActiva = async () => {
 const listarSemillaInactiva = async () => {
   try {
     const res = await useSemilla.listarSemillaInactiva();
-    rows.value = res.semilla.reverse();
+    rows.value = res.semillaInactiva.reverse();
     Notify.create({
       message: "Listado de Nomina Inactiva",
       color: "green",
     });
 
-    console.log(res.semilla);
+    console.log(res.semillaInactiva);
   } catch (error) {
     console.error("Error al listar Semilla inactiva", error);
     Notify.create("Error al obtener listado de Semilla inactiva");

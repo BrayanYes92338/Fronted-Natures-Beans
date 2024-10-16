@@ -64,7 +64,6 @@
             <q-table title="Cultivos" title-class="text-green text-weight-bolder text-h4"
                 table-header-class="text-black font-weight-bold" :rows="rows" :columns="columns" row-key="name"
                 style="width: 90%; margin-bottom: 5%;">
-                
                 <template v-slot:body-cell-idParcela="props">
   <q-td :props="props">
     <!-- VDropdown para mostrar el tooltip al hacer clic -->
@@ -194,8 +193,7 @@ const columns = ref([
         label: 'Estado',
         align: 'center',
         field: 'estado',
-        sortable: true,
-         format: val => val.charAt(0).toUpperCase() + val.slice(1).toLowerCase()
+        sortable: true
     },
     {
         name: 'opciones',

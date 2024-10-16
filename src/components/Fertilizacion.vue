@@ -36,10 +36,11 @@
                         </q-item>
                         </template> 
                     </q-select>
-                    <q-select outlined v-model="estadoFenologico" :options="['Germinación', 'brotación', 'desarrollo de la yema', 'Desarrollo de las hojas', 'Formación de brotes laterales', 'amacollamiento', 'Crecimiento longitudinal del tallo', 'crecimiento en roceta', 'desarrollo de brotes', 'Desarrollo de las partes vegetativas cosechables de la planta', 'Emergencia del botón o inflorescencia ', 'espigamiento', 'Floración', 'Desarrollo del fruto', 'Maduración del fruto y semilla', 'Senescencia', ' comienzo de la dormancia', 'cosecha']"
-                        label="Seleccione el testado Fenologico" class="q-my-md q-mx-md" />
-                    <q-select outlined v-model="tipo" :options="['Orgánicos', 'Inorgánicos (minerales)']"
-                        label="Seleccione el tipo de Fertilizacion" class="q-my-md q-mx-md" />
+                    <q-input outlined v-model="estadoFenologico" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Estado Fenologico Fertilizante" type="text" />
+                    <q-input outlined v-model="tipo" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="Tipo de Fertilizante" type="text" />
+                    
                     <q-input outlined v-model="nombreFertilizante" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="nombre Fertilizante" type="text" />
                     <q-input outlined v-model="cantidad" use-input hide-selected fill-input input-debounce="0"
@@ -106,6 +107,8 @@ const useInsumo = UseInsumoStore();
 
 
 
+
+
 let rows = ref([]);
 let alert = ref(false);
 let id = ref('');
@@ -163,31 +166,34 @@ const columns = ref([
     {
         name: 'estadoFenologico',
         required: true,
-        label: 'estado Fenologico',
+        label: 'Estado Fenologico',
         align: 'center',
         field: 'estadoFenologico',
-        sortable: true
+        sortable: true,
+         format: val => val.charAt(0).toUpperCase() + val.slice(1).toLowerCase()
     },
     {
         name: 'tipo',
         required: true,
-        label: 'tipo Fertilizacion',
+        label: 'Tipo Fertilizacion',
         align: 'center',
         field: 'tipo',
         sortable: true,
+         format: val => val.charAt(0).toUpperCase() + val.slice(1).toLowerCase()
     },
     {
         name: 'nombreFertilizante',
         required: true,
-        label: ' nombre Fertilizante',
+        label: ' Nombre Fertilizante',
         align: 'center',
         field: 'nombreFertilizante',
         sortable: true,
+         format: val => val.charAt(0).toUpperCase() + val.slice(1).toLowerCase()
     },
     {
         name: 'cantidad',
         required: true,
-        label: 'cantidad',
+        label: 'Cantidad',
         align: 'center',
         field: 'cantidad',
     },
@@ -275,17 +281,17 @@ function filtrarFn(val, update, abort) {
 }
 //listar Insumos
 let insumos = []
-let date = {}
+let datesa = {}
 const opcion = ref(insumos)
 
 async function listarInsumos() {
     const data = await useInsumo.listarInsumos();
     data.data.insumo.forEach(item => {
-        date = {
+        datesa = {
             label: `${item?.nombre} - ${item.registro_ICA} `,
             value: item._id
         };
-        insumos.push(date);
+        insumos.push(datesa);
     })
     console.log(insumos);
 }
@@ -293,7 +299,7 @@ async function listarInsumos() {
 function filtraFn(val, update, abort) {
     update(() => {
         const needle = val.toLowerCase();
-        opcion.value = insumos.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
+        opciones.value = insumos.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
     });
 }
 

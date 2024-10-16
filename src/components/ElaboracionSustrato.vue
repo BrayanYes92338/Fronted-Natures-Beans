@@ -126,24 +126,23 @@
             type="text"
             required
           />
-<q-select
-  outlined
-  v-model="MetodoAplicacion"
-  :options="[
-    'Mezcla Manual', 
-    'Mezcla Mecánica', 
-    'Aplicación Directa', 
-    'Aplicación en Capas', 
-    'Incorporación de Aditivos', 
-    'Esterilización del Sustrato', 
-    'Enriquecimiento con Microorganismos', 
-    'Aplicación de Cobertura'
-  ]"
-  label="Seleccione el Método de Aplicación"
-  class="q-my-md q-mx-md"
-  required
-/>
-
+          <q-select
+            outlined
+            v-model="MetodoAplicacion"
+            :options="[
+              'Mezcla Manual',
+              'Mezcla Mecánica',
+              'Aplicación Directa',
+              'Aplicación en Capas',
+              'Incorporación de Aditivos',
+              'Esterilización del Sustrato',
+              'Enriquecimiento con Microorganismos',
+              'Aplicación de Cobertura',
+            ]"
+            label="Seleccione el Método de Aplicación"
+            class="q-my-md q-mx-md"
+            required
+          />
 
           <q-card-actions align="right">
             <q-btn
@@ -182,8 +181,34 @@
         :rows="rows"
         :columns="columns"
         row-key="name"
-        style="width: 90%; margin-bottom: 5%"
-      >
+        style="width: 90%; margin-bottom: 5%">
+
+        <template v-slot:body-cell-idProceso="props">
+          <q-td :props="props">
+              <!-- VDropdown para mostrar el tooltip al hacer clic -->
+            <VDropdown :distance="6" v-model="props.row.showDropdown">
+                <!-- Botón que activará el dropdown -->
+              <q-btn flat dense @click="toggleDropdown(props.row)">
+              <!-- Controlamos que no se muestre en mayúsculas -->
+                <span style="text-transform: none;">
+              <!-- Mostramos un resumen del campo 'detalle' con una longitud máxima de 10 caracteres -->
+                {{ props.row.idProceso.descripcion.length > 10 ? props.row.idProceso.descripcion.substring(0, 10) + '...' :
+               props.row.idProceso.descripcion }}
+              </span>
+              </q-btn>
+
+                <!-- Contenido del popper (dropdown) con estilos personalizados -->
+               <template #popper>
+              <div class="custom-tooltip-content"
+               style="max-height: 200px; max-width: 200px; overflow-y: auto; padding: 10px;">
+                 <!-- Mostramos solo el campo 'descripcion' completo -->
+               {{ props.row.idProceso.descripcion }}
+               </div>
+          </template>
+         </VDropdown>
+        </q-td>
+        </template>
+
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props">
             <div style="display: flex; gap: 15px; justify-content: center">
@@ -224,9 +249,6 @@ const ingredienteActivo = ref("");
 const dosisUtilizada = ref("");
 const MetodoAplicacion = ref(null);
 
-
-
-
 function abrir() {
   accion.value = 1;
   alert.value = true;
@@ -241,7 +263,7 @@ const columns = ref([
   {
     name: "idProceso",
     required: true,
-    label: "Nombre del Cultivo",
+    label: "Descripcion del Proceso",
     align: "center",
     field: (row) => row.idProceso.descripcion,
     sortable: true,
@@ -270,6 +292,7 @@ const columns = ref([
     align: "center",
     field: "productocomercial",
     sortable: true,
+     format: val => val.charAt(0).toUpperCase() + val.slice(1).toLowerCase()
   },
   {
     name: "ingredienteActivo",
@@ -278,6 +301,7 @@ const columns = ref([
     align: "center",
     field: "ingredienteActivo",
     sortable: true,
+     format: val => val.charAt(0).toUpperCase() + val.slice(1).toLowerCase()
   },
   {
     name: "dosisUtilizada",
@@ -294,6 +318,7 @@ const columns = ref([
     align: "center",
     field: "MetodoAplicacion",
     sortable: true,
+     format: val => val.charAt(0).toUpperCase() + val.slice(1).toLowerCase()
   },
 
   {
@@ -483,10 +508,9 @@ async function editarElaboracion() {
       dosisUtilizada: dosisUtilizada.value,
       MetodoAplicacion: MetodoAplicacion.value,
     });
-     
+
     listarElaboracion();
     cerrar();
-    
   } catch (error) {
     console.error("Error de actualizar Elaboracion de sustrato", error);
     Notify.create(
@@ -504,6 +528,18 @@ function Limpiar() {
   dosisUtilizada.value = "";
   MetodoAplicacion.value = "";
 }
+
+// Función para alternar la visibilidad del dropdown
+const toggleDropdown = (row) => {
+  row.showDropdown = !row.showDropdown;
+};
+
+
+// Inicialización de los datos de la tabla
+rows.value = rows.value.map(row => ({
+  ...row,
+  showDropdown: false,
+}));
 
 onMounted(() => {
   listarElaboracion();

@@ -12,6 +12,7 @@
     "@quasar/extras": "^1.16.12",
     "axios": "^1.7.2",
     "floating-vue": "^5.2.2",
+    "jspdf": "^2.5.2",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "quasar": "^2.16.5",

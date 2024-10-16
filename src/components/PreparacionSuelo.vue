@@ -25,7 +25,7 @@
                             </q-item>
                         </template>
                     </q-select>
-                    <q-select outlined v-model="idEmpleado" use-input hide-selected fill-input input-debounce="0"
+                    <q-select outlined v-model="idEmpleadooperario" use-input hide-selected fill-input input-debounce="0"
                     class="q-my-md q-mx-md" :options="opciones" @filter="filtrarFn" label="Selecciona el oprerario">
                     <template v-slot:no-option>
                         <q-item>
@@ -183,7 +183,7 @@
                 <template v-slot:body-cell-opciones="props">
                     <q-td :props="props">
                         <div style="display: flex; gap:15px; justify-content: center; ">
-                            <q-btn color="green" @click="abrirProductos(props.row)">
+                            <q-btn color="green" @click="abrirProducto(props.row)">
                                 <q-tooltip>
                                     Ver productos
                                 </q-tooltip>
@@ -324,7 +324,7 @@ let columnas = ref([
 function traerDatosProductos(data) {
     alerta2.value = true;
     ingredienteActivo.value = data.ingredienteActivo;
-    dosismetodoAplicacion.value = data.dosismetodoAplicacion;
+    dosis.value = data.dosis;
     metodoAplicacion.value = data.metodoAplicacion;
     idProducto.value = data._id
     console.log(data)

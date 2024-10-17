@@ -566,6 +566,9 @@ function validarGastos() {
   } else {
     cerrar()
     agregarGasto()
+    limpiar();
+    limpiarSemilla();
+    limpiarInsumo();
     Notify.create({
       type: "positive",
       message: "Gasto agregado exitosamente",
@@ -583,6 +586,9 @@ async function agregarGasto() {
   })
   cerrar()
   listarGastos()
+  limpiar();
+  limpiarSemilla();
+  limpiarInsumo();
   console.log(r)
 }
 
@@ -614,7 +620,10 @@ function validarEdicionGastos() {
     Notify.create("Se debe ingresar el numero de factura");
   } else {
     cerrar()
-    editarGastos()
+    editarGastos();
+    limpiar();
+    limpiarSemilla();
+    limpiarInsumo();
     Notify.create({
       type: "positive",
       message: "Gasto editado exitosamente",
@@ -633,7 +642,8 @@ async function editarGastos() {
       numerofactura: numerofactura.value,
       descripcion: descripcion.value,
     })
-    listarGastos()
+    listarGastos();
+
   } catch (error) {
     console.error("Error de actualizar Gastos", error);
     Notify.create("Ocurrio un error al editar datos de Gastos");
@@ -840,7 +850,10 @@ async function agregarGastosSemillas() {
       await useGasto.putGastos(idDeSemillas.value, {
         semillas: semillas.value
       })
-      listarGastos()
+      listarGastos();
+      limpiar();
+      limpiarSemilla();
+      limpiarInsumo();
     }
 
   } catch (error) {
@@ -901,7 +914,10 @@ async function editarGastosSemillas() {
       await useGasto.putGastos(idDeSemillas.value, {
         semillas: semillas.value
       })
-      listarGastos()
+      listarGastos();
+      limpiar();
+      limpiarSemilla();
+      limpiarInsumo();
     }
   } catch (error) {
     console.error('Error de Gastos Semillas', error)
@@ -1041,7 +1057,11 @@ async function agregarGastosInsumos() {
       await useGasto.putGastos(idDeInsumos.value, {
         insumo: insumo.value
       })
-      listarGastos()
+      listarGastos();
+      limpiar();
+      limpiarSemilla();
+      limpiarInsumo();
+      
     }
 
   } catch (error) {
@@ -1100,7 +1120,8 @@ async function editarGastosInsumos(){
       await useGasto.putGastos(idDeInsumos.value, {
         insumo: insumo.value
       })
-      listarGastos()
+      listarGastos();
+      
     }
   }catch (error){
     console.error('Error de Gastos Insumos', error)

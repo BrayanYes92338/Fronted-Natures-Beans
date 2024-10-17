@@ -941,8 +941,9 @@ async function agregarMaquinaHerramienta() {
     cantidad: cantidad.value,
     precio: precio.value,
   })
-  cerrar()
-  listarMaquinariaHerramienta()
+  cerrar();
+  listarMaquinariaHerramienta();
+  Limpiar();
   console.log(r)
 
 }
@@ -968,6 +969,7 @@ function validarIngresoMaquinaHerramientas() {
   } else {
     cerrar();
     agregarMaquinaHerramienta();
+    Limpiar();
     Notify.create({
       type: "positive",
       message: "Maquina/Herramienta agregada exitosamente",

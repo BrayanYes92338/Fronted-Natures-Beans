@@ -8,25 +8,6 @@
         ">
             <q-btn style="background-color: #00c04f; color: white" class="q-my-md q-ml-md" @click="abrir()">Registrar
                 Siembra</q-btn>
-            <q-btn-dropdown color="blue" icon="visibility" label="Filtrar" style="
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: 16px;
-            height: 20px;
-          " class="q-my-md q-ml-md">
-                <q-list>
-                    <q-item clickable v-ripple @click="listarSemilla()">
-                        <q-item-section>Listar Todos</q-item-section>
-                    </q-item>
-                    <q-item clickable v-ripple @click="listarSemillaActiva()">
-                        <q-item-section>Listar Activos</q-item-section>
-                    </q-item>
-                    <q-item clickable v-ripple @click="listarSemillaInactiva()">
-                        <q-item-section>Listar Inactivos</q-item-section>
-                    </q-item>
-                </q-list>
-            </q-btn-dropdown>
         </div>
         <div>
             <q-dialog v-model="alert" persistent>
@@ -70,16 +51,8 @@
                     <q-input outlined v-model="fechacosecha" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Fecha Cosecha" type="date" />
 
-
-                    <q-select outlined v-model="cultivoAnterior" use-input hide-selected fill-input input-debounce="0"
-                        class="q-my-md q-mx-md" :options="options" label="Seleccionar Cultivo">
-                        <template v-slot:no-option>
-                            <q-item>
-                                <q-item-section class="text-grey">Sin resultados</q-item-section>
-                            </q-item>
-                        </template>
-                    </q-select>
-
+                    <q-input outlined v-model="cultivoAnterior" use-input hide-selected fill-input input-debounce="0"
+                        class="q-my-md q-mx-md" label="cultivo Anterior" type="text" required />
                     <q-input outlined v-model="transplante" use-input hide-selected fill-input input-debounce="0"
                         class="q-my-md q-mx-md" label="Transplante" type="text" required />
 
@@ -120,12 +93,6 @@
                                 <q-tooltip> Editar </q-tooltip>
                                 <i class="fas fa-pencil-alt"> </i></q-btn>
                             <!-- botons de activado y desactivado -->
-                            <q-btn v-if="props.row.estado == 1" @click="deshabilitarSemilla(props.row)"
-                                color="negative">
-                                <q-tooltip> Desactivar </q-tooltip>
-                                <i class="fas fa-times"> </i></q-btn>
-                            <q-btn v-else color="positive" @click="habilitarSemilla(props.row)">
-                                <q-tooltip> Activar </q-tooltip><i class="fas fa-check"> </i></q-btn>
                         </div>
                     </q-td>
                 </template>
@@ -232,7 +199,7 @@ const columns = ref([
     {
         name: "idEmpleados",
         required: true,
-        label: "id Empleados",
+        label: "Empleados",
         align: "center",
         field: (row) => row.idEmpleados?.nombre ?? "Finca no disponible",
         sortable: true,
@@ -240,7 +207,7 @@ const columns = ref([
     {
         name: "idSemilla",
         required: true,
-        label: "idSemilla",
+        label: "Semilla",
         align: "center",
         field: (row) => row.idSemilla?.especie ?? "semilla no disponible",
         sortable: true,
@@ -250,7 +217,7 @@ const columns = ref([
         required: true,
         label: "cultivo Anterior",
         align: "center",
-        field: (row) => row.cultivoAnterior?.nombre ?? "semilla no disponible",
+        field: "cultivoAnterior",
         sortable: true,
     },
 
@@ -372,7 +339,7 @@ async function listarSiembra() {
 function validarIngresoSemilla() {
     let validacionnumeros = /^[0-9]+$/;
 
-    if (idCultivo.value.value == null) {
+    if (idCultivo.value == null) {
         Notify.create("Se debe seleccionar un cultivo");
     } else if (idEmpleados.value.value == null) {
         Notify.create("Se debe seleccionar un empleado");
@@ -388,9 +355,8 @@ function validarIngresoSemilla() {
         fechacosecha.value.trim().length === 0
     ) {
         Notify.create("Se debe agregar la fecha de cosecha");
-    } else if (cultivoAnterior.value.value == null) {
+    } else if (cultivoAnterior.value == null) {
         Notify.create("Se debe agregar el cultivo anterior");
-
     } else if (transplante.value == "" || transplante.value.trim().length === 0) {
         Notify.create("Se debe indicar si es un transplante");
     } else {
@@ -411,7 +377,7 @@ async function agregarSemilla() {
         idSemilla: idSemilla.value.value,
         fechasiembra: fechasiembra.value,
         fechacosecha: fechacosecha.value,
-        cultivoAnterior: cultivoAnterior.value.value,
+        cultivoAnterior: cultivoAnterior.value,
         transplante: transplante.value,
     });
 
@@ -455,10 +421,7 @@ function traerSemilla(semilla) {
         };
     }
 
-    cultivoAnterior.value = {
-        label: semilla.cultivoAnterior.nombre,
-        value: semilla.cultivoAnterior._id,
-    }
+    cultivoAnterior.value = semilla.cultivoAnterior;
     fechacosecha.value = semilla.fechacosecha.split("T")[0];
     fechasiembra.value = semilla.fechasiembra.split("T")[0];
 
@@ -468,7 +431,7 @@ function traerSemilla(semilla) {
 function validarEdicionSemilla() {
     let validacionnumeros = /^[0-9]+$/;
 
-    if (idCultivo.value.value == null) {
+    if (idCultivo.value == null) {
         Notify.create("Se debe seleccionar un cultivo");
     } else if (idEmpleados.value.value == null) {
         Notify.create("Se debe seleccionar un empleado");
@@ -484,9 +447,8 @@ function validarEdicionSemilla() {
         fechacosecha.value.trim().length === 0
     ) {
         Notify.create("Se debe agregar la fecha de cosecha");
-    } else if (cultivoAnterior.value.value == null) {
+    } else if (cultivoAnterior.value == null) {
         Notify.create("Se debe agregar el cultivo anterior");
-
     } else if (transplante.value == "" || transplante.value.trim().length === 0) {
         Notify.create("Se debe indicar si es un transplante");
     } else {
@@ -508,7 +470,7 @@ async function editarSemilla() {
             idSemilla: idSemilla.value.value,
             fechasiembra: fechasiembra.value,
             fechacosecha: fechacosecha.value,
-            cultivoAnterior: cultivoAnterior.value.value,
+            cultivoAnterior: cultivoAnterior.value,
             transplante: transplante.value,
         });
         listarSiembra();

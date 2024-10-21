@@ -26,6 +26,7 @@ import Gasto from "../components/Gasto.vue"
 import Siembra from "../components/Siembra.vue";
 import Analisis from "../components/analisisSuelo.vue";
 import Preparacion from "../components/preparacionSuelo.vue";
+import Factura from "../components/Factura.vue"
 
 const auth = (to, from, next) => {
     if (checkAuth()) {
@@ -78,6 +79,7 @@ const routes = [
             {path: "/siembra", component: Siembra, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             {path: "/analisis", component: Analisis, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
             {path: "/preparacion", component: Preparacion, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } },
+            {path: "/factura", component: Factura, beforeEnter: auth, meta: { roles: ['ADMIN', 'GESTOR'] } }
         ]   
 
     },

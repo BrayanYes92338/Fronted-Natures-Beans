@@ -78,6 +78,16 @@
               <i class="fas fa-spa"></i> Semilla
             </router-link>
           </div>
+          <div class="sub-menu" v-show="subMenus.finca">
+            <router-link class="opciones" to="/fertilizacion">
+              <i class="fas fa-seedling"></i> Fertilizacion
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.finca">
+            <router-link class="opciones" to="/siembra">
+              <i class="fas fa-seedling"></i>Siembra
+            </router-link>
+          </div>
         </div>
         <div class="item">
           <a class="opciones sub" href="#" @click.prevent="toggleSubMenu('insumo_proveedor')">
@@ -129,6 +139,16 @@
               <i class="fas fa-bug"></i> Control Plaga
             </router-link>
           </div>
+          <div class="sub-menu" v-show="subMenus.produccion">
+            <router-link class="opciones" to="/analisis">
+              <i class="fas fa-flask"></i> Analisis de Suelos
+            </router-link>
+          </div>
+          <div class="sub-menu" v-show="subMenus.produccion">
+            <router-link class="opciones" to="/preparacion">
+              <i class="fas fa-seedling"></i>Preparacion de Suelos
+            </router-link>
+          </div>
         </div>
 
         <div class="item">
@@ -143,8 +163,12 @@
               <i class="fas fa-file-invoice"></i> Nómina
             </router-link>
           </div>
+          <div class="sub-menu" v-show="subMenus.nomina">
+            <router-link class="opciones" to="/gasto">
+              <i class="fas fa-credit-card"></i> Gastos
+            </router-link>
+          </div>
         </div>
-
         <div class="item">
           <a class="opciones sub" href="#" @click.prevent="toggleSubMenu('ventas_distribucion')">
             <i class="fas fa-tags"></i> Ventas y Distribución
@@ -156,31 +180,11 @@
               <i class="fas fa-shopping-cart"></i> Comprador
             </router-link>
           </div>
-        </div>
-        <div class="item">
-          <router-link class="opciones" to="/fertilizacion">
-            <i class="fas fa-fill-drip"></i> Fertilizacion
-          </router-link>
-        </div>
-        <div class="item">
-          <router-link class="opciones" to="/gasto">
-            <i class="fas fa-credit-card"></i> Gastos
-          </router-link>
-        </div>
-        <div class="item">
-          <router-link class="opciones" to="/siembra">
-            <i class="fas fa-seedling"></i>Siembra
-          </router-link>
-        </div>
-        <div class="item">
-          <router-link class="opciones" to="/analisis">
-            <i class="fas fa-seedling"></i>Analisis de Suelos
-          </router-link>
-        </div>
-        <div class="item">
-          <router-link class="opciones" to="/preparacion">
-            <i class="fas fa-seedling"></i>Preparacion de Suelos
-          </router-link>
+          <div class="sub-menu" v-show="subMenus.ventas_distribucion">
+            <router-link class="opciones" to="/factura">
+              <i class="fas fa-file-invoice"></i>Factura
+            </router-link>
+          </div>
         </div>
       </div>
       <div class="btn-cerrar">

@@ -8,7 +8,25 @@
       ">
       <q-btn style="background-color: #00c04f; color: white" class="q-my-md q-ml-md" @click="abrir()">Registrar
         Semilla</q-btn>
-    
+      <q-btn-dropdown color="blue" icon="visibility" label="Filtrar" style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-left: 16px;
+          height: 20px;
+        " class="q-my-md q-ml-md">
+        <q-list>
+          <q-item clickable v-ripple @click="listarSemilla()">
+            <q-item-section>Listar Todos</q-item-section>
+          </q-item>
+          <q-item clickable v-ripple @click="listarSemillaActiva()">
+            <q-item-section>Listar Activos</q-item-section>
+          </q-item>
+          <q-item clickable v-ripple @click="listarSemillaInactiva()">
+            <q-item-section>Listar Inactivos</q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
     </div>
     <div>
       <q-dialog v-model="alert" persistent>
@@ -77,10 +95,16 @@
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props">
             <div style="display: flex; gap: 15px; justify-content: center">
+              <!-- boton de editar -->
               <q-btn color="primary" @click="traerSemilla(props.row)">
                 <q-tooltip> Editar </q-tooltip>
                 <i class="fas fa-pencil-alt"> </i></q-btn>
-              
+              <!-- botons de activado y desactivado -->
+              <q-btn v-if="props.row.estado == 1" @click="deshabilitarSemilla(props.row)" color="negative">
+                <q-tooltip> Desactivar </q-tooltip>
+                <i class="fas fa-times"> </i></q-btn>
+              <q-btn v-else color="positive" @click="habilitarSemilla(props.row)">
+                <q-tooltip> Activar </q-tooltip><i class="fas fa-check"> </i></q-btn>
             </div>
           </q-td>
         </template>
@@ -226,6 +250,14 @@ const columns = ref([
     label: "poder Germinativo",
     align: "center",
     field: "poderGerminativo",
+    sortable: true,
+  },
+  {
+    name: "estado",
+    required: true,
+    label: "Estado",
+    align: "center",
+    field: "estado",
     sortable: true,
   },
   {
